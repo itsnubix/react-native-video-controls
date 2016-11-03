@@ -683,7 +683,7 @@ export default class VideoPlayer extends Component {
     renderBack() {
         return this.renderControl(
             <Image
-                source={ require( '../assets/img/video/back.png' ) }
+                source={ require( './assets/img/back.png' ) }
                 style={ styles.controls.back }
             />,
             this.methods.goBack,
@@ -714,7 +714,7 @@ export default class VideoPlayer extends Component {
                         ]}
                         { ...this.player.volumePanResponder.panHandlers }
                     >
-                        <Image style={ styles.volume.icon } source={ require( '../assets/img/video/volume.png' ) } />
+                        <Image style={ styles.volume.icon } source={ require( './assets/img/volume.png' ) } />
                     </View>
                 </View>
             </View>
@@ -725,7 +725,7 @@ export default class VideoPlayer extends Component {
      * Render fullscreen toggle and set icon based on the fullscreen state.
      */
     renderFullscreen() {
-        let source = this.state.isFullscreen === true ? require( '../assets/img/video/shrink.png' ) : require( '../assets/img/video/expand.png' );
+        let source = this.state.isFullscreen === true ? require( './assets/img/shrink.png' ) : require( './assets/img/expand.png' );
         return this.renderControl(
             <Image source={ source } />,
             this.methods.toggleFullscreen,
@@ -797,7 +797,7 @@ export default class VideoPlayer extends Component {
      * Render the play/pause button and show the respective icon
      */
     renderPlayPause() {
-        let source = this.state.paused === true ? require( '../assets/img/video/play.png' ) : require( '../assets/img/video/pause.png' );
+        let source = this.state.paused === true ? require( './assets/img/play.png' ) : require( './assets/img/pause.png' );
         return this.renderControl(
             <Image source={ source } />,
             this.methods.togglePlayPause,
