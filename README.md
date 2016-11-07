@@ -45,11 +45,11 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
     playInBackground={ false }   // play audio when entering background
     resizeMode={ 'contain' }     // 'contain' or 'cover' should be used.
     paused={ false }             // stop playback entirely
-    volume={ 1 }                 // 0 is muted, 1 is normal.
     repeat={ false }             // Repeats at end of duration
     muted={ false }              // Mutes the audio entirely.
-    title={}                     // Video title, if null title area is hidden
+    volume={ 1 }                 // 0 is muted, 1 is normal.
     rate={ 1 }                   // 0 is paused, 1 is normal.
+    title={}                     // Video title, if null title area is hidden
 
     // events
     onLoadStart={}   // Fired when loading of the source starts
