@@ -41,7 +41,7 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
     volume={ 1 }                 // 0 is muted, 1 is normal.
     repeat={ false }             // Repeats at end of duration
     muted={ false }              // Mutes the audio entirely.
-    title=""                     // Video title
+    title={}                     // Video title, if null title area is hidden
     rate={ 1 }                   // 0 is paused, 1 is normal.
 
     // events
