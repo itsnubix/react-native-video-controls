@@ -14,6 +14,7 @@ You should also provide your own onEnd prop to the component so it knows what to
 
 ## Installation
 Run `npm install --save react-native-video react-native-video-controls`
+
 Install [rnpm](https://github.com/rnpm/rnpm) and run `rnpm link react-native-video`
 
 ## Usage
