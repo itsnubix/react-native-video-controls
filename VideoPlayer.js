@@ -22,6 +22,8 @@ export default class VideoPlayer extends Component {
          * All of our values that are updated by the
          * methods and listeners in this class
          */
+
+        const isFullscreen = this.props.resizeMode === 'cover' || false;
         this.state = {
             // Video
             resizeMode: this.props.resizeMode || 'contain',
@@ -31,7 +33,7 @@ export default class VideoPlayer extends Component {
             rate: this.props.rate || 1,
 
             // Controls
-            isFullscreen: this.state.resizeMode === 'cover' || false,
+            isFullscreen: isFullscreen,
             showTimeRemaining: true,
             showControls: true,
             lastScreenPress: 0,
@@ -354,7 +356,7 @@ export default class VideoPlayer extends Component {
     /**
      * The default 'goback' function pops the navigator
      * and as such the video player requires a
-     * navigator prop.
+     * navigator prop by default.
      */
     _goBack() {
         if ( this.props.navigator && this.props.navigator.pop ) {
@@ -659,7 +661,7 @@ export default class VideoPlayer extends Component {
      */
     renderTopControls() {
         return(
-            <Animated.View style={[
+            <Animated.Image source={ require( './assets/img/top-vignette.png' ) } style={[
                 styles.controls.top,
                 {
                     opacity: this.animations.topControl.opacity,
@@ -673,7 +675,7 @@ export default class VideoPlayer extends Component {
                         { this.renderFullscreen() }
                     </View>
                 </View>
-            </Animated.View>
+            </Animated.Image>
         );
     }
 
@@ -738,7 +740,7 @@ export default class VideoPlayer extends Component {
      */
     renderBottomControls() {
         return(
-            <Animated.View style={[
+            <Animated.Image source={ require( './assets/img/bottom-vignette.png' ) } style={[
                 styles.controls.bottom,
                 {
                     opacity: this.animations.bottomControl.opacity,
@@ -756,7 +758,7 @@ export default class VideoPlayer extends Component {
                     { this.renderTitle() }
                     { this.renderTimer() }
                 </View>
-            </Animated.View>
+            </Animated.Image>
         );
     }
 
@@ -926,7 +928,6 @@ const styles = {
             flex: 1,
             alignItems: 'stretch',
             justifyContent: 'flex-start',
-            paddingTop: 28,
             height: 32,
         },
         bottom: {
@@ -934,7 +935,6 @@ const styles = {
             flex: 2,
             height: 32,
             justifyContent: 'flex-end',
-            paddingBottom: 8,
             marginLeft: 16,
             marginRight: 16,
         },

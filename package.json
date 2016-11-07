@@ -10,9 +10,10 @@
   "author": "Kyle Milloy (https://github.com/kylemilloy)",
   "repository": {
     "type": "git",
-    "url": "git@github.com:itsnubix/react-native-video-player.git"
+    "url": "git@github.com:itsnubix/react-native-video-controls.git"
   },
   "dependencies": {
+    "lodash": "^4.16.6",
     "react": "15.3.2",
     "react-native": "0.36.1",
     "react-native-video": "^0.9.0"

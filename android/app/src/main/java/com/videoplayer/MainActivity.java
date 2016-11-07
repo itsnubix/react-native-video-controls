@@ -1,6 +1,7 @@
 package com.videoplayer;
 
 import com.facebook.react.ReactActivity;
+import com.brentvatne.react.ReactVideoPackage;
 
 public class MainActivity extends ReactActivity {
 
