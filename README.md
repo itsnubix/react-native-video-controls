@@ -1,8 +1,6 @@
 # react-native-video-controls
 Controls for the React Native `<Video>` component at [react-native-video](https://github.com/react-native-community/react-native-video).
 
-This has yet to be tested on Android.
-
 ## Features
 This package contains a simple set of GUI controls that work with the [react-native-video](https://github.com/react-native-community/react-native-video) `<Video>` component. This includes a back button, volume bar, fullscreen toggle, play/pause toggle, seekbar, title and timer toggle that can switch between time remaining and current time when tapped.
 
@@ -13,9 +11,9 @@ By default the `<VideoPlayer>` accepts a navigator property from React's built-i
 You should also provide your own onEnd prop to the component so it knows what to do when a video ends playback.
 
 ## Installation
-Run `npm install --save react-native-video react-native-video-controls`
+Run `npm install --save react-native-video-controls`
 
-Install [rnpm](https://github.com/rnpm/rnpm) and run `rnpm link react-native-video`
+Then run `react-native link react-native-video`
 
 ## Usage
 The `<VideoPlayer>` component follows the API of the `<Video>` component at [react-native-video](https://github.com/react-native-community/react-native-video). It also takes a number of additional props which are outlined in the [API](#api) section.
@@ -27,7 +25,7 @@ For basic operation the `<VideoPlayer>` component requires a video source and a 
 import VideoPlayer from 'react-native-video-controls';
 
 
-// in the components render() function
+// in the component's render() function
 <VideoPlayer
     source={{ uri: 'https://vjs.zencdn.net/v/oceans.mp4' }}
     navigator={ this.props.navigator }
