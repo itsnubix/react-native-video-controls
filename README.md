@@ -13,8 +13,8 @@ By default the `<VideoPlayer>` accepts a navigator property from React's built-i
 You should also provide your own onEnd prop to the component so it knows what to do when a video ends playback.
 
 ## Installation
-Run `npm install --save react-native-video-controls`
-Install [rnpm](https://github.com/rnpm/rnpm) and run `rnpm link react-native-video-controls`
+Run `npm install --save react-native-video react-native-video-controls`
+Install [rnpm](https://github.com/rnpm/rnpm) and run `rnpm link react-native-video`
 
 ## Usage
 The `<VideoPlayer>` component follows the API of the `<Video>` component at [react-native-video](https://github.com/react-native-community/react-native-video). It also takes a number of additional props which are outlined in the [API](#api) section.
