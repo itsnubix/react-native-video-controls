@@ -52,7 +52,7 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
     rate={ 1 }                   // 0 is paused, 1 is normal.
     title={}                     // Video title, if null title area is hidden
 
-    // events
+    // events callbacks
     onLoadStart={}   // Fired when loading of the source starts
     onProgress={}    // Fired every ~250ms when the video progresses
     onError={}       // Fired when an error is encountered on load
