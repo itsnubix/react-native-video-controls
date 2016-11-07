@@ -228,7 +228,7 @@ export default class VideoPlayer extends Component {
      */
     setControlTimeout() {
         this.player.controlTimeout = setTimeout( ()=> {
-            this._hideControls.bind( this );
+            this._hideControls();
         }, this.player.controlTimeoutDelay );
     }
 
@@ -465,7 +465,10 @@ export default class VideoPlayer extends Component {
         let state = this.state;
         position = this.constrainToVolumeMinMax( position );
         state.volumePosition = position;
-        state.volumeFillWidth = position;
+        state.volumeFillWidth = position - 7;
+        if ( state.volumeFillWidth < 0 ) {
+            state.volumeFillWidth = 0;
+        }
         this.setState( state );
     }
 
@@ -477,8 +480,8 @@ export default class VideoPlayer extends Component {
         if ( val <= 0 ) {
             return 0;
         }
-        else if ( val >= this.player.volumeWidth ) {
-            return this.player.volumeWidth;
+        else if ( val >= this.player.volumeWidth + 18 ) {
+            return this.player.volumeWidth + 18;
         }
         return val;
     }
@@ -661,21 +664,26 @@ export default class VideoPlayer extends Component {
      */
     renderTopControls() {
         return(
-            <Animated.Image source={ require( './assets/img/top-vignette.png' ) } style={[
+            <Animated.View style={[
                 styles.controls.top,
                 {
                     opacity: this.animations.topControl.opacity,
                     marginTop: this.animations.topControl.marginTop,
                 }
             ]}>
-                <View style={ styles.controls.row }>
-                    { this.renderBack() }
-                    <View style={ styles.controls.pullRight }>
-                        { this.renderVolume() }
-                        { this.renderFullscreen() }
+                <Image
+                    source={ require( './assets/img/top-vignette.png' ) }
+                    style={[ styles.controls.column, styles.controls.vignette,
+                ]}>
+                    <View style={ styles.controls.topControlGroup }>
+                        { this.renderBack() }
+                        <View style={ styles.controls.pullRight }>
+                            { this.renderVolume() }
+                            { this.renderFullscreen() }
+                        </View>
                     </View>
-                </View>
-            </Animated.Image>
+                </Image>
+            </Animated.View>
         );
     }
 
@@ -740,25 +748,33 @@ export default class VideoPlayer extends Component {
      */
     renderBottomControls() {
         return(
-            <Animated.Image source={ require( './assets/img/bottom-vignette.png' ) } style={[
+            <Animated.View style={[
                 styles.controls.bottom,
                 {
                     opacity: this.animations.bottomControl.opacity,
                     marginBottom: this.animations.bottomControl.marginBottom,
                 }
             ]}>
+            <Image
+                source={ require( './assets/img/bottom-vignette.png' ) }
+                style={[ styles.controls.column, styles.controls.vignette,
+            ]}>
                 <View style={[
-                    styles.controls.column,
+                    styles.player.container,
                     styles.controls.seekbar
                 ]}>
                     { this.renderSeekbar() }
                 </View>
-                <View style={ styles.controls.row }>
+                <View style={[
+                    styles.controls.column,
+                    styles.controls.bottomControlGroup
+                ]}>
                     { this.renderPlayPause() }
                     { this.renderTitle() }
                     { this.renderTimer() }
                 </View>
-            </Animated.Image>
+            </Image>
+            </Animated.View>
         );
     }
 
@@ -876,7 +892,7 @@ export default class VideoPlayer extends Component {
                     { this.renderTopControls() }
                     { this.renderBottomControls() }
                 </View>
-            </TouchableWithoutFeedback >
+            </TouchableWithoutFeedback>
         );
     }
 }
@@ -886,125 +902,160 @@ export default class VideoPlayer extends Component {
  * specific styles and control specific ones.
  * And then there's volume/seeker styles.
  */
-const styles = {
-    player: StyleSheet.create({
-        container: {
-            flex: 1,
-        },
-        video: {
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-        },
-    }),
-    controls: StyleSheet.create({
-        row: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-        },
-        column: {
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-        },
-        control: {
-            padding: 24,
-        },
-        text: {
-            backgroundColor: 'transparent',
-            color: '#FFF',
-            fontSize: 16,
-            textAlign: 'center',
-        },
-        pullRight: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        top: {
-            flex: 1,
-            alignItems: 'stretch',
-            justifyContent: 'flex-start',
-            height: 32,
-        },
-        bottom: {
-            alignItems: 'stretch',
-            flex: 2,
-            height: 32,
-            justifyContent: 'flex-end',
-            marginLeft: 16,
-            marginRight: 16,
-        },
-        seekbar: {
-            zIndex: 100,
-        },
-        back: {},
-        volume: {
-            flexDirection: 'row',
-        },
-        fullscreen: {
-            flexDirection: 'row',
-        },
-        seek: {},
-        playPause: {
-            width: 32,
-        },
-        title: {},
-        timer: {
-            width: 100,
-        },
-    }),
-    seek: StyleSheet.create({
-        track: {
-            alignSelf: 'stretch',
-            justifyContent: 'center',
-            backgroundColor: '#333',
-            height: 4,
-            marginLeft: 20,
-            marginRight: 20,
-        },
-        fill: {
-            alignSelf: 'flex-start',
-            backgroundColor: '#a6105e',
-            height: 2,
-            width: 1,
-        },
-        handle: {
-            position: 'absolute',
-            marginTop: -21,
-            marginLeft: -24,
-            padding: 16,
-        },
-        circle: {
-            backgroundColor: '#a6105e',
-            borderRadius: 20,
-            height: 12,
-            width: 12,
-        },
-    }),
-    volume: StyleSheet.create({
-        track: {
-            justifyContent: 'center',
-            backgroundColor: '#333',
-            height: 2,
-            marginLeft: 20,
-            marginRight: 20,
-            width: 150,
-        },
-        fill: {
-            alignSelf: 'flex-start',
-            backgroundColor: '#FFF',
-            height: 2,
-        },
-        handle: {
-            position: 'absolute',
-            marginTop: -23,
-            marginLeft: -24,
-            padding: 16,
-        },
-        icon: {},
-    })
-};
+ const styles = {
+     player: StyleSheet.create({
+         container: {
+             flex: 1,
+             alignSelf: 'stretch',
+         },
+         video: {
+             position: 'absolute',
+             top: 0,
+             right: 0,
+             bottom: 0,
+             left: 0,
+         },
+     }),
+     controls: StyleSheet.create({
+         row: {
+             flexDirection: 'row',
+             alignItems: 'center',
+             justifyContent: 'space-between',
+             height: null,
+             width: null,
+         },
+         column: {
+             flexDirection: 'column',
+             alignItems: 'center',
+             justifyContent: 'space-between',
+             height: null,
+             width: null,
+         },
+         background: {
+             resizeMode: 'repeat',
+         },
+         control: {
+             padding: 24,
+         },
+         text: {
+             backgroundColor: 'transparent',
+             color: '#FFF',
+             fontSize: 16,
+             textAlign: 'center',
+         },
+         pullRight: {
+             flexDirection: 'row',
+             alignItems: 'center',
+             justifyContent: 'center',
+         },
+         top: {
+             flex: 1,
+             alignItems: 'stretch',
+             justifyContent: 'flex-start',
+         },
+         bottom: {
+             alignItems: 'stretch',
+             flex: 2,
+             justifyContent: 'flex-end',
+         },
+         seekbar: {
+             alignSelf: 'stretch',
+             alignItems: 'center',
+             justifyContent: 'center',
+             zIndex: 100,
+             marginTop: 24,
+             marginBottom: -10,
+             marginLeft: 12,
+             marginRight: 12,
+         },
+         topControlGroup: {
+             alignSelf: 'stretch',
+             alignItems: 'center',
+             justifyContent: 'space-between',
+             flexDirection: 'row',
+             width: null,
+             marginLeft: 16,
+             marginRight: 16,
+         },
+         bottomControlGroup: {
+             alignSelf: 'stretch',
+             alignItems: 'center',
+             justifyContent: 'space-between',
+             flexDirection: 'row',
+             marginBottom: -10,
+             marginLeft: 18,
+             marginRight: 18,
+         },
+         back: {},
+         volume: {
+             flexDirection: 'row',
+         },
+         fullscreen: {
+             flexDirection: 'row',
+         },
+         seek: {},
+         playPause: {
+             width: 32,
+             marginRight: 58,
+         },
+         title: {},
+         timer: {
+             width: 100,
+         },
+         timerText: {
+             fontSize: 11,
+             textAlign: 'right',
+         },
+     }),
+     seek: StyleSheet.create({
+         track: {
+             alignSelf: 'stretch',
+             justifyContent: 'center',
+             backgroundColor: '#333',
+             height: 4,
+             marginLeft: 28,
+             marginRight: 28,
+         },
+         fill: {
+             alignSelf: 'flex-start',
+             backgroundColor: '#fff',
+             height: 2,
+             width: 1,
+         },
+         handle: {
+             position: 'absolute',
+             marginTop: -21,
+             marginLeft: -24,
+             padding: 16,
+             paddingBottom: 4,
+         },
+         circle: {
+             backgroundColor: '#fff',
+             borderRadius: 20,
+             height: 12,
+             width: 12,
+         },
+     }),
+     volume: StyleSheet.create({
+         track: {
+             justifyContent: 'center',
+             backgroundColor: '#333',
+             height: 1,
+             marginLeft: 20,
+             marginRight: 20,
+             width: 160,
+         },
+         fill: {
+             alignSelf: 'flex-start',
+             backgroundColor: '#FFF',
+             height: 1,
+         },
+         handle: {
+             position: 'absolute',
+             marginTop: -24,
+             marginLeft: -24,
+             padding: 16,
+         },
+         icon: {},
+     })
+ };

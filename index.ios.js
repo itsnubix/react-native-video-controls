@@ -11,9 +11,10 @@ import VideoPlayer from './VideoPlayer';
 export default class App extends Component {
   render() {
     return (
-        <View style={ styles.container }>
-            <VideoPlayer source={{ uri: 'https://vjs.zencdn.net/v/oceans.mp4' }} />
-        </View>
+        <VideoPlayer
+            source={{ uri: 'https://vjs.zencdn.net/v/oceans.mp4' }}
+            title="Oceans"
+        />
     );
   }
 }
