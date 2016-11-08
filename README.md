@@ -6,9 +6,9 @@ This package contains a simple set of GUI controls that work with the [react-nat
 
 ![How it looks](https://s3-us-west-2.amazonaws.com/nubix.ca/github/example.gif)
 
-By default the `<VideoPlayer>` accepts a navigator property from React's built-in `<Navigator>` which pops the current scene off the stack when tapped. Alternatively you can provide your own goBack prop to the component to override this functionality.
+By default the `<VideoPlayer>` accepts a navigator property from React's built-in `<Navigator>` which pops the current scene off the stack when tapped. Alternatively you can provide your own goBack prop to the component to override this functionality. You should also provide your own onEnd prop to the component so it knows what to do when a video ends playback.
 
-You should also provide your own onEnd prop to the component so it knows what to do when a video ends playback.
+By default, tapping the screen anywhere will show the player controls. After 10s the controls disappear. Double tapping will toggle fullscreen.
 
 ## Installation
 Run `npm install --save react-native-video-controls`
