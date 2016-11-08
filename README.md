@@ -18,7 +18,7 @@ Then run `react-native link react-native-video`
 ## Usage
 The `<VideoPlayer>` component follows the API of the `<Video>` component at [react-native-video](https://github.com/react-native-community/react-native-video). It also takes a number of additional props which are outlined in the [API](#api) section.
 
-For basic operation the `<VideoPlayer>` component requires a video source and a navigator property. The default back button functionality in the component pops the navigator. This can be overridden if desired, see the [API](#api) for more details.
+For basic operation the `<VideoPlayer>` component requires a video source and a navigator property. The default back button functionality in the component relies on using the built-in `<Navigator>` functionality in React Native and pops the current scene off the stack. This can be overridden if desired, see the [API](#api) for more details.
 
 ```javascript
 // At the top where our imports are...
