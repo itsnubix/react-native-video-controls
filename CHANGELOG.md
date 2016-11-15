@@ -17,6 +17,8 @@
   - Added calculation to measure fill bar width and then subtract that from the width and assign to track bar on right side of icon.
   - Long story short, the icon now masks the volume bar.
 
+[Clean up file structure](https://github.com/itsnubix/react-native-video-controls/issues/5)
+
 ### Features:
 
 - Added loading icon when buffering movie
