@@ -14,3 +14,4 @@
 ### Features:
 
 - Added loading icon
+- Add error handling, ref: [Issue #4](https://github.com/itsnubix/react-native-video-controls/issues/4)

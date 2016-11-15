@@ -47,6 +47,7 @@ export default class VideoPlayer extends Component {
             seeking: false,
             loading: false,
             currentTime: 0,
+            error: false,
             duration: 0,
         };
 
@@ -191,9 +192,12 @@ export default class VideoPlayer extends Component {
      * Here we display a simple error saying
      * the video failed to load.
      */
-    _onError() {
-        // TODO
-        // handle errors...
+    _onError( err ) {
+        console.log( 'VideoPlayer: There was an error during playback', err );
+        let state = this.state;
+        state.error = true;
+        state.loading = false;
+        this.setState( state );
     }
 
     /**
@@ -927,6 +931,20 @@ export default class VideoPlayer extends Component {
         return null;
     }
 
+    renderError() {
+        if ( this.state.error ) {
+            return (
+                <View style={ styles.error.container }>
+                    <Image source={ require( './assets/img/error-icon.png' ) } style={ styles.error.icon } />
+                    <Text style={ styles.error.text }>
+                        Video unavailable
+                    </Text>
+                </View>
+            );
+        }
+        return null;
+    }
+
     /**
      * Provide all of our options and render the whole component.
      */
@@ -960,6 +978,7 @@ export default class VideoPlayer extends Component {
 
                         source={ this.props.source }
                     />
+                    { this.renderError() }
                     { this.renderTopControls() }
                     { this.renderLoader() }
                     { this.renderBottomControls() }
@@ -987,6 +1006,25 @@ const styles = {
             right: 0,
             bottom: 0,
             left: 0,
+        },
+    }),
+    error: StyleSheet.create({
+        container: {
+            backgroundColor: 'rgba( 0, 0, 0, 0.5 )',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        icon: {
+            marginBottom: 16,
+        },
+        text: {
+            backgroundColor: 'transparent',
+            color: '#f27474'
         },
     }),
     loader: StyleSheet.create({
