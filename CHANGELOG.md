@@ -1,4 +1,12 @@
-## 0.9.5 (15-11-2016)
+## 0.9.6 (15-11-2016)
+
+### Bug fixes
+
+[Clean up file Structure](https://github.com/itsnubix/react-native-video-controls/issues/5):
+
+  - cleaned up deps and files included.
+
+## 0.9.5 (14-11-2016)
 
 ### Bug fixes
 [Tapping controls doesn't reset control hide timeout](https://github.com/itsnubix/react-native-video-controls/issues/1):
@@ -19,7 +27,7 @@
 
 [Clean up file structure](https://github.com/itsnubix/react-native-video-controls/issues/5)
 
-### Features:
+### Features
 
 - Added loading icon when buffering movie
 - Add error handling, ref: [Issue #4](https://github.com/itsnubix/react-native-video-controls/issues/4)
