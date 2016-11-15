@@ -90,7 +90,6 @@ export default class VideoPlayer extends Component {
             volumePanResponder: PanResponder,
             seekPanResponder: PanResponder,
             controlTimeoutDelay: 10000,
-            controlTimeoutDelay: 10000000,
             controlTimeout: null,
             volumeWidth: 150,
             seekWidth: 0,
