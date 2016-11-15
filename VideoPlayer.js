@@ -89,7 +89,7 @@ export default class VideoPlayer extends Component {
         this.player = {
             volumePanResponder: PanResponder,
             seekPanResponder: PanResponder,
-            //controlTimeoutDelay: 10000, CHANGEBACK
+            controlTimeoutDelay: 10000,
             controlTimeoutDelay: 10000000,
             controlTimeout: null,
             volumeWidth: 150,
@@ -978,12 +978,13 @@ export default class VideoPlayer extends Component {
 const styles = {
     player: StyleSheet.create({
         container: {
+            backgroundColor: '#000',
             flex: 1,
             alignSelf: 'stretch',
-            backfaceVisibility: 'hidden',
             justifyContent: 'space-between',
         },
         video: {
+            backgroundColor: '#000',
             position: 'absolute',
             top: 0,
             right: 0,
@@ -1019,7 +1020,6 @@ const styles = {
         },
         vignette: {
             resizeMode: 'stretch',
-            backfaceVisibility: 'hidden',
         },
         control: {
             padding: 24,
