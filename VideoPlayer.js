@@ -89,7 +89,8 @@ export default class VideoPlayer extends Component {
         this.player = {
             volumePanResponder: PanResponder,
             seekPanResponder: PanResponder,
-            controlTimeoutDelay: 10000,
+            //controlTimeoutDelay: 10000, CHANGEBACK
+            controlTimeoutDelay: 10000000,
             controlTimeout: null,
             volumeWidth: 150,
             seekWidth: 0,
@@ -979,6 +980,8 @@ const styles = {
         container: {
             flex: 1,
             alignSelf: 'stretch',
+            backfaceVisibility: 'hidden',
+            justifyContent: 'space-between',
         },
         video: {
             position: 'absolute',
@@ -998,9 +1001,6 @@ const styles = {
             alignItems: 'center',
             justifyContent: 'center',
         },
-        icon: {
-
-        },
     }),
     controls: StyleSheet.create({
         row: {
@@ -1017,8 +1017,9 @@ const styles = {
             height: null,
             width: null,
         },
-        background: {
-            resizeMode: 'repeat',
+        vignette: {
+            resizeMode: 'stretch',
+            backfaceVisibility: 'hidden',
         },
         control: {
             padding: 24,
@@ -1052,7 +1053,7 @@ const styles = {
             justifyContent: 'center',
             zIndex: 100,
             marginTop: 24,
-            marginBottom: -10,
+            marginBottom: 0,
             marginLeft: 12,
             marginRight: 12,
         },
@@ -1070,7 +1071,7 @@ const styles = {
             alignItems: 'center',
             justifyContent: 'space-between',
             flexDirection: 'row',
-            marginBottom: -10,
+            marginBottom: 0,
             marginLeft: 18,
             marginRight: 18,
         },
