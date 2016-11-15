@@ -35,10 +35,10 @@ export default class VideoPlayer extends Component {
             // Controls
             isFullscreen: isFullscreen,
             showTimeRemaining: true,
-            showControls: true,
             lastScreenPress: 0,
             volumeFillWidth: 0,
             seekerFillWidth: 0,
+            showControls: true,
             volumePosition: 0,
             seekerPosition: 0,
             volumeOffset: 0,
@@ -130,7 +130,8 @@ export default class VideoPlayer extends Component {
      * and show the controls.
      */
     _onLoadStart() {
-
+        // TODO
+        // Add loading icon
     }
 
     /**
@@ -986,19 +987,16 @@ export default class VideoPlayer extends Component {
              marginLeft: 18,
              marginRight: 18,
          },
-         back: {},
          volume: {
              flexDirection: 'row',
          },
          fullscreen: {
              flexDirection: 'row',
          },
-         seek: {},
          playPause: {
              width: 32,
              marginRight: 58,
          },
-         title: {},
          timer: {
              width: 100,
          },
@@ -1055,7 +1053,6 @@ export default class VideoPlayer extends Component {
              marginTop: -24,
              marginLeft: -24,
              padding: 16,
-         },
-         icon: {},
+         }
      })
  };
