@@ -977,13 +977,11 @@ export default class VideoPlayer extends Component {
 const styles = {
     player: StyleSheet.create({
         container: {
-            backgroundColor: '#000',
             flex: 1,
             alignSelf: 'stretch',
             justifyContent: 'space-between',
         },
         video: {
-            backgroundColor: '#000',
             position: 'absolute',
             top: 0,
             right: 0,
