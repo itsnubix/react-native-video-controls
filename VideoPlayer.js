@@ -247,6 +247,11 @@ export default class VideoPlayer extends Component {
         clearTimeout( this.player.controlTimeout );
     }
 
+    resetControlTimeout() {
+        this.clearControlTimeout();
+        this.setControlTimeout();
+    }
+
     /**
      * Animation to hide controls. We fade the
      * display to 0 then move them off the
@@ -581,6 +586,7 @@ export default class VideoPlayer extends Component {
              */
             onPanResponderGrant: ( evt, gestureState ) => {
                 let state = this.state;
+                this.clearControlTimeout();
                 state.seeking = true;
                 this.setState( state );
             },
@@ -606,6 +612,7 @@ export default class VideoPlayer extends Component {
                 if ( time >= state.duration ) {
                     this.events.onEnd();
                 }
+                this.setControlTimeout();
                 this.setState( state );
             }
         });
@@ -618,7 +625,9 @@ export default class VideoPlayer extends Component {
         this.player.volumePanResponder = PanResponder.create({
             onStartShouldSetPanResponder: ( evt, gestureState ) => true,
             onMoveShouldSetPanResponder: ( evt, gestureState ) => true,
-            onPanResponderGrant: ( evt, gestureState ) => {},
+            onPanResponderGrant: ( evt, gestureState ) => {
+                this.clearControlTimeout();
+            },
 
             /**
              * Update the volume as we change the position.
@@ -648,6 +657,7 @@ export default class VideoPlayer extends Component {
             onPanResponderRelease: ( evt, gestureState ) => {
                 let state = this.state;
                 state.volumeOffset = state.volumePosition;
+                this.setControlTimeout();
                 this.setState( state );
             }
         });
@@ -673,13 +683,20 @@ export default class VideoPlayer extends Component {
      */
     renderControl( children, callback, style = {} ) {
         callback = callback || function() {
-            console.warn( 'No callback supplied for this input' );
+            console.warn( 'renderControl: No callback supplied for this input' );
         };
+        if ( typeof callback !== 'function' ) {
+            console.warn( 'renderControl: callback needs to be a function' );
+        }
+
         return (
             <TouchableHighlight
                 underlayColor="transparent"
                 activeOpacity={ 0.3 }
-                onPress={ callback }
+                onPress={()=>{
+                    this.resetControlTimeout();
+                    callback();
+                }}
                 style={[
                     styles.controls.control,
                     style
