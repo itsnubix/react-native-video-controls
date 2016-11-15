@@ -7,6 +7,7 @@ import {
     StyleSheet,
     Touchable,
     Animated,
+    Easing,
     Image,
     View,
     Text
@@ -109,6 +110,10 @@ export default class VideoPlayer extends Component {
             },
             video: {
                 opacity: new Animated.Value( 1 ),
+            },
+            loader: {
+                rotate: new Animated.Value( 0 ),
+                MAX_VALUE: 360,
             }
         };
     }
@@ -130,8 +135,10 @@ export default class VideoPlayer extends Component {
      * and show the controls.
      */
     _onLoadStart() {
-        // TODO
-        // Add loading icon
+        let state = this.state;
+        state.loading = true;
+        this.loadAnimation();
+        this.setState( state );
     }
 
     /**
@@ -290,6 +297,30 @@ export default class VideoPlayer extends Component {
                 { toValue: 0 }
             ),
         ]).start();
+    }
+
+    /**
+     * Animation to spin loader icon
+     */
+    loadAnimation() {
+        Animated.sequence([
+            Animated.timing(
+                this.animations.loader.rotate,
+                {
+                    toValue: this.animations.loader.MAX_VALUE,
+                    duration: 1500,
+                    easing: Easing.linear,
+                }
+            ),
+            Animated.timing(
+                this.animations.loader.rotate,
+                {
+                    toValue: 0,
+                    duration: 0,
+                    easing: Easing.linear,
+                }
+            ),
+        ]).start( this.loadAnimation.bind( this ) );
     }
 
     /**
@@ -858,6 +889,28 @@ export default class VideoPlayer extends Component {
     }
 
     /**
+     * Show loading icon
+     */
+    renderLoader() {
+        if ( this.state.loading ) {
+            return (
+                <View style={ styles.loader.container }>
+                    <Animated.Image source={ require( './assets/img/loader-icon.png' ) } style={[
+                        styles.loader.icon,
+                        { transform: [
+                            { rotate: this.animations.loader.rotate.interpolate({
+                                inputRange: [ 0, 360 ],
+                                outputRange: [ '0deg', '360deg' ]
+                            })}
+                        ]}
+                    ]} />
+                </View>
+            );
+        }
+        return null;
+    }
+
+    /**
      * Provide all of our options and render the whole component.
      */
     render() {
@@ -891,6 +944,7 @@ export default class VideoPlayer extends Component {
                         source={ this.props.source }
                     />
                     { this.renderTopControls() }
+                    { this.renderLoader() }
                     { this.renderBottomControls() }
                 </View>
             </TouchableWithoutFeedback>
@@ -903,156 +957,172 @@ export default class VideoPlayer extends Component {
  * specific styles and control specific ones.
  * And then there's volume/seeker styles.
  */
- const styles = {
-     player: StyleSheet.create({
-         container: {
-             flex: 1,
-             alignSelf: 'stretch',
-         },
-         video: {
-             position: 'absolute',
-             top: 0,
-             right: 0,
-             bottom: 0,
-             left: 0,
-         },
-     }),
-     controls: StyleSheet.create({
-         row: {
-             flexDirection: 'row',
-             alignItems: 'center',
-             justifyContent: 'space-between',
-             height: null,
-             width: null,
-         },
-         column: {
-             flexDirection: 'column',
-             alignItems: 'center',
-             justifyContent: 'space-between',
-             height: null,
-             width: null,
-         },
-         background: {
-             resizeMode: 'repeat',
-         },
-         control: {
-             padding: 24,
-         },
-         text: {
-             backgroundColor: 'transparent',
-             color: '#FFF',
-             fontSize: 16,
-             textAlign: 'center',
-         },
-         pullRight: {
-             flexDirection: 'row',
-             alignItems: 'center',
-             justifyContent: 'center',
-         },
-         top: {
-             flex: 1,
-             alignItems: 'stretch',
-             justifyContent: 'flex-start',
-         },
-         bottom: {
-             alignItems: 'stretch',
-             flex: 2,
-             justifyContent: 'flex-end',
-         },
-         seekbar: {
-             alignSelf: 'stretch',
-             alignItems: 'center',
-             justifyContent: 'center',
-             zIndex: 100,
-             marginTop: 24,
-             marginBottom: -10,
-             marginLeft: 12,
-             marginRight: 12,
-         },
-         topControlGroup: {
-             alignSelf: 'stretch',
-             alignItems: 'center',
-             justifyContent: 'space-between',
-             flexDirection: 'row',
-             width: null,
-             marginLeft: 16,
-             marginRight: 16,
-         },
-         bottomControlGroup: {
-             alignSelf: 'stretch',
-             alignItems: 'center',
-             justifyContent: 'space-between',
-             flexDirection: 'row',
-             marginBottom: -10,
-             marginLeft: 18,
-             marginRight: 18,
-         },
-         volume: {
-             flexDirection: 'row',
-         },
-         fullscreen: {
-             flexDirection: 'row',
-         },
-         playPause: {
-             width: 32,
-             marginRight: 58,
-         },
-         timer: {
-             width: 100,
-         },
-         timerText: {
-             fontSize: 11,
-             textAlign: 'right',
-         },
-     }),
-     seek: StyleSheet.create({
-         track: {
-             alignSelf: 'stretch',
-             justifyContent: 'center',
-             backgroundColor: '#333',
-             height: 4,
-             marginLeft: 28,
-             marginRight: 28,
-         },
-         fill: {
-             alignSelf: 'flex-start',
-             backgroundColor: '#fff',
-             height: 2,
-             width: 1,
-         },
-         handle: {
-             position: 'absolute',
-             marginTop: -21,
-             marginLeft: -24,
-             padding: 16,
-             paddingBottom: 4,
-         },
-         circle: {
-             backgroundColor: '#fff',
-             borderRadius: 20,
-             height: 12,
-             width: 12,
-         },
-     }),
-     volume: StyleSheet.create({
-         track: {
-             justifyContent: 'center',
-             backgroundColor: '#333',
-             height: 1,
-             marginLeft: 20,
-             marginRight: 20,
-             width: 160,
-         },
-         fill: {
-             alignSelf: 'flex-start',
-             backgroundColor: '#FFF',
-             height: 1,
-         },
-         handle: {
-             position: 'absolute',
-             marginTop: -24,
-             marginLeft: -24,
-             padding: 16,
-         }
-     })
- };
+const styles = {
+    player: StyleSheet.create({
+        container: {
+            flex: 1,
+            alignSelf: 'stretch',
+        },
+        video: {
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+        },
+    }),
+    loader: StyleSheet.create({
+        container: {
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        icon: {
+
+        },
+    }),
+    controls: StyleSheet.create({
+        row: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            height: null,
+            width: null,
+        },
+        column: {
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            height: null,
+            width: null,
+        },
+        background: {
+            resizeMode: 'repeat',
+        },
+        control: {
+            padding: 24,
+        },
+        text: {
+            backgroundColor: 'transparent',
+            color: '#FFF',
+            fontSize: 16,
+            textAlign: 'center',
+        },
+        pullRight: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        top: {
+            flex: 1,
+            alignItems: 'stretch',
+            justifyContent: 'flex-start',
+            height: 64,
+        },
+        bottom: {
+            alignItems: 'stretch',
+            flex: 2,
+            justifyContent: 'flex-end',
+            height: 64,
+        },
+        seekbar: {
+            alignSelf: 'stretch',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100,
+            marginTop: 24,
+            marginBottom: -10,
+            marginLeft: 12,
+            marginRight: 12,
+        },
+        topControlGroup: {
+            alignSelf: 'stretch',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            width: null,
+            marginLeft: 16,
+            marginRight: 16,
+        },
+        bottomControlGroup: {
+            alignSelf: 'stretch',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            marginBottom: -10,
+            marginLeft: 18,
+            marginRight: 18,
+        },
+        volume: {
+            flexDirection: 'row',
+        },
+        fullscreen: {
+            flexDirection: 'row',
+        },
+        playPause: {
+            width: 32,
+            marginRight: 58,
+        },
+        timer: {
+            width: 100,
+        },
+        timerText: {
+            fontSize: 11,
+            textAlign: 'right',
+        },
+    }),
+    seek: StyleSheet.create({
+        track: {
+            alignSelf: 'stretch',
+            justifyContent: 'center',
+            backgroundColor: '#333',
+            height: 4,
+            marginLeft: 28,
+            marginRight: 28,
+        },
+        fill: {
+            alignSelf: 'flex-start',
+            backgroundColor: '#fff',
+            height: 2,
+            width: 1,
+        },
+        handle: {
+            position: 'absolute',
+            marginTop: -21,
+            marginLeft: -24,
+            padding: 16,
+            paddingBottom: 4,
+        },
+        circle: {
+            backgroundColor: '#fff',
+            borderRadius: 20,
+            height: 12,
+            width: 12,
+        },
+    }),
+    volume: StyleSheet.create({
+        track: {
+            justifyContent: 'center',
+            backgroundColor: '#333',
+            height: 1,
+            marginLeft: 20,
+            marginRight: 20,
+            width: 160,
+        },
+        fill: {
+            alignSelf: 'flex-start',
+            backgroundColor: '#FFF',
+            height: 1,
+        },
+        handle: {
+                position: 'absolute',
+                marginTop: -24,
+                marginLeft: -24,
+                padding: 16,
+            }
+        })
+};
