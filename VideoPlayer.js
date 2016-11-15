@@ -36,6 +36,7 @@ export default class VideoPlayer extends Component {
             // Controls
             isFullscreen: isFullscreen,
             showTimeRemaining: true,
+            volumeTrackWidth: 0,
             lastScreenPress: 0,
             volumeFillWidth: 0,
             seekerFillWidth: 0,
@@ -90,9 +91,10 @@ export default class VideoPlayer extends Component {
         this.player = {
             volumePanResponder: PanResponder,
             seekPanResponder: PanResponder,
-            controlTimeoutDelay: 10000,
+            controlTimeoutDelay: 100000000, // CHANGEBACK
             controlTimeout: null,
             volumeWidth: 150,
+            iconOffset: 7,
             seekWidth: 0,
             ref: Video,
         };
@@ -505,11 +507,19 @@ export default class VideoPlayer extends Component {
     setVolumePosition( position = 0 ) {
         let state = this.state;
         position = this.constrainToVolumeMinMax( position );
-        state.volumePosition = position;
-        state.volumeFillWidth = position - 7;
+        state.volumePosition = position + this.player.iconOffset;
+        state.volumeFillWidth = position;
+
+        state.volumeTrackWidth = this.player.volumeWidth - state.volumeFillWidth;
+
         if ( state.volumeFillWidth < 0 ) {
             state.volumeFillWidth = 0;
         }
+
+        if ( state.volumeTrackWidth > 150 ) {
+            state.volumeTrackWidth = 150;
+        }
+
         this.setState( state );
     }
 
@@ -521,8 +531,8 @@ export default class VideoPlayer extends Component {
         if ( val <= 0 ) {
             return 0;
         }
-        else if ( val >= this.player.volumeWidth + 18 ) {
-            return this.player.volumeWidth + 18;
+        else if ( val >= this.player.volumeWidth + 9 ) {
+            return this.player.volumeWidth + 9;
         }
         return val;
     }
@@ -640,8 +650,8 @@ export default class VideoPlayer extends Component {
              */
             onPanResponderMove: ( evt, gestureState ) => {
                 let state = this.state;
-
                 const position = this.state.volumeOffset + gestureState.dx;
+
                 this.setVolumePosition( position );
                 state.volume = this.calculateVolumeFromVolumePosition();
 
@@ -759,26 +769,25 @@ export default class VideoPlayer extends Component {
      */
     renderVolume() {
         return (
-            <View
-                style={ styles.volume.track }
-            >
+            <View style={ styles.volume.container }>
                 <View style={[
                     styles.volume.fill,
-                    {
-                        width: this.state.volumeFillWidth
-                    }
-                ]}>
-                    <View
-                        style={[
-                            styles.volume.handle,
-                            {
-                                left: this.state.volumePosition
-                            }
-                        ]}
-                        { ...this.player.volumePanResponder.panHandlers }
-                    >
-                        <Image style={ styles.volume.icon } source={ require( './assets/img/volume.png' ) } />
-                    </View>
+                    { width: this.state.volumeFillWidth }
+                ]}/>
+                <View style={[
+                    styles.volume.track,
+                    { width: this.state.volumeTrackWidth }
+                ]}/>
+                <View
+                    style={[
+                        styles.volume.handle,
+                        {
+                            left: this.state.volumePosition
+                        }
+                    ]}
+                    { ...this.player.volumePanResponder.panHandlers }
+                >
+                    <Image style={ styles.volume.icon } source={ require( './assets/img/volume.png' ) } />
                 </View>
             </View>
         );
@@ -1158,16 +1167,21 @@ const styles = {
         },
     }),
     volume: StyleSheet.create({
-        track: {
-            justifyContent: 'center',
-            backgroundColor: '#333',
+        container: {
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            flexDirection: 'row',
             height: 1,
             marginLeft: 20,
             marginRight: 20,
-            width: 160,
+            width: 150,
+        },
+        track: {
+            backgroundColor: '#333',
+            height: 1,
+            marginLeft: 7,
         },
         fill: {
-            alignSelf: 'flex-start',
             backgroundColor: '#FFF',
             height: 1,
         },

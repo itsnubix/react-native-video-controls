@@ -11,7 +11,13 @@
   - Changed vignette assets to be more subtle.
   - Added stretch to resizeMode
 
+[Volume track bar is visible through volume icon](https://github.com/itsnubix/react-native-video-controls/issues/3)
+
+  - Rebuilt volume area to be four parts. Container (ctrls max width), track (right side of icon), fill (left side of icon) and the handle (icon).
+  - Added calculation to measure fill bar width and then subtract that from the width and assign to track bar on right side of icon.
+  - Long story short, the icon now masks the volume bar.
+
 ### Features:
 
-- Added loading icon
+- Added loading icon when buffering movie
 - Add error handling, ref: [Issue #4](https://github.com/itsnubix/react-native-video-controls/issues/4)
