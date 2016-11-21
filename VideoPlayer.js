@@ -91,7 +91,7 @@ export default class VideoPlayer extends Component {
         this.player = {
             volumePanResponder: PanResponder,
             seekPanResponder: PanResponder,
-            controlTimeoutDelay: 100000000, // CHANGEBACK
+            controlTimeoutDelay: 10000,
             controlTimeout: null,
             volumeWidth: 150,
             iconOffset: 7,
@@ -1125,13 +1125,8 @@ const styles = {
         fullscreen: {
             flexDirection: 'row',
         },
-        playPause: {
-            width: 32,
-            marginRight: 58,
-        },
-        timer: {
-            width: 100,
-        },
+        playPause: {},
+        timer: {},
         timerText: {
             fontSize: 11,
             textAlign: 'right',
