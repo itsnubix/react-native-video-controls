@@ -1,3 +1,9 @@
+## 0.9.7 (21-11-2016)
+
+  - Aesthetic changes made with regards to spacing in the bottom control group
+  - Tightened up space in the upper group as well.
+  - Changed control timeout to 15s by default. Allow the ability to overwrite. See API.
+
 ## 0.9.6 (15-11-2016)
 
 ### Bug fixes

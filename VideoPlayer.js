@@ -89,9 +89,9 @@ export default class VideoPlayer extends Component {
          * Player information
          */
         this.player = {
+            controlTimeoutDelay: this.props.controlTimeout || 15000,
             volumePanResponder: PanResponder,
             seekPanResponder: PanResponder,
-            controlTimeoutDelay: 10000,
             controlTimeout: null,
             volumeWidth: 150,
             iconOffset: 7,
@@ -895,7 +895,10 @@ export default class VideoPlayer extends Component {
                     styles.controls.control,
                     styles.controls.title,
                 ]}>
-                    <Text style={ styles.controls.text }>
+                    <Text style={[
+                        styles.controls.text,
+                        styles.controls.titleText
+                    ]}>
                         { this.opts.title || '' }
                     </Text>
                 </View>
@@ -910,7 +913,7 @@ export default class VideoPlayer extends Component {
      */
     renderTimer() {
         return this.renderControl(
-            <Text style={ styles.controls.text }>
+            <Text style={ styles.controls.timerText }>
                 { this.calculateTime() }
             </Text>,
             this.methods.toggleTimer,
@@ -1066,7 +1069,7 @@ const styles = {
             resizeMode: 'stretch',
         },
         control: {
-            padding: 24,
+            padding: 16,
         },
         text: {
             backgroundColor: 'transparent',
@@ -1098,8 +1101,6 @@ const styles = {
             zIndex: 100,
             marginTop: 24,
             marginBottom: 0,
-            marginLeft: 12,
-            marginRight: 12,
         },
         topControlGroup: {
             alignSelf: 'stretch',
@@ -1107,17 +1108,18 @@ const styles = {
             justifyContent: 'space-between',
             flexDirection: 'row',
             width: null,
-            marginLeft: 16,
-            marginRight: 16,
+            marginLeft: 12,
+            marginRight: 12,
+            marginTop: 12,
         },
         bottomControlGroup: {
             alignSelf: 'stretch',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexDirection: 'row',
+            marginLeft: 12,
+            marginRight: 12,
             marginBottom: 0,
-            marginLeft: 18,
-            marginRight: 18,
         },
         volume: {
             flexDirection: 'row',
@@ -1125,9 +1127,22 @@ const styles = {
         fullscreen: {
             flexDirection: 'row',
         },
-        playPause: {},
-        timer: {},
+        playPause: {
+            width: 80,
+        },
+        title: {
+            alignItems: 'center',
+            padding: 0,
+        },
+        titleText: {
+            textAlign: 'center',
+        },
+        timer: {
+            width: 80,
+        },
         timerText: {
+            backgroundColor: 'transparent',
+            color: '#FFF',
             fontSize: 11,
             textAlign: 'right',
         },

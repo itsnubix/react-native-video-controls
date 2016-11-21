@@ -50,15 +50,18 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
     rate={ 1 }                   // 0 is paused, 1 is normal.
     title={}                     // Video title, if null title area is hidden
 
-    // events callbacks
-    onLoadStart={}   // Fired when loading of the source starts
-    onProgress={}    // Fired every ~250ms when the video progresses
-    onError={}       // Fired when an error is encountered on load
-    onLoad={}        // Fired when loading is complete
-    onEnd={}         // Fired when the video is complete.
+    // settings
+    controlTimeout={ 15000 }     // hide controls after ms of inactivity.
+
+    // event callbacks
+    onLoadStart={}               // Fired when loading of the source starts
+    onProgress={}                // Fired every ~250ms when the video progresses
+    onError={}                   // Fired when an error is encountered on load
+    onLoad={}                    // Fired when loading is complete
+    onEnd={}                     // Fired when the video is complete.
 
     // actions
-    goBack={}   // Function fired when back button is pressed.
+    goBack={}                    // Function fired when back button is pressed.
 
 />
 ```
