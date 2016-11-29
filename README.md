@@ -40,27 +40,27 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
 <VideoPlayer
 
     // react-native-video options
-    playWhenInactive={ false }   // [iOS] continuing playing when notification centre active
     playInBackground={ false }   // play audio when entering background
+    playWhenInactive={ false }   // [iOS] continuing playing when notification centre active
     resizeMode={ 'contain' }     // 'contain' or 'cover' should be used.
     paused={ false }             // stop playback entirely
     repeat={ false }             // Repeats at end of duration
     muted={ false }              // Mutes the audio entirely.
+    title={ '' }                 // Video title, if null title area is hidden
     volume={ 1 }                 // 0 is muted, 1 is normal.
     rate={ 1 }                   // 0 is paused, 1 is normal.
-    title={}                     // Video title, if null title area is hidden
 
     // settings
     controlTimeout={ 15000 }     // hide controls after ms of inactivity.
-    videoStyle={{}}              // Style appended to <Video> component
-    style={{}}                   // Style appended to <View> container
+    videoStyle={ {} }            // Style appended to <Video> component
+    style={ {} }                 // Style appended to <View> container
 
     // event callbacks
-    onLoadStart={}               // Fired when loading of the source starts
-    onProgress={}                // Fired every ~250ms when the video progresses
-    onError={}                   // Fired when an error is encountered on load
-    onLoad={}                    // Fired when loading is complete
-    onEnd={}                     // Fired when the video is complete.
+    onLoadStart={ () => {} }     // Fired when loading of the source starts
+    onProgress={ () => {} }      // Fired every ~250ms when the video progresses
+    onError={ () => {} }         // Fired when an error is encountered on load
+    onLoad={ () => {} }          // Fired when loading is complete
+    onEnd={ () => {} }           // Fired when the video is complete.
 
     // actions
     goBack={}                    // Function fired when back button is pressed.
