@@ -901,7 +901,7 @@ export default class VideoPlayer extends Component {
                     <Text style={[
                         styles.controls.text,
                         styles.controls.titleText
-                    ]}>
+                    ]} numberOfLines={ 1 }>
                         { this.opts.title || '' }
                     </Text>
                 </View>
@@ -1138,6 +1138,8 @@ const styles = {
         },
         title: {
             alignItems: 'center',
+            flex: 0.6,
+            flexDirection: 'column',
             padding: 0,
         },
         titleText: {

@@ -9,6 +9,8 @@
   - added componentWillUnmount function to clear controlTimeout
   - Note that if using react router componentWillUnmount will not fire unless you configure it to. See [this ticket](https://github.com/aksonov/react-native-router-flux/issues/131)
 
+[If title is too long it runs off the page.](https://github.com/itsnubix/react-native-video-controls/issues/6)
+  - added flex 0.6 to size and restricted number of lines to 1. If it exceeds you'll get tail ellipsis
 
 ## 0.9.7 (21-11-2016)
 
