@@ -1,3 +1,7 @@
+## 1.0.0 (29-11-2016)
+
+Bump to 1.0.0 as all major issues are fixed and API has changed slightly.
+
 ## 0.9.8 (28-11-2016)
 
 ### Bug fixes
