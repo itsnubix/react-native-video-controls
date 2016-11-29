@@ -1,8 +1,23 @@
+## 0.9.8 (28-11-2016)
+
+### Bug fixes
+
+[Seeking before onLoad triggers onEnd](https://github.com/itsnubix/react-native-video-controls/issues/8)
+  - modified pan handler to also look for if loading state which is set to false on init and changed when onLoad fired.
+
+
+
 ## 0.9.7 (21-11-2016)
+
+### Changes
 
   - Aesthetic changes made with regards to spacing in the bottom control group
   - Tightened up space in the upper group as well.
+
+### Features
+
   - Changed control timeout to 15s by default. Allow the ability to overwrite. See API.
+  - Added ability to add container and video styling
 
 ## 0.9.6 (15-11-2016)
 

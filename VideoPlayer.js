@@ -623,7 +623,7 @@ export default class VideoPlayer extends Component {
                 const time = this.calculateTimeFromSeekerPosition();
                 state.seeking = false;
                 this.seekTo( time );
-                if ( time >= state.duration ) {
+                if ( time >= state.duration && ! state.loading ) {
                     this.events.onEnd();
                 }
                 this.setControlTimeout();
@@ -866,7 +866,7 @@ export default class VideoPlayer extends Component {
                         ]}
                         { ...this.player.seekPanResponder.panHandlers }
                     >
-                        <View style={ styles.seek.circle} />
+                        <View style={[ styles.seek.circle ]} />
                     </View>
                 </View>
             </View>
@@ -961,12 +961,15 @@ export default class VideoPlayer extends Component {
      * Provide all of our options and render the whole component.
      */
     render() {
+        containerStyle = this.props.style || {};
+        videoStyle = this.props.videoStyle || {};
+
         return (
             <TouchableWithoutFeedback
                 onPress={ this.events.onScreenPress }
-                style={ styles.player.container }
+                style={[ styles.player.container, containerStyle ]}
             >
-                <View style={ styles.player.container }>
+                <View style={[ styles.player.container, containerStyle ]}>
                     <Video
                         ref={ videoPlayer => this.player.ref = videoPlayer }
 
@@ -986,7 +989,7 @@ export default class VideoPlayer extends Component {
                         onLoad={ this.events.onLoad }
                         onEnd={ this.events.onEnd }
 
-                        style={ styles.player.video }
+                        style={[ styles.player.video, videoStyle ]}
 
                         source={ this.props.source }
                     />
