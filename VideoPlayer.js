@@ -141,6 +141,7 @@ export default class VideoPlayer extends Component {
         let state = this.state;
         state.loading = true;
         this.loadAnimation();
+        
         this.setState( state );
     }
 
@@ -156,6 +157,7 @@ export default class VideoPlayer extends Component {
 
         state.duration = data.duration;
         state.loading = false;
+
 
         this.setState( state );
 
@@ -179,6 +181,7 @@ export default class VideoPlayer extends Component {
             this.setSeekerPosition( position );
         }
 
+
         this.setState( state );
     }
 
@@ -195,10 +198,12 @@ export default class VideoPlayer extends Component {
      * the video failed to load.
      */
     _onError( err ) {
-        console.log( 'VideoPlayer: There was an error during playback', err );
+
         let state = this.state;
         state.error = true;
         state.loading = false;
+
+
         this.setState( state );
     }
 
@@ -219,6 +224,8 @@ export default class VideoPlayer extends Component {
 
         this.methods.toggleControls();
         state.lastScreenPress = time;
+
+
         this.setState( state );
     }
 
@@ -342,6 +349,8 @@ export default class VideoPlayer extends Component {
         let state = this.state;
         state.showControls = false;
         this.hideControlAnimation();
+
+
         this.setState( state );
     }
 
@@ -362,6 +371,7 @@ export default class VideoPlayer extends Component {
             this.clearControlTimeout();
         }
 
+
         this.setState( state );
     }
 
@@ -374,6 +384,8 @@ export default class VideoPlayer extends Component {
         let state = this.state;
         state.isFullscreen = ! state.isFullscreen;
         state.resizeMode = state.isFullscreen === true ? 'cover' : 'contain';
+
+
         this.setState( state );
     }
 
@@ -383,6 +395,7 @@ export default class VideoPlayer extends Component {
     _togglePlayPause() {
         let state = this.state;
         state.paused = ! state.paused;
+
         this.setState( state );
     }
 
@@ -393,6 +406,7 @@ export default class VideoPlayer extends Component {
     _toggleTimer() {
         let state = this.state;
         state.showTimeRemaining = ! state.showTimeRemaining;
+
         this.setState( state );
     }
 
@@ -406,7 +420,7 @@ export default class VideoPlayer extends Component {
             this.props.navigator.pop();
         }
         else {
-            console.warn( '_goBack requires navigator property to function' );
+            console.warn( 'Warning: _onBack requires navigator property to function. Either modify the onBack prop or ' );
         }
     }
 
@@ -498,6 +512,7 @@ export default class VideoPlayer extends Component {
         let state = this.state;
         state.currentTime = time;
         this.player.ref.seek( time );
+
         this.setState( state );
     }
 
@@ -519,6 +534,7 @@ export default class VideoPlayer extends Component {
         if ( state.volumeTrackWidth > 150 ) {
             state.volumeTrackWidth = 150;
         }
+
 
         this.setState( state );
     }
@@ -582,7 +598,17 @@ export default class VideoPlayer extends Component {
         let state = this.state;
         this.setVolumePosition( position );
         state.volumeOffset = position;
+
+
         this.setState( state );
+    }
+
+    /**
+     * When the component is about to unmount kill its
+     * listeners and associated information.
+     */
+    componentWillUnmount() {
+        this.clearControlTimeout();
     }
 
     /**
@@ -602,6 +628,8 @@ export default class VideoPlayer extends Component {
                 let state = this.state;
                 this.clearControlTimeout();
                 state.seeking = true;
+
+
                 this.setState( state );
             },
 
@@ -627,6 +655,7 @@ export default class VideoPlayer extends Component {
                     this.events.onEnd();
                 }
                 this.setControlTimeout();
+
                 this.setState( state );
             }
         });
@@ -662,6 +691,7 @@ export default class VideoPlayer extends Component {
                     state.muted = false;
                 }
 
+
                 this.setState( state );
             },
 
@@ -672,6 +702,7 @@ export default class VideoPlayer extends Component {
                 let state = this.state;
                 state.volumeOffset = state.volumePosition;
                 this.setControlTimeout();
+
                 this.setState( state );
             }
         });
@@ -697,10 +728,10 @@ export default class VideoPlayer extends Component {
      */
     renderControl( children, callback, style = {} ) {
         callback = callback || function() {
-            console.warn( 'renderControl: No callback supplied for this input' );
+
         };
         if ( typeof callback !== 'function' ) {
-            console.warn( 'renderControl: callback needs to be a function' );
+
         }
 
         return (
