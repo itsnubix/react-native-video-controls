@@ -8,8 +8,6 @@ Add ability to set seeker bar colour
 
 [When seeking sometimes seek handle hops back to original position](https://github.com/itsnubix/react-native-video-controls/issues/9)
 
-  -
-
 ## 1.0.0 (29-11-2016)
 
 Bump to 1.0.0 as all major issues are fixed and API has changed slightly.
