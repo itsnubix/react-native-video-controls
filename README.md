@@ -53,6 +53,7 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
     // settings
     controlTimeout={ 15000 }     // hide controls after ms of inactivity.
     navigator={ navigator }      // prop from React Native <Navigator> component
+    seekColor={ '#FFF' }         // fill/handle colour of the seekbar
     videoStyle={ {} }            // Style appended to <Video> component
     style={ {} }                 // Style appended to <View> container
 

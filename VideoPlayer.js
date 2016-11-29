@@ -23,7 +23,6 @@ export default class VideoPlayer extends Component {
          * All of our values that are updated by the
          * methods and listeners in this class
          */
-
         const isFullscreen = this.props.resizeMode === 'cover' || false;
         this.state = {
             // Video
@@ -32,7 +31,6 @@ export default class VideoPlayer extends Component {
             muted: this.props.muted || false,
             volume: this.props.volume || 1,
             rate: this.props.rate || 1,
-
             // Controls
             isFullscreen: isFullscreen,
             showTimeRemaining: true,
@@ -75,7 +73,7 @@ export default class VideoPlayer extends Component {
         };
 
         /**
-         *
+         * Functions used throughout the application
          */
         this.methods = {
             onBack: this.props.onBack || this._onBack.bind( this ),
@@ -100,7 +98,7 @@ export default class VideoPlayer extends Component {
         };
 
         /**
-         *
+         * Various animations
          */
         this.animations = {
             bottomControl: {
@@ -118,6 +116,14 @@ export default class VideoPlayer extends Component {
                 rotate: new Animated.Value( 0 ),
                 MAX_VALUE: 360,
             }
+        };
+
+        /**
+         * Various styles
+         */
+        this.styles = {
+            containerStyle: this.props.style || {},
+            videoStyle: this.props.videoStyle || {}
         };
     }
 
@@ -630,14 +636,16 @@ export default class VideoPlayer extends Component {
              * onEnd callback
              */
             onPanResponderRelease: ( evt, gestureState ) => {
-                let state = this.state;
                 const time = this.calculateTimeFromSeekerPosition();
-                state.seeking = false;
-                this.seekTo( time );
+                let state = this.state;
                 if ( time >= state.duration && ! state.loading ) {
+                    state.paused = true;
                     this.events.onEnd();
+                } else {
+                    this.seekTo( time );
+                    this.setControlTimeout();
+                    state.seeking = false;
                 }
-                this.setControlTimeout();
                 this.setState( state );
             }
         });
@@ -672,6 +680,7 @@ export default class VideoPlayer extends Component {
                 else {
                     state.muted = false;
                 }
+
                 this.setState( state );
             },
 
@@ -857,7 +866,8 @@ export default class VideoPlayer extends Component {
                 <View style={[
                     styles.seek.fill,
                     {
-                        width: this.state.seekerFillWidth
+                        width: this.state.seekerFillWidth,
+                        backgroundColor: this.props.seekColor || '#FFF'
                     }
                 ]}>
                     <View
@@ -869,7 +879,10 @@ export default class VideoPlayer extends Component {
                         ]}
                         { ...this.player.seekPanResponder.panHandlers }
                     >
-                        <View style={[ styles.seek.circle ]} />
+                        <View style={[
+                            styles.seek.circle,
+                            { backgroundColor: this.props.seekColor || '#FFF' } ]}
+                        />
                     </View>
                 </View>
             </View>
@@ -964,15 +977,12 @@ export default class VideoPlayer extends Component {
      * Provide all of our options and render the whole component.
      */
     render() {
-        containerStyle = this.props.style || {};
-        videoStyle = this.props.videoStyle || {};
-
         return (
             <TouchableWithoutFeedback
                 onPress={ this.events.onScreenPress }
-                style={[ styles.player.container, containerStyle ]}
+                style={[ styles.player.container, this.styles.containerStyle ]}
             >
-                <View style={[ styles.player.container, containerStyle ]}>
+                <View style={[ styles.player.container, this.styles.containerStyle ]}>
                     <Video
                         ref={ videoPlayer => this.player.ref = videoPlayer }
 
@@ -992,7 +1002,7 @@ export default class VideoPlayer extends Component {
                         onLoad={ this.events.onLoad }
                         onEnd={ this.events.onEnd }
 
-                        style={[ styles.player.video, videoStyle ]}
+                        style={[ styles.player.video, this.styles.videoStyle ]}
 
                         source={ this.props.source }
                     />
@@ -1092,13 +1102,11 @@ const styles = {
             flex: 1,
             alignItems: 'stretch',
             justifyContent: 'flex-start',
-            height: 64,
         },
         bottom: {
             alignItems: 'stretch',
             flex: 2,
             justifyContent: 'flex-end',
-            height: 64,
         },
         seekbar: {
             alignSelf: 'stretch',
@@ -1114,9 +1122,8 @@ const styles = {
             justifyContent: 'space-between',
             flexDirection: 'row',
             width: null,
-            marginLeft: 12,
-            marginRight: 12,
-            marginTop: 12,
+            margin: 12,
+            marginBottom: 18,
         },
         bottomControlGroup: {
             alignSelf: 'stretch',
@@ -1166,7 +1173,6 @@ const styles = {
         },
         fill: {
             alignSelf: 'flex-start',
-            backgroundColor: '#fff',
             height: 2,
             width: 1,
         },
@@ -1178,7 +1184,6 @@ const styles = {
             paddingBottom: 4,
         },
         circle: {
-            backgroundColor: '#fff',
             borderRadius: 20,
             height: 12,
             width: 12,
