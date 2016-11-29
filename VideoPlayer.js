@@ -78,7 +78,7 @@ export default class VideoPlayer extends Component {
          *
          */
         this.methods = {
-            goBack: this.props.goBack || this._goBack.bind( this ),
+            onBack: this.props.onBack || this._onBack.bind( this ),
             toggleFullscreen: this._toggleFullscreen.bind( this ),
             togglePlayPause: this._togglePlayPause.bind( this ),
             toggleControls: this._toggleControls.bind( this ),
@@ -400,11 +400,11 @@ export default class VideoPlayer extends Component {
     }
 
     /**
-     * The default 'goback' function pops the navigator
+     * The default 'onBack' function pops the navigator
      * and as such the video player requires a
      * navigator prop by default.
      */
-    _goBack() {
+    _onBack() {
         if ( this.props.navigator && this.props.navigator.pop ) {
             this.props.navigator.pop();
         }
@@ -762,7 +762,7 @@ export default class VideoPlayer extends Component {
                 source={ require( './assets/img/back.png' ) }
                 style={ styles.controls.back }
             />,
-            this.methods.goBack,
+            this.methods.onBack,
             styles.controls.back
         );
     }
