@@ -5,6 +5,9 @@
 [Seeking before onLoad triggers onEnd](https://github.com/itsnubix/react-native-video-controls/issues/8)
   - modified pan handler to also look for if loading state which is set to false on init and changed when onLoad fired.
 
+[setState being called when window off screen](https://github.com/itsnubix/react-native-video-controls/issues/7)
+  - added componentWillUnmount function to clear controlTimeout
+  - Note that if using react router componentWillUnmount will not fire unless you configure it to. See [this ticket](https://github.com/aksonov/react-native-router-flux/issues/131)
 
 
 ## 0.9.7 (21-11-2016)
