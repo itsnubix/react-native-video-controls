@@ -1209,10 +1209,10 @@ const styles = {
             height: 1,
         },
         handle: {
-                position: 'absolute',
-                marginTop: -24,
-                marginLeft: -24,
-                padding: 16,
-            }
-        })
+            position: 'absolute',
+            marginTop: -24,
+            marginLeft: -24,
+            padding: 16,
+        }
+    })
 };
