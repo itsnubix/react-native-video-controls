@@ -119,11 +119,11 @@ export default class VideoPlayer extends Component {
         };
 
         /**
-         * Various styles
+         * Various styles that be added...
          */
         this.styles = {
-            containerStyle: this.props.style || {},
-            videoStyle: this.props.videoStyle || {}
+            videoStyle: this.props.videoStyle || {},
+            containerStyle: this.props.style || {}
         };
     }
 
@@ -155,7 +155,7 @@ export default class VideoPlayer extends Component {
      * and hide the controls. We also set the
      * video duration.
      *
-     * @param  data  The video meta data
+     * @param {object} data The video meta data
      */
     _onLoad( data = {} ) {
         let state = this.state;
@@ -174,7 +174,7 @@ export default class VideoPlayer extends Component {
      * For onprogress we fire listeners that
      * update our seekbar and timer.
      *
-     * @param  data  The video meta data
+     * @param {object} data The video meta data
      */
     _onProgress( data = {} ) {
         let state = this.state;
@@ -197,8 +197,10 @@ export default class VideoPlayer extends Component {
     _onEnd() {}
 
     /**
-     * Here we display a simple error saying
-     * the video failed to load.
+     * Set the error state to true which then
+     * changes our renderError function
+     *
+     * @param {object} err  Err obj returned from <Video> component
      */
     _onError( err ) {
         let state = this.state;
@@ -260,6 +262,9 @@ export default class VideoPlayer extends Component {
         clearTimeout( this.player.controlTimeout );
     }
 
+    /**
+     * Reset the timer completely
+     */
     resetControlTimeout() {
         this.clearControlTimeout();
         this.setControlTimeout();
@@ -434,6 +439,9 @@ export default class VideoPlayer extends Component {
 
     /**
      * Format a time string as mm:ss
+     *
+     * @param {int} time time in milliseconds
+     * @return {string} formatted time string in mm:ss format
      */
     formatTime( time = 0 ) {
         const symbol = this.state.showRemainingTime ? '-' : '';
@@ -454,6 +462,8 @@ export default class VideoPlayer extends Component {
      * Set the position of the seekbar's components
      * (both fill and handle) according to the
      * position supplied.
+     *
+     * @param {float} position position in px of seeker handle}
      */
     setSeekerPosition( position = 0 ) {
         position = this.constrainToSeekerMinMax( position );
@@ -468,8 +478,12 @@ export default class VideoPlayer extends Component {
     }
 
     /**
-     * Contrain the value of the seeker to the min/max
-     * value based on how big the seeker is.
+     * Contrain the location of the seeker to the
+     * min/max value based on how big the
+     * seeker is.
+     *
+     * @param {float} val position of seeker handle in px
+     * @return {float} contrained position of seeker handle in px
      */
     constrainToSeekerMinMax( val = 0 ) {
         if ( val <= 0 ) {
@@ -484,6 +498,8 @@ export default class VideoPlayer extends Component {
     /**
      * Calculate the position that the seeker should be
      * at along its track.
+     *
+     * @return {float} position of seeker handle in px based on currentTime
      */
     calculateSeekerPosition() {
         const percent = this.state.currentTime / this.state.duration;
@@ -493,6 +509,8 @@ export default class VideoPlayer extends Component {
     /**
      * Return the time that the video should be at
      * based on where the seeker handle is.
+     *
+     * @return {float} time in ms based on seekerPosition.
      */
     calculateTimeFromSeekerPosition() {
         const percent = this.state.seekerPosition / this.player.seekerWidth;
@@ -501,6 +519,8 @@ export default class VideoPlayer extends Component {
 
     /**
      * Seek to a time in the video.
+     *
+     * @param {float} time time to seek to in ms
      */
     seekTo( time = 0 ) {
         let state = this.state;
@@ -511,6 +531,8 @@ export default class VideoPlayer extends Component {
 
     /**
      * Set the position of the volume slider
+     *
+     * @param {float} position position of the volume handle in px
      */
     setVolumePosition( position = 0 ) {
         let state = this.state;
@@ -534,6 +556,9 @@ export default class VideoPlayer extends Component {
     /**
      * Constrain the volume bar to the min/max of
      * its track's width.
+     *
+     * @param {float} val position of the volume handle in px
+     * @return {float} contrained position of the volume handle in px
      */
     constrainToVolumeMinMax( val = 0 ) {
         if ( val <= 0 ) {
@@ -548,6 +573,8 @@ export default class VideoPlayer extends Component {
     /**
      * Get the volume based on the position of the
      * volume object.
+     *
+     * @return {float} volume level based on volume handle position
      */
     calculateVolumeFromVolumePosition() {
         return this.state.volumePosition / this.player.volumeWidth;
@@ -556,6 +583,8 @@ export default class VideoPlayer extends Component {
     /**
      * Get the position of the volume handle based
      * on the volume
+     *
+     * @return {float} volume handle position in px based on volume
      */
     calculateVolumePositionFromVolume() {
         return this.player.volumeWidth / this.state.volume;
@@ -564,16 +593,17 @@ export default class VideoPlayer extends Component {
 
 
     /*------------------------------------------------------
-    | Init
+    | React Component functions
     |-------------------------------------------------------
     |
     | Here we're initializing our listeners and getting
-    | the component ready.
+    | the component ready using the built-in React
+    | Component methods
     |
     */
 
     /**
-     * Before mounting init our seekbar and volume bar
+     * Before mounting, init our seekbar and volume bar
      * pan responders.
      */
     componentWillMount() {
@@ -595,18 +625,20 @@ export default class VideoPlayer extends Component {
     }
 
     /**
-     * When the component is about to unmount kill its
-     * listeners and associated information.
+     * When the component is about to unmount kill the
+     * timeout less it fire in the prev/next scene
      */
     componentWillUnmount() {
         this.clearControlTimeout();
     }
 
     /**
-     * Get our seekbar responder going!
+     * Get our seekbar responder going
      */
     initSeekPanResponder() {
         this.player.seekPanResponder = PanResponder.create({
+
+            // Ask to be the responder.
             onStartShouldSetPanResponder: ( evt, gestureState ) => true,
             onMoveShouldSetPanResponder: ( evt, gestureState ) => true,
 
