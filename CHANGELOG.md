@@ -1,3 +1,7 @@
+## 1.1.1 (23-12-2016)
+
+Restore playInBackground and playWhenInactive
+
 ## 1.1.0 (23-12-2016)
 
 Updated to work with react-native ^0.39.2.
