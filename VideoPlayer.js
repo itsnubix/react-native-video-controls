@@ -162,7 +162,6 @@ export default class VideoPlayer extends Component {
 
         state.duration = data.duration;
         state.loading = false;
-
         this.setState( state );
 
         if ( state.showControls ) {
@@ -323,27 +322,29 @@ export default class VideoPlayer extends Component {
     }
 
     /**
-     * Animation to spin loader icon
+     * Loop animation to spin loader icon. If not loading then stop loop.
      */
     loadAnimation() {
-        Animated.sequence([
-            Animated.timing(
-                this.animations.loader.rotate,
-                {
-                    toValue: this.animations.loader.MAX_VALUE,
-                    duration: 1500,
-                    easing: Easing.linear,
-                }
-            ),
-            Animated.timing(
-                this.animations.loader.rotate,
-                {
-                    toValue: 0,
-                    duration: 0,
-                    easing: Easing.linear,
-                }
-            ),
-        ]).start( this.loadAnimation.bind( this ) );
+        if ( this.state.loading ) {
+            Animated.sequence([
+                Animated.timing(
+                    this.animations.loader.rotate,
+                    {
+                        toValue: this.animations.loader.MAX_VALUE,
+                        duration: 1500,
+                        easing: Easing.linear,
+                    }
+                ),
+                Animated.timing(
+                    this.animations.loader.rotate,
+                    {
+                        toValue: 0,
+                        duration: 0,
+                        easing: Easing.linear,
+                    }
+                ),
+            ]).start( this.loadAnimation.bind( this ) );
+        }
     }
 
     /**
@@ -1024,8 +1025,6 @@ export default class VideoPlayer extends Component {
                         muted={ this.state.muted }
                         rate={ this.state.rate }
 
-                        playInBackground={ this.opts.playInBackground }
-                        playWhenInactive={ this.opts.playWhenInactive }
                         repeat={ this.opts.repeat }
 
                         onLoadStart={ this.events.onLoadStart }

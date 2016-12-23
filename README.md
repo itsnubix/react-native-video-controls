@@ -1,5 +1,5 @@
 # react-native-video-controls
-Controls for the React Native `<Video>` component at [react-native-video](https://github.com/react-native-community/react-native-video).
+Controls for the React Native `<Video>` component at [react-native-video](https://github.com/react-native-community/react-native-video). 1.1.x works with RN ^0.39.2. For support for lower versions of RN use version 1.0.x.
 
 ## Features
 This package contains a simple set of GUI controls that work with the [react-native-video](https://github.com/react-native-community/react-native-video) `<Video>` component. This includes a back button, volume bar, fullscreen toggle, play/pause toggle, seekbar, title, error handling and timer toggle that can switch between time remaining and current time when tapped.
@@ -14,6 +14,8 @@ By default, tapping the screen anywhere will show the player controls. After 10s
 Run `npm install --save react-native-video-controls`
 
 Then run `react-native link react-native-video`
+
+If you're using RN < 39 run `npm install --save react-native-video-controls@1.0.1`
 
 ## Usage
 The `<VideoPlayer>` component follows the API of the `<Video>` component at [react-native-video](https://github.com/react-native-community/react-native-video). It also takes a number of additional props which are outlined in the [API](#api) section.

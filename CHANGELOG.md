@@ -1,3 +1,15 @@
+## 1.1.0 (23-12-2016)
+
+Updated to work with react-native ^0.39.2.
+
+### Bug fixes
+
+[fix loadAnimation infinity loop](https://github.com/itsnubix/react-native-video-controls/pull/13)
+  - added if statement to loadAnimation function to prevent loop
+
+[Crashes with New version of react-native-video](https://github.com/itsnubix/react-native-video-controls/issues/12)
+  - using latest github version of `react-native-video` to fix multiple issues with RN 39
+
 ## 1.0.1 (29-11-2016)
 
 ### Features
