@@ -60,11 +60,8 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
     style={ {} }                 // Style appended to <View> container
 
     // event callbacks
-    onLoadStart={ () => {} }     // Fired when loading of the source starts
-    onProgress={ () => {} }      // Fired every ~250ms when the video progresses
     onError={ () => {} }         // Fired when an error is encountered on load
     onBack={ () => {} }          // Function fired when back button is pressed.
-    onLoad={ () => {} }          // Fired when loading is complete
     onEnd={ () => {} }           // Fired when the video is complete.
 
 />

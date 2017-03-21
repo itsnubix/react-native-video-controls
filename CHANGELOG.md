@@ -1,3 +1,16 @@
+## 1.2.0 (20-03-2017)
+
+[#14](https://github.com/itsnubix/react-native-video-controls/issues/14)
+  - Remove ability for loading events to be altered
+
+[#19](https://github.com/itsnubix/react-native-video-controls/issues/19)
+  - Updated requirements to RN 0.42.x and RN Video 1.0.0
+
+
+
+
+
+
 ## 1.1.1 (23-12-2016)
 
 Restore playInBackground and playWhenInactive

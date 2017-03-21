@@ -64,12 +64,12 @@ export default class VideoPlayer extends Component {
          * Our app listeners and associated methods
          */
         this.events = {
-            onLoadStart: this.props.onLoadStart || this._onLoadStart.bind( this ),
-            onProgress: this.props.onProgress || this._onProgress.bind( this ),
             onError: this.props.onError || this._onError.bind( this ),
-            onLoad: this.props.onLoad || this._onLoad.bind( this ),
             onEnd: this.props.onEnd || this._onEnd.bind( this ),
             onScreenPress: this._onScreenPress.bind( this ),
+            onLoadStart: this._onLoadStart.bind( this ),
+            onProgress: this._onProgress.bind( this ),
+            onLoad: this._onLoad.bind( this ),
         };
 
         /**

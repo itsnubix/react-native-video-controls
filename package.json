@@ -1,14 +1,14 @@
 {
   "name": "react-native-video-controls",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "description": "A set of GUI controls for the react-native-video component",
   "license": "MIT",
   "main": "VideoPlayer.js",
   "keywords": [
-      "react-native",
-      "react-native-video",
-      "react video controls",
-      "react video player"
+    "react-native",
+    "react-native-video",
+    "react video controls",
+    "react video player"
   ],
   "scripts": {
     "test": "echo \"No test specified\" && exit 1"
@@ -19,10 +19,10 @@
     "url": "git@github.com:itsnubix/react-native-video-controls.git"
   },
   "dependencies": {
-      "lodash": "^4.16.4",
-      "react-native-video": "git+https://github.com/react-native-community/react-native-video.git#master"
+    "lodash": "^4.16.4",
+    "react-native-video": "^1.0.0"
   },
   "peerDependencies": {
-    "react-native": "^0.39.2"
+    "react-native": "^0.42.0"
   }
 }
