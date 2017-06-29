@@ -1,3 +1,7 @@
+## 1.2.1 (29-06-2017)
+[#26](https://github.com/itsnubix/react-native-video-controls/issues/26)
+  - Floor time values to prevent wrong time being displayed.
+
 ## 1.2.0 (20-03-2017)
 
 [#14](https://github.com/itsnubix/react-native-video-controls/issues/14)
@@ -5,11 +9,6 @@
 
 [#19](https://github.com/itsnubix/react-native-video-controls/issues/19)
   - Updated requirements to RN 0.42.x and RN Video 1.0.0
-
-
-
-
-
 
 ## 1.1.1 (23-12-2016)
 

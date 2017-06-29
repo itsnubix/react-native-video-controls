@@ -453,8 +453,11 @@ export default class VideoPlayer extends Component {
         const minutes = time / 60;
         const seconds = time % 60;
 
-        const formattedMinutes = _.padStart( minutes.toFixed( 0 ), 2, 0 );
-        const formattedSeconds = _.padStart( seconds.toFixed( 0 ), 2 , 0 );
+        const formattedMinutes = _.padStart( Math.floor( minutes ).toFixed( 0 ), 2, 0 );
+        const formattedSeconds = _.padStart( Math.floor( seconds ).toFixed( 0 ), 2 , 0 );
+
+        // console.warn(formattedMinutes);
+
 
         return `${ symbol }${ formattedMinutes }:${ formattedSeconds }`;
     }
