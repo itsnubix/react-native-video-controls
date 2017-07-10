@@ -788,10 +788,6 @@ export default class VideoPlayer extends Component {
                 ]}>
                     <View style={ styles.controls.topControlGroup }>
                         { this.renderBack() }
-                        <View style={ styles.controls.pullRight }>
-                            { this.renderVolume() }
-                            { this.renderFullscreen() }
-                        </View>
                     </View>
                 </Image>
             </Animated.View>
@@ -804,7 +800,7 @@ export default class VideoPlayer extends Component {
     renderBack() {
         return this.renderControl(
             <Image
-                source={ require( './assets/img/back.png' ) }
+                source={ require( './assets/img/done.png' ) }
                 style={ styles.controls.back }
             />,
             this.methods.onBack,
