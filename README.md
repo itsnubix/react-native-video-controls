@@ -11,11 +11,11 @@ By default the `<VideoPlayer>` accepts a navigator property from React's built-i
 By default, tapping the screen anywhere will show the player controls. After 10s the controls disappear. Double tapping will toggle fullscreen.
 
 ## Installation
-Run `npm install --save react-native-video-controls`
+Run `npm install --save react-native-video react-native-video-controls`
 
 Then run `react-native link react-native-video`
 
-If you're using RN < 39 run `npm install --save react-native-video-controls@1.0.1`
+If you're using RN < 39 run `npm install --save react-native-video-controls@1.0.1`. Note this version includes `react-native-video` as a normal dependency instead of a peer-dependency.
 
 ## Usage
 The `<VideoPlayer>` component follows the API of the `<Video>` component at [react-native-video](https://github.com/react-native-community/react-native-video). It also takes a number of additional props which are outlined in the [API](#api) section.
