@@ -861,20 +861,12 @@ export default class VideoPlayer extends Component {
                     marginBottom: this.animations.bottomControl.marginBottom,
                 }
             ]}>
-            <Image
-                source={ require( './assets/img/bottom-vignette.png' ) }
-                style={[ styles.controls.column, styles.controls.vignette,
-            ]}>
-                <View style={[
-                    styles.player.container,
-                    styles.controls.seekbar
-                ]}>
+            <Image source={ require( './assets/img/bottom-vignette.png' ) }
+                style={[ styles.controls.column, styles.controls.vignette,]}>
+                <View style={[styles.player.container, styles.controls.seekbar]}>
                     { this.renderSeekbar() }
                 </View>
-                <View style={[
-                    styles.controls.column,
-                    styles.controls.bottomControlGroup
-                ]}>
+                <View style={[styles.controls.column, styles.controls.bottomControlGroup]}>
                     { this.renderPlayPause() }
                     { this.renderTitle() }
                     { this.renderTimer() }
@@ -1145,8 +1137,8 @@ const styles = {
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 100,
-            marginTop: 24,
-            marginBottom: 0,
+            paddingTop: 24,
+            paddingBottom: 0,
         },
         topControlGroup: {
             alignSelf: 'stretch',
