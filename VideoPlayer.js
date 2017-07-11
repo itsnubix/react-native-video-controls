@@ -861,17 +861,19 @@ export default class VideoPlayer extends Component {
                     marginBottom: this.animations.bottomControl.marginBottom,
                 }
             ]}>
-            <Image source={ require( './assets/img/bottom-vignette.png' ) }
-                style={[ styles.controls.column, styles.controls.vignette,]}>
-                <View style={[styles.player.container, styles.controls.seekbar]}>
-                    { this.renderSeekbar() }
-                </View>
-                <View style={[styles.controls.column, styles.controls.bottomControlGroup]}>
-                    { this.renderPlayPause() }
-                    { this.renderTitle() }
-                    { this.renderTimer() }
-                </View>
-            </Image>
+                <Image source={ require( './assets/img/bottom-vignette.png' ) }
+                       style={[ styles.controls.column, styles.controls.vignette,]}>
+                    <View style={[styles.player.container, styles.controls.seekbar]}>
+                        { this.renderSeekbar() }
+
+                    </View>
+                    <View style={[styles.controls.column, styles.controls.bottomControlGroup]}>
+                        { this.renderPlayPause() }
+                        { this.renderTitle() }
+                        { this.renderTimer() }
+                    </View>
+                    {this.renderSeekHandle()}
+                </Image>
             </Animated.View>
         );
     }
@@ -894,25 +896,27 @@ export default class VideoPlayer extends Component {
                         backgroundColor: this.props.seekColor || '#FFF'
                     }
                 ]}>
-                    <View
-                        style={[
-                            styles.seek.handle,
-                            {
-                                left: this.state.seekerPosition
-                            }
-                        ]}
-                        { ...this.player.seekPanResponder.panHandlers }
-                    >
-                        <View style={[
-                            styles.seek.circle,
-                            { backgroundColor: this.props.seekColor || '#FFF' } ]}
-                        />
-                    </View>
+
                 </View>
+
             </View>
         );
     }
+    renderSeekHandle(){
+        return(
+            <View
+                style={[
+                    styles.seek.handle,
+                    {
+                        left: this.state.seekerPosition,
+                        backgroundColor: '#FFF'
+                    }
+                ]}
+                { ...this.player.seekPanResponder.panHandlers }
+            >
 
+            </View>);
+    }
     /**
      * Render the play/pause button and show the respective icon
      */
@@ -1202,13 +1206,14 @@ const styles = {
         },
         handle: {
             position: 'absolute',
-            marginTop: -21,
-            marginLeft: -24,
-            padding: 16,
-            paddingBottom: 4,
+            top:14,
+            marginLeft:28,
+            height: 20,
+            width: 20,
+            zIndex:200,
+            borderRadius: 10,
         },
         circle: {
-            borderRadius: 20,
             height: 12,
             width: 12,
         },
