@@ -1,3 +1,7 @@
+## 1.3.0 (17-07-2017)
+[#30](https://github.com/itsnubix/react-native-video-controls/issues/30)
+  - Add `react-native-video` as a peer-dependency
+
 ## 1.2.1 (29-06-2017)
 [#26](https://github.com/itsnubix/react-native-video-controls/issues/26)
   - Floor time values to prevent wrong time being displayed.
