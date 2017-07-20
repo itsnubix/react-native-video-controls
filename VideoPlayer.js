@@ -1142,7 +1142,7 @@ const styles = {
             justifyContent: 'center',
             zIndex: 100,
             paddingTop: 24,
-            paddingBottom: 0,
+            paddingBottom: 8
         },
         topControlGroup: {
             alignSelf: 'stretch',
@@ -1160,7 +1160,7 @@ const styles = {
             flexDirection: 'row',
             marginLeft: 12,
             marginRight: 12,
-            marginBottom: 0,
+            marginBottom: 8
         },
         volume: {
             flexDirection: 'row',
