@@ -1041,6 +1041,7 @@ export default class VideoPlayer extends Component {
                         style={[ styles.player.video, this.styles.videoStyle ]}
 
                         source={ this.props.source }
+                        ignoreSilentSwitch={ this.props.ignoreSilentSwitch }
                     />
                     { this.renderError() }
                     { this.renderTopControls() }
