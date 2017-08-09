@@ -1061,11 +1061,11 @@ export default class VideoPlayer extends Component {
 const styles = {
     player: StyleSheet.create({
         container: {
-            overflow: 'hidden',
             alignSelf: 'stretch',
             justifyContent: 'space-between',
         },
         video: {
+            overflow: 'hidden',
             position: 'absolute',
             top: 0,
             right: 0,
