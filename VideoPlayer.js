@@ -1033,6 +1033,7 @@ export default class VideoPlayer extends Component {
             >
                 <View style={[ styles.player.container, this.styles.containerStyle ]}>
                     <Video
+                        {...this.props}
                         ref={ videoPlayer => this.player.ref = videoPlayer }
 
                         resizeMode={ this.state.resizeMode }
