@@ -7,11 +7,11 @@ import {
     StyleSheet,
     Touchable,
     Animated,
+    Platform,
     Easing,
     Image,
     View,
-    Text,
-    Platform,
+    Text
 } from 'react-native';
 import _ from 'lodash';
 
@@ -57,7 +57,6 @@ export default class VideoPlayer extends Component {
         this.opts = {
             playWhenInactive: this.props.playWhenInactive || false,
             playInBackground: this.props.playInBackground || false,
-            ignoreSilentSwitch: this.props.ignoreSilentSwitch || 'ignore',
             repeat: this.props.repeat || false,
             title: this.props.title || '',
         };
@@ -150,6 +149,10 @@ export default class VideoPlayer extends Component {
         state.loading = true;
         this.loadAnimation();
         this.setState( state );
+
+        if ( typeof this.props.onLoadStart === 'function' ) {
+            this.props.onLoadStart(...arguments);
+        }
     }
 
     /**
@@ -169,6 +172,10 @@ export default class VideoPlayer extends Component {
         if ( state.showControls ) {
             this.setControlTimeout();
         }
+
+        if ( typeof this.props.onLoad === 'function' ) {
+            this.props.onLoad(...arguments);
+        }
     }
 
     /**
@@ -184,6 +191,10 @@ export default class VideoPlayer extends Component {
         if ( ! state.seeking ) {
             const position = this.calculateSeekerPosition();
             this.setSeekerPosition( position );
+        }
+
+        if ( typeof this.props.onProgress === 'function' ) {
+            this.props.onProgress(...arguments);
         }
 
         this.setState( state );
@@ -894,85 +905,37 @@ export default class VideoPlayer extends Component {
      * Render the seekbar and attach its handlers
      */
     renderSeekbar() {
-        if(Platform.OS === 'ios'){
-            return (
-                <View
-                    style={ styles.seek.track }
-                    onLayout={ event => {
-                        this.player.seekerWidth = event.nativeEvent.layout.width;
-                    }}
-                >
-                    <View style={[
-                        styles.seek.fill,
-                        {
-                            width: this.state.seekerFillWidth,
-                            backgroundColor: this.props.seekColor || '#FFF'
-                        }
-                    ]}>
-                        <View
-                            style={[
-                                styles.seek.handle,
-                                {
-                                    left: this.state.seekerPosition
-                                }
-                            ]}
-                            { ...this.player.seekPanResponder.panHandlers }
-                        >
-                            <View style={[
-                                styles.seek.circle,
-                                { backgroundColor: this.props.seekColor || '#FFF' } ]}
-                            />
-                        </View>
-                    </View>
-                </View>
-            );
-        }
-        else{
-            return (
-                <View
-                    style={ styles.seek.track }
-                    onLayout={ event => {
-                        // Changed track's margin to padding which means we have extra 56px 
-                        // on the main view. We just subtracted exact amount of pixel 
-                        // from the calculated with of the track. 
-                        //Now, track View doesn't cut out the handler when it reaches the end.
-                        this.player.seekerWidth = event.nativeEvent.layout.width -56; 
-                    }}
-                    >
-                    <View style={styles.seek.fillCover}>
-                        <View style={[
-                            styles.seek.fill,
-                            {
-                                width: this.state.seekerFillWidth,
-                                backgroundColor: this.props.seekColor || '#FFF'
-                            }
-                            ]}>
-                        </View>
-                    </View>
-                        
+        return (
+            <View
+                style={ styles.seek.track }
+                onLayout={ event => {
+                    this.player.seekerWidth = event.nativeEvent.layout.width;
+                }}
+            >
+                <View style={[
+                    styles.seek.fill,
                     {
-                        // Dragged out the handler from inside of fill 
-                        // to make it bigger than fill. Android doesn't support overflow
-                        // That's why it was couldn't display itself bigger than the fill View
+                        width: this.state.seekerFillWidth,
+                        backgroundColor: this.props.seekColor || '#FFF'
                     }
+                ]}>
                     <View
                         style={[
                             styles.seek.handle,
                             {
-                                left: this.state.seekerPosition + 28
+                                left: this.state.seekerPosition
                             }
                         ]}
                         { ...this.player.seekPanResponder.panHandlers }
-                        >
+                    >
                         <View style={[
                             styles.seek.circle,
                             { backgroundColor: this.props.seekColor || '#FFF' } ]}
                         />
                     </View>
                 </View>
-            );
-        }
-        
+            </View>
+        );
     }
 
     /**
@@ -1078,10 +1041,7 @@ export default class VideoPlayer extends Component {
                         muted={ this.state.muted }
                         rate={ this.state.rate }
 
-                        ignoreSilentSwitch={ this.opts.ignoreSilentSwitch }
-                        playInBackground={ this.opts.playInBackground }
-                        playWhenInactive={ this.opts.playWhenInactive }
-                        repeat={ this.opts.repeat }
+                        { ...this.props }
 
                         onLoadStart={ this.events.onLoadStart }
                         onProgress={ this.events.onProgress }
@@ -1111,10 +1071,12 @@ export default class VideoPlayer extends Component {
 const styles = {
     player: StyleSheet.create({
         container: {
+            flex: Platform.OS === 'ios' ? 1 : null,
             alignSelf: 'stretch',
             justifyContent: 'space-between',
         },
         video: {
+            overflow: 'hidden',
             position: 'absolute',
             top: 0,
             right: 0,
@@ -1200,7 +1162,7 @@ const styles = {
             justifyContent: 'center',
             zIndex: 100,
             marginTop: 24,
-            marginBottom: 0,
+            marginBottom: 8
         },
         topControlGroup: {
             alignSelf: 'stretch',
@@ -1218,7 +1180,7 @@ const styles = {
             flexDirection: 'row',
             marginLeft: 12,
             marginRight: 12,
-            marginBottom: 0,
+            marginBottom: 0
         },
         volume: {
             flexDirection: 'row',
@@ -1227,7 +1189,9 @@ const styles = {
             flexDirection: 'row',
         },
         playPause: {
+            position: 'relative',
             width: 80,
+            zIndex: 0
         },
         title: {
             alignItems: 'center',
@@ -1252,18 +1216,10 @@ const styles = {
         track: {
             alignSelf: 'stretch',
             justifyContent: 'center',
-            backgroundColor: Platform.OS === 'ios' ? '#333' : 'rgba(0,0,0,0)',
-            height: Platform.OS === 'ios' ? 4 : 20,
-            marginLeft: Platform.OS === 'ios' ? 28 : 0,
-            marginRight: Platform.OS === 'ios' ? 28 : 0,
-            paddingHorizontal: Platform.OS === 'ios' ? 0 : 28,
-        },
-        // Created a FillCover for the fill. It's doing what track was doing. 
-        fillCover:{
-            height:4,
-            alignSelf:"stretch",
             backgroundColor: '#333',
-            justifyContent:"center"
+            height: 4,
+            marginLeft: 28,
+            marginRight: 28,
         },
         fill: {
             alignSelf: 'flex-start',
@@ -1272,15 +1228,15 @@ const styles = {
         },
         handle: {
             position: 'absolute',
-            marginTop: Platform.OS === 'ios' ? -21 : 0,
-            marginLeft: Platform.OS === 'ios' ? -24 : -10,
-            padding: Platform.OS === 'ios' ? 16 : 0,
-            paddingBottom: Platform.OS === 'ios' ? 4 : 0,
+            marginTop: -21,
+            marginLeft: -24,
+            padding: 16,
+            paddingBottom: 4,
         },
         circle: {
             borderRadius: 20,
-            height: Platform.OS === 'ios' ? 12 : 20,
-            width: Platform.OS === 'ios' ? 12 : 20,
+            height: 12,
+            width: 12,
         },
     }),
     volume: StyleSheet.create({

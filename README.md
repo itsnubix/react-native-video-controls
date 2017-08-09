@@ -41,28 +41,20 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
 ```javascript
 <VideoPlayer
 
-    // react-native-video options
-    playInBackground={ false }   // play audio when entering background
-    playWhenInactive={ false }   // [iOS] continuing playing when notification centre active
-    resizeMode={ 'contain' }     // 'contain' or 'cover' should be used.
-    paused={ false }             // stop playback entirely
-    repeat={ false }             // Repeats at end of duration
-    muted={ false }              // Mutes the audio entirely.
-    title={ '' }                 // Video title, if null title area is hidden
-    volume={ 1 }                 // 0 is muted, 1 is normal.
-    rate={ 1 }                   // 0 is paused, 1 is normal.
+    // react-native-video props
+    // Pass any prop that the <Video> element may accept
 
     // settings
-    controlTimeout={ 15000 }     // hide controls after ms of inactivity.
-    navigator={ navigator }      // prop from React Native <Navigator> component
-    seekColor={ '#FFF' }         // fill/handle colour of the seekbar
-    videoStyle={ {} }            // Style appended to <Video> component
-    style={ {} }                 // Style appended to <View> container
+    controlTimeout={ 15000 }         // hide controls after ms of inactivity.
+    navigator={ navigator }          // prop from React Native <Navigator> component
+    seekColor={ '#FFF' }             // fill/handle colour of the seekbar
+    videoStyle={ {} }                // Style appended to <Video> component
+    style={ {} }                     // Style appended to <View> container
 
     // event callbacks
-    onError={ () => {} }         // Fired when an error is encountered on load
-    onBack={ () => {} }          // Function fired when back button is pressed.
-    onEnd={ () => {} }           // Fired when the video is complete.
+    onError={ () => {} }             // Fired when an error is encountered on load
+    onBack={ () => {} }              // Function fired when back button is pressed.
+    onEnd={ () => {} }               // Fired when the video is complete.
 
 />
 ```

@@ -1,3 +1,12 @@
+## 1.4.0 (09-08-2017)
+Distilled down some merge requests and found a simple solution to a seekbar issue reported. Sometimes you just gotta give your elements a little more space. Let this be a lesson not to rush out push requests between meetings...I think this warrants a larger version change...you can now pass any prop to the `<VideoPlayer>` element and it'll pass those to `react-native-video`. API changes quite a lot because of that but shouldn't break. 
+
+## 1.3.1 (09-08-2017)
+[#35](https://github.com/itsnubix/react-native-video-controls/pull/35)
+  - Fix flex issue with Android
+[#38](https://github.com/itsnubix/react-native-video-controls/pull/38)
+  - Added additional RN Video params to opts call
+
 ## 1.3.0 (17-07-2017)
 [#30](https://github.com/itsnubix/react-native-video-controls/issues/30)
   - Add `react-native-video` as a peer-dependency
