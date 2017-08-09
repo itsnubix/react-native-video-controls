@@ -148,6 +148,10 @@ export default class VideoPlayer extends Component {
         state.loading = true;
         this.loadAnimation();
         this.setState( state );
+
+        if ( typeof this.props.onLoadStart === 'function' ) {
+            this.props.onLoadStart(...arguments);
+        }
     }
 
     /**
@@ -167,6 +171,10 @@ export default class VideoPlayer extends Component {
         if ( state.showControls ) {
             this.setControlTimeout();
         }
+
+        if ( typeof this.props.onLoad === 'function' ) {
+            this.props.onLoad(...arguments);
+        }
     }
 
     /**
@@ -182,6 +190,10 @@ export default class VideoPlayer extends Component {
         if ( ! state.seeking ) {
             const position = this.calculateSeekerPosition();
             this.setSeekerPosition( position );
+        }
+
+        if ( typeof this.props.onProgress === 'function' ) {
+            this.props.onProgress(...arguments);
         }
 
         this.setState( state );
