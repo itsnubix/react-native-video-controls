@@ -10,7 +10,8 @@ import {
     Easing,
     Image,
     View,
-    Text
+    Text,
+    Platform,
 } from 'react-native';
 import _ from 'lodash';
 
@@ -893,37 +894,85 @@ export default class VideoPlayer extends Component {
      * Render the seekbar and attach its handlers
      */
     renderSeekbar() {
-        return (
-            <View
-                style={ styles.seek.track }
-                onLayout={ event => {
-                    this.player.seekerWidth = event.nativeEvent.layout.width;
-                }}
-            >
-                <View style={[
-                    styles.seek.fill,
+        if(Platform.OS === 'ios'){
+            return (
+                <View
+                    style={ styles.seek.track }
+                    onLayout={ event => {
+                        this.player.seekerWidth = event.nativeEvent.layout.width;
+                    }}
+                >
+                    <View style={[
+                        styles.seek.fill,
+                        {
+                            width: this.state.seekerFillWidth,
+                            backgroundColor: this.props.seekColor || '#FFF'
+                        }
+                    ]}>
+                        <View
+                            style={[
+                                styles.seek.handle,
+                                {
+                                    left: this.state.seekerPosition
+                                }
+                            ]}
+                            { ...this.player.seekPanResponder.panHandlers }
+                        >
+                            <View style={[
+                                styles.seek.circle,
+                                { backgroundColor: this.props.seekColor || '#FFF' } ]}
+                            />
+                        </View>
+                    </View>
+                </View>
+            );
+        }
+        else{
+            return (
+                <View
+                    style={ styles.seek.track }
+                    onLayout={ event => {
+                        // Changed track's margin to padding which means we have extra 56px 
+                        // on the main view. We just subtracted exact amount of pixel 
+                        // from the calculated with of the track. 
+                        //Now, track View doesn't cut out the handler when it reaches the end.
+                        this.player.seekerWidth = event.nativeEvent.layout.width -56; 
+                    }}
+                    >
+                    <View style={styles.seek.fillCover}>
+                        <View style={[
+                            styles.seek.fill,
+                            {
+                                width: this.state.seekerFillWidth,
+                                backgroundColor: this.props.seekColor || '#FFF'
+                            }
+                            ]}>
+                        </View>
+                    </View>
+                        
                     {
-                        width: this.state.seekerFillWidth,
-                        backgroundColor: this.props.seekColor || '#FFF'
+                        // Dragged out the handler from inside of fill 
+                        // to make it bigger than fill. Android doesn't support overflow
+                        // That's why it was couldn't display itself bigger than the fill View
                     }
-                ]}>
                     <View
                         style={[
                             styles.seek.handle,
                             {
-                                left: this.state.seekerPosition
+                                left: this.state.seekerPosition + 28
                             }
                         ]}
                         { ...this.player.seekPanResponder.panHandlers }
-                    >
+                        >
                         <View style={[
                             styles.seek.circle,
                             { backgroundColor: this.props.seekColor || '#FFF' } ]}
                         />
                     </View>
                 </View>
-            </View>
-        );
+            );
+        }
+        
     }
 
     /**
@@ -1062,7 +1111,6 @@ export default class VideoPlayer extends Component {
 const styles = {
     player: StyleSheet.create({
         container: {
-            flex: 1,
             alignSelf: 'stretch',
             justifyContent: 'space-between',
         },
@@ -1204,10 +1252,18 @@ const styles = {
         track: {
             alignSelf: 'stretch',
             justifyContent: 'center',
+            backgroundColor: Platform.OS === 'ios' ? '#333' : 'rgba(0,0,0,0)',
+            height: Platform.OS === 'ios' ? 4 : 20,
+            marginLeft: Platform.OS === 'ios' ? 28 : 0,
+            marginRight: Platform.OS === 'ios' ? 28 : 0,
+            paddingHorizontal: Platform.OS === 'ios' ? 0 : 28,
+        },
+        // Created a FillCover for the fill. It's doing what track was doing. 
+        fillCover:{
+            height:4,
+            alignSelf:"stretch",
             backgroundColor: '#333',
-            height: 4,
-            marginLeft: 28,
-            marginRight: 28,
+            justifyContent:"center"
         },
         fill: {
             alignSelf: 'flex-start',
@@ -1216,15 +1272,15 @@ const styles = {
         },
         handle: {
             position: 'absolute',
-            marginTop: -21,
-            marginLeft: -24,
-            padding: 16,
-            paddingBottom: 4,
+            marginTop: Platform.OS === 'ios' ? -21 : 0,
+            marginLeft: Platform.OS === 'ios' ? -24 : -10,
+            padding: Platform.OS === 'ios' ? 16 : 0,
+            paddingBottom: Platform.OS === 'ios' ? 4 : 0,
         },
         circle: {
             borderRadius: 20,
-            height: 12,
-            width: 12,
+            height: Platform.OS === 'ios' ? 12 : 20,
+            width: Platform.OS === 'ios' ? 12 : 20,
         },
     }),
     volume: StyleSheet.create({
