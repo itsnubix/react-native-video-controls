@@ -1060,6 +1060,7 @@ export default class VideoPlayer extends Component {
 const styles = {
     player: StyleSheet.create({
         container: {
+            overflow: 'hidden',
             alignSelf: 'stretch',
             justifyContent: 'space-between',
         },
