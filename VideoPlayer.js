@@ -56,6 +56,7 @@ export default class VideoPlayer extends Component {
         this.opts = {
             playWhenInactive: this.props.playWhenInactive || false,
             playInBackground: this.props.playInBackground || false,
+            ignoreSilentSwitch: this.props.ignoreSilentSwitch || 'ignore',
             repeat: this.props.repeat || false,
             title: this.props.title || '',
         };
@@ -1028,6 +1029,7 @@ export default class VideoPlayer extends Component {
                         muted={ this.state.muted }
                         rate={ this.state.rate }
 
+                        ignoreSilentSwitch={ this.opts.ignoreSilentSwitch }
                         playInBackground={ this.opts.playInBackground }
                         playWhenInactive={ this.opts.playWhenInactive }
                         repeat={ this.opts.repeat }
