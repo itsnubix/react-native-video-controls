@@ -1071,7 +1071,7 @@ export default class VideoPlayer extends Component {
                 {
                     // Since, We've removed the flex:1 from the player.container, 
                     // the container of the Video component lost its ability to fill the View 
-                    // and the flex shouldn't inside of container too. 
+                    // and the flex:1 shouldn't be inside of player.container too. 
                     // Now Parent component can fill the View just perfectly 
                 }
                 <View style={[ styles.player.container, this.styles.containerStyle, styles.player.containerFlex ]}>
