@@ -906,35 +906,34 @@ export default class VideoPlayer extends Component {
      */
     renderSeekbar() {
         return (
+          <View style={styles.seek.container}>
             <View
                 style={ styles.seek.track }
                 onLayout={ event => {
                     this.player.seekerWidth = event.nativeEvent.layout.width;
-                }}
-            >
+                }}>
                 <View style={[
                     styles.seek.fill,
                     {
                         width: this.state.seekerFillWidth,
                         backgroundColor: this.props.seekColor || '#FFF'
                     }
-                ]}>
-                    <View
-                        style={[
-                            styles.seek.handle,
-                            {
-                                left: this.state.seekerPosition
-                            }
-                        ]}
-                        { ...this.player.seekPanResponder.panHandlers }
-                    >
-                        <View style={[
-                            styles.seek.circle,
-                            { backgroundColor: this.props.seekColor || '#FFF' } ]}
-                        />
-                    </View>
-                </View>
+                ]} />
             </View>
+            <View
+                style={[
+                    styles.seek.handle,
+                    {
+                        left: this.state.seekerPosition
+                    }
+                ]}
+                { ...this.player.seekPanResponder.panHandlers }>
+                <View style={[
+                    styles.seek.circle,
+                    { backgroundColor: this.props.seekColor || '#FFF' } ]}
+                />
+                </View>
+          </View>
         );
     }
 
@@ -1214,25 +1213,29 @@ const styles = {
         },
     }),
     seek: StyleSheet.create({
-        track: {
+        container: {
             alignSelf: 'stretch',
             justifyContent: 'center',
-            backgroundColor: '#333',
-            height: 4,
             marginLeft: 28,
             marginRight: 28,
+            height: 12,
+            backgroundColor: 'transparent'
+        },
+        track: {
+            backgroundColor: '#333',
+            height: 4,
         },
         fill: {
             alignSelf: 'flex-start',
-            height: 2,
-            width: 1,
+            height: 4,
+            width: 1
         },
         handle: {
             position: 'absolute',
             marginTop: -21,
             marginLeft: -24,
             padding: 16,
-            paddingBottom: 4,
+            paddingBottom: 16,
         },
         circle: {
             borderRadius: 20,
