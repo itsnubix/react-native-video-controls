@@ -70,6 +70,7 @@ export default class VideoPlayer extends Component {
             onLoadStart: this._onLoadStart.bind( this ),
             onProgress: this._onProgress.bind( this ),
             onLoad: this._onLoad.bind( this ),
+            onPlaybackRateChanged: this._onPlaybackRateChanged.bind( this )
         };
 
         /**
@@ -227,6 +228,12 @@ export default class VideoPlayer extends Component {
         this.methods.toggleControls();
         state.lastScreenPress = time;
 
+        this.setState( state );
+    }
+
+    _onPlaybackRateChanged(data) {
+        let state = this.state;
+        state.paused = (data.playbackRate === 0);
         this.setState( state );
     }
 
@@ -1029,6 +1036,7 @@ export default class VideoPlayer extends Component {
                         onError={ this.events.onError }
                         onLoad={ this.events.onLoad }
                         onEnd={ this.events.onEnd }
+                        onPlaybackRateChange={ this.events.onPlaybackRateChanged }
 
                         style={[ styles.player.video, this.styles.videoStyle ]}
 
