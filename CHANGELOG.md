@@ -1,3 +1,10 @@
+## 1.4.1 (30-08-2017)
+Bug fixes. Updated `react-native-video` to ^2.0.0 in the peer deps and `react-native` to 47.2. Changed default title font size to 14.
+[#42](https://github.com/itsnubix/react-native-video-controls/issues/42)
+  - Related to a number of things...hitbox size, zIndex, overflow for whatever reason. Seekbar layout has been rebuilt and tested in both iOS and Android.
+[#46](https://github.com/itsnubix/react-native-video-controls/issues/46)
+  - Props were being assigned twice. Removing second assignment has resolved the issue.
+
 ## 1.4.0 (09-08-2017)
 Distilled down some merge requests and found a simple solution to a seekbar issue reported. Sometimes you just gotta give your elements a little more space. Let this be a lesson not to rush out push requests between meetings...I think this warrants a larger version change...you can now pass any prop to the `<VideoPlayer>` element and it'll pass those to `react-native-video`. API changes quite a lot because of that but shouldn't break. 
 

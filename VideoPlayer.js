@@ -24,7 +24,6 @@ export default class VideoPlayer extends Component {
          * All of our values that are updated by the
          * methods and listeners in this class
          */
-        const isFullscreen = this.props.resizeMode === 'cover' || false;
         this.state = {
             // Video
             resizeMode: this.props.resizeMode || 'contain',
@@ -33,7 +32,8 @@ export default class VideoPlayer extends Component {
             volume: this.props.volume || 1,
             rate: this.props.rate || 1,
             // Controls
-            isFullscreen: isFullscreen,
+            
+            isFullscreen: this.props.resizeMode === 'cover' || false,
             showTimeRemaining: true,
             volumeTrackWidth: 0,
             lastScreenPress: 0,
@@ -67,7 +67,7 @@ export default class VideoPlayer extends Component {
         this.events = {
             onError: this.props.onError || this._onError.bind( this ),
             onEnd: this.props.onEnd || this._onEnd.bind( this ),
-            onScreenPress: this._onScreenPress.bind( this ),
+            onScreenTouch: this._onScreenTouch.bind( this ),
             onLoadStart: this._onLoadStart.bind( this ),
             onProgress: this._onProgress.bind( this ),
             onLoad: this._onLoad.bind( this ),
@@ -130,9 +130,10 @@ export default class VideoPlayer extends Component {
 
 
 
-    /*------------------------------------------------------
+    /**
+    | -------------------------------------------------------
     | Events
-    |-------------------------------------------------------
+    | -------------------------------------------------------
     |
     | These are the events that the <Video> component uses
     | and can be overridden by assigning it as a prop.
@@ -228,7 +229,7 @@ export default class VideoPlayer extends Component {
      * One tap toggles controls, two toggles
      * fullscreen mode.
      */
-    _onScreenPress() {
+    _onScreenTouch() {
         let state = this.state;
         const time = new Date().getTime();
         const delta =  time - state.lastScreenPress;
@@ -245,9 +246,10 @@ export default class VideoPlayer extends Component {
 
 
 
-    /*------------------------------------------------------
+    /**
+    | -------------------------------------------------------
     | Methods
-    |-------------------------------------------------------
+    | -------------------------------------------------------
     |
     | These are all of our functions that interact with
     | various parts of the class. Anything from
@@ -448,7 +450,8 @@ export default class VideoPlayer extends Component {
             const time = this.state.duration - this.state.currentTime;
             return `-${ this.formatTime( time ) }`;
         }
-        return `${ this.formatTime( this.state.currentTime ) }`;
+
+        return this.formatTime( this.state.currentTime );
     }
 
     /**
@@ -463,14 +466,9 @@ export default class VideoPlayer extends Component {
             Math.max( time, 0 ),
             this.state.duration
         );
-        const minutes = time / 60;
-        const seconds = time % 60;
 
-        const formattedMinutes = _.padStart( Math.floor( minutes ).toFixed( 0 ), 2, 0 );
-        const formattedSeconds = _.padStart( Math.floor( seconds ).toFixed( 0 ), 2 , 0 );
-
-        // console.warn(formattedMinutes);
-
+        const formattedMinutes = _.padStart( Math.floor( time / 60 ).toFixed( 0 ), 2, 0 );
+        const formattedSeconds = _.padStart( Math.floor( time % 60 ).toFixed( 0 ), 2 , 0 );
 
         return `${ symbol }${ formattedMinutes }:${ formattedSeconds }`;
     }
@@ -609,9 +607,10 @@ export default class VideoPlayer extends Component {
 
 
 
-    /*------------------------------------------------------
+    /**
+    | -------------------------------------------------------
     | React Component functions
-    |-------------------------------------------------------
+    | -------------------------------------------------------
     |
     | Here we're initializing our listeners and getting
     | the component ready using the built-in React
@@ -746,9 +745,10 @@ export default class VideoPlayer extends Component {
     }
 
 
-    /*------------------------------------------------------
+    /**
+    | -------------------------------------------------------
     | Rendering
-    |-------------------------------------------------------
+    | -------------------------------------------------------
     |
     | This section contains all of our render methods.
     | In addition to the typical React render func
@@ -842,9 +842,7 @@ export default class VideoPlayer extends Component {
                 <View
                     style={[
                         styles.volume.handle,
-                        {
-                            left: this.state.volumePosition
-                        }
+                        { left: this.state.volumePosition }
                     ]}
                     { ...this.player.volumePanResponder.panHandlers }
                 >
@@ -878,25 +876,20 @@ export default class VideoPlayer extends Component {
                     marginBottom: this.animations.bottomControl.marginBottom,
                 }
             ]}>
-            <Image
-                source={ require( './assets/img/bottom-vignette.png' ) }
-                style={[ styles.controls.column, styles.controls.vignette,
-            ]}>
-                <View style={[
-                    styles.player.container,
-                    styles.controls.seekbar
+                <Image
+                    source={ require( './assets/img/bottom-vignette.png' ) }
+                    style={[ styles.controls.column, styles.controls.vignette,
                 ]}>
                     { this.renderSeekbar() }
-                </View>
-                <View style={[
-                    styles.controls.column,
-                    styles.controls.bottomControlGroup
-                ]}>
-                    { this.renderPlayPause() }
-                    { this.renderTitle() }
-                    { this.renderTimer() }
-                </View>
-            </Image>
+                    <View style={[
+                        styles.controls.row,
+                        styles.controls.bottomControlGroup
+                    ]}>
+                        { this.renderPlayPause() }
+                        { this.renderTitle() }
+                        { this.renderTimer() }
+                    </View>
+                </Image>
             </Animated.View>
         );
     }
@@ -906,33 +899,33 @@ export default class VideoPlayer extends Component {
      */
     renderSeekbar() {
         return (
-            <View
-                style={ styles.seek.track }
-                onLayout={ event => {
-                    this.player.seekerWidth = event.nativeEvent.layout.width;
-                }}
-            >
-                <View style={[
-                    styles.seek.fill,
-                    {
-                        width: this.state.seekerFillWidth,
-                        backgroundColor: this.props.seekColor || '#FFF'
-                    }
-                ]}>
-                    <View
-                        style={[
-                            styles.seek.handle,
-                            {
-                                left: this.state.seekerPosition
-                            }
-                        ]}
-                        { ...this.player.seekPanResponder.panHandlers }
-                    >
-                        <View style={[
-                            styles.seek.circle,
-                            { backgroundColor: this.props.seekColor || '#FFF' } ]}
-                        />
-                    </View>
+            <View style={ styles.seekbar.container }>
+                <View
+                    style={ styles.seekbar.track }
+                    onLayout={ event => {
+                        console.log(event.nativeEvent.layout.width);
+                        this.player.seekerWidth = event.nativeEvent.layout.width 
+                    }}
+                >
+                    <View style={[
+                        styles.seekbar.fill,
+                        {
+                            width: this.state.seekerFillWidth,
+                            backgroundColor: this.props.seekColor || '#FFF'
+                        }
+                    ]}/>
+                </View>
+                <View
+                    style={[
+                        styles.seekbar.handle,
+                        { left: this.state.seekerPosition }
+                    ]}
+                    { ...this.player.seekPanResponder.panHandlers }
+                >
+                    <View style={[
+                        styles.seekbar.circle,
+                        { backgroundColor: this.props.seekColor || '#FFF' } ]}
+                    />
                 </View>
             </View>
         );
@@ -1028,12 +1021,12 @@ export default class VideoPlayer extends Component {
     render() {
         return (
             <TouchableWithoutFeedback
-                onPress={ this.events.onScreenPress }
+                onPress={ this.events.onScreenTouch }
                 style={[ styles.player.container, this.styles.containerStyle ]}
             >
                 <View style={[ styles.player.container, this.styles.containerStyle ]}>
                     <Video
-                        {...this.props}
+                        { ...this.props }
                         ref={ videoPlayer => this.player.ref = videoPlayer }
 
                         resizeMode={ this.state.resizeMode }
@@ -1041,8 +1034,6 @@ export default class VideoPlayer extends Component {
                         paused={ this.state.paused }
                         muted={ this.state.muted }
                         rate={ this.state.rate }
-
-                        { ...this.props }
 
                         onLoadStart={ this.events.onLoadStart }
                         onProgress={ this.events.onProgress }
@@ -1072,7 +1063,8 @@ export default class VideoPlayer extends Component {
 const styles = {
     player: StyleSheet.create({
         container: {
-            flex: Platform.OS === 'ios' ? 1 : null,
+            backgroundColor: '#000',
+            flex: 1,
             alignSelf: 'stretch',
             justifyContent: 'space-between',
         },
@@ -1131,7 +1123,7 @@ const styles = {
             width: null,
         },
         vignette: {
-            resizeMode: 'stretch',
+            resizeMode: 'stretch'
         },
         control: {
             padding: 16,
@@ -1139,7 +1131,7 @@ const styles = {
         text: {
             backgroundColor: 'transparent',
             color: '#FFF',
-            fontSize: 16,
+            fontSize: 14,
             textAlign: 'center',
         },
         pullRight: {
@@ -1157,14 +1149,6 @@ const styles = {
             flex: 2,
             justifyContent: 'flex-end',
         },
-        seekbar: {
-            alignSelf: 'stretch',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100,
-            marginTop: 24,
-            marginBottom: 8
-        },
         topControlGroup: {
             alignSelf: 'stretch',
             alignItems: 'center',
@@ -1178,10 +1162,9 @@ const styles = {
             alignSelf: 'stretch',
             alignItems: 'center',
             justifyContent: 'space-between',
-            flexDirection: 'row',
             marginLeft: 12,
             marginRight: 12,
-            marginBottom: 0
+            marginBottom: 0,
         },
         volume: {
             flexDirection: 'row',
@@ -1213,33 +1196,6 @@ const styles = {
             textAlign: 'right',
         },
     }),
-    seek: StyleSheet.create({
-        track: {
-            alignSelf: 'stretch',
-            justifyContent: 'center',
-            backgroundColor: '#333',
-            height: 4,
-            marginLeft: 28,
-            marginRight: 28,
-        },
-        fill: {
-            alignSelf: 'flex-start',
-            height: 2,
-            width: 1,
-        },
-        handle: {
-            position: 'absolute',
-            marginTop: -21,
-            marginLeft: -24,
-            padding: 16,
-            paddingBottom: 4,
-        },
-        circle: {
-            borderRadius: 20,
-            height: 12,
-            width: 12,
-        },
-    }),
     volume: StyleSheet.create({
         container: {
             alignItems: 'center',
@@ -1265,5 +1221,38 @@ const styles = {
             marginLeft: -24,
             padding: 16,
         }
+    }),
+    seekbar: StyleSheet.create({
+        container: {
+            alignSelf: 'stretch',
+            height: 28,
+            marginLeft: 20,
+            marginRight: 20
+        },
+        track: {
+            backgroundColor: '#333',
+            height: 1,
+            position: 'relative',
+            top: 14,
+            width: '100%'
+        },
+        fill: {
+            backgroundColor: '#FFF',
+            height: 1,
+            width: '100%'
+        },
+        handle: {
+            position: 'absolute',
+            marginLeft: -7,
+            height: 28,
+            width: 28,
+        },
+        circle: {
+            borderRadius: 12,
+            position: 'relative',
+            top: 8, left: 8,
+            height: 12,
+            width: 12,
+        },
     })
 };
