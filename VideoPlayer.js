@@ -481,14 +481,16 @@ export default class VideoPlayer extends Component {
      * @param {float} position position in px of seeker handle}
      */
     setSeekerPosition( position = 0 ) {
-        position = this.constrainToSeekerMinMax( position );
         let state = this.state;
+        position = this.constrainToSeekerMinMax( position );
 
         state.seekerFillWidth = position;
         state.seekerPosition = position;
+        
         if ( ! state.seeking ) {
-            state.seekerOffset = position;
-        }
+            state.seekerOffset = position
+        };
+
         this.setState( state );
     }
 
@@ -902,10 +904,7 @@ export default class VideoPlayer extends Component {
             <View style={ styles.seekbar.container }>
                 <View
                     style={ styles.seekbar.track }
-                    onLayout={ event => {
-                        console.log(event.nativeEvent.layout.width);
-                        this.player.seekerWidth = event.nativeEvent.layout.width 
-                    }}
+                    onLayout={ event => this.player.seekerWidth = event.nativeEvent.layout.width }
                 >
                     <View style={[
                         styles.seekbar.fill,
