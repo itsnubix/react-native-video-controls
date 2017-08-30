@@ -1024,7 +1024,14 @@ export default class VideoPlayer extends Component {
                 onPress={ this.events.onScreenTouch }
                 style={[ styles.player.container, this.styles.containerStyle ]}
             >
-                <View style={[ styles.player.container, this.styles.containerStyle ]}>
+
+                {
+                    // Since, We've removed the flex:1 from the player.container, 
+                    // the container of the Video component lost its ability to fill the View 
+                    // and the flex:1 shouldn't be inside of player.container too. 
+                    // Now Parent component can fill the View just perfectly 
+                }
+                <View style={[ styles.player.container, this.styles.containerStyle, styles.player.containerFlex ]}>
                     <Video
                         { ...this.props }
                         ref={ videoPlayer => this.player.ref = videoPlayer }
@@ -1062,6 +1069,9 @@ export default class VideoPlayer extends Component {
  */
 const styles = {
     player: StyleSheet.create({
+        containerFlex:{
+            flex:1,
+        },
         container: {
             backgroundColor: '#000',
             flex: 1,
