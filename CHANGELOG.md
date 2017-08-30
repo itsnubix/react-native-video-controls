@@ -1,7 +1,9 @@
 ## 1.4.1 (30-08-2017)
 Bug fixes. Updated `react-native-video` to ^2.0.0 in the peer deps and `react-native` to 47.2. Changed default title font size to 14.
+
 [#42](https://github.com/itsnubix/react-native-video-controls/issues/42)
   - Related to a number of things...hitbox size, zIndex, overflow for whatever reason. Seekbar layout has been rebuilt and tested in both iOS and Android.
+
 [#46](https://github.com/itsnubix/react-native-video-controls/issues/46)
   - Props were being assigned twice. Removing second assignment has resolved the issue.
 
@@ -9,16 +11,20 @@ Bug fixes. Updated `react-native-video` to ^2.0.0 in the peer deps and `react-na
 Distilled down some merge requests and found a simple solution to a seekbar issue reported. Sometimes you just gotta give your elements a little more space. Let this be a lesson not to rush out push requests between meetings...I think this warrants a larger version change...you can now pass any prop to the `<VideoPlayer>` element and it'll pass those to `react-native-video`. API changes quite a lot because of that but shouldn't break. 
 
 ## 1.3.1 (09-08-2017)
+
 [#35](https://github.com/itsnubix/react-native-video-controls/pull/35)
   - Fix flex issue with Android
+
 [#38](https://github.com/itsnubix/react-native-video-controls/pull/38)
   - Added additional RN Video params to opts call
 
 ## 1.3.0 (17-07-2017)
+
 [#30](https://github.com/itsnubix/react-native-video-controls/issues/30)
   - Add `react-native-video` as a peer-dependency
 
 ## 1.2.1 (29-06-2017)
+
 [#26](https://github.com/itsnubix/react-native-video-controls/issues/26)
   - Floor time values to prevent wrong time being displayed.
 
