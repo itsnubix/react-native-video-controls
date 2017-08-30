@@ -870,7 +870,7 @@ export default class VideoPlayer extends Component {
             ]}>
                 <Image source={ require( './assets/img/bottom-vignette.png' ) }
                        style={[ styles.controls.column, styles.controls.vignette,]}>
-                    <View style={[styles.player.container, styles.controls.seekbar]}>
+                    <View style={[styles.player.container, styles.controls.seekbar, {marginBottom: 8}]}>
                         { this.renderSeekbar() }
 
                     </View>
@@ -1214,12 +1214,12 @@ const styles = {
         },
         handle: {
             position: 'absolute',
-            top:14,
+            top:10,
             marginLeft:28,
-            height: 20,
-            width: 20,
+            height: 25,
+            width: 25,
             zIndex:200,
-            borderRadius: 10,
+            borderRadius: 12.5,
         },
         circle: {
             height: 12,
