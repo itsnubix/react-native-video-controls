@@ -817,6 +817,11 @@ export default class VideoPlayer extends Component {
      * Back button control
      */
     renderBack() {
+
+        if (this.props.disableBack === true) {
+            return this.renderControl(<View></View>);            
+        }
+
         return this.renderControl(
             <Image
                 source={ require( './assets/img/back.png' ) }
@@ -831,6 +836,11 @@ export default class VideoPlayer extends Component {
      * Render the volume slider and attach the pan handlers
      */
     renderVolume() {
+
+        if (this.props.disableVolume === true) {
+            return this.renderControl(<View></View>);            
+        }
+
         return (
             <View style={ styles.volume.container }>
                 <View style={[
@@ -858,6 +868,11 @@ export default class VideoPlayer extends Component {
      * Render fullscreen toggle and set icon based on the fullscreen state.
      */
     renderFullscreen() {
+
+        if (this.props.disableFullScreen === true) {
+            return this.renderControl(<View></View>);
+        }
+
         let source = this.state.isFullscreen === true ? require( './assets/img/shrink.png' ) : require( './assets/img/expand.png' );
         return this.renderControl(
             <Image source={ source } />,
@@ -900,6 +915,12 @@ export default class VideoPlayer extends Component {
      * Render the seekbar and attach its handlers
      */
     renderSeekbar() {
+
+        //Check if the seekbar has been disabled before rendering.
+        if (this.props.disableSeekbar === true) {
+            return this.renderControl(<View></View>);
+        }
+
         return (
             <View style={ styles.seekbar.container }>
                 <View
@@ -934,6 +955,11 @@ export default class VideoPlayer extends Component {
      * Render the play/pause button and show the respective icon
      */
     renderPlayPause() {
+
+        if (this.props.disablePlayPause === true) {
+            return this.renderControl(<View></View>);
+        }
+
         let source = this.state.paused === true ? require( './assets/img/play.png' ) : require( './assets/img/pause.png' );
         return this.renderControl(
             <Image source={ source } />,
@@ -946,6 +972,7 @@ export default class VideoPlayer extends Component {
      * Render our title...if supplied.
      */
     renderTitle() {
+
         if ( this.opts.title ) {
             return (
                 <View style={[
@@ -969,6 +996,11 @@ export default class VideoPlayer extends Component {
      * Show our timer.
      */
     renderTimer() {
+
+        if (this.props.disableTimer === true) {
+            return this.renderControl(<View></View>);
+        }
+
         return this.renderControl(
             <Text style={ styles.controls.timerText }>
                 { this.calculateTime() }
