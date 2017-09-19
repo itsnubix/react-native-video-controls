@@ -57,7 +57,7 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
     onEnd={ () => {} }               // Fired when the video is complete.
 
     // disabling individual controls
-    disableFullScreen={ false }      // Used to hide the Fullscreen control.
+    disableFullscreen={ false }      // Used to hide the Fullscreen control.
     disableSeekbar={ false }         // Used to hide the Seekbar control.
     disableVolume={ false }          // Used to hide the Volume control.
     disableBack={ false }            // Used to hide the Back control.
