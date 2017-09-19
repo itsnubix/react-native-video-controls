@@ -802,10 +802,10 @@ export default class VideoPlayer extends Component {
                     style={[ styles.controls.column, styles.controls.vignette,
                 ]}>
                     <View style={ styles.controls.topControlGroup }>
-                        { this.renderBack() }
+                        { !this.props.disableBack && this.renderBack() }
                         <View style={ styles.controls.pullRight }>
-                            { this.renderVolume() }
-                            { this.renderFullscreen() }
+                            { !this.props.disableVolume && this.renderVolume() }
+                            { !this.props.disableFullscreen && this.renderFullscreen() }
                         </View>
                     </View>
                 </Image>
@@ -817,10 +817,6 @@ export default class VideoPlayer extends Component {
      * Back button control
      */
     renderBack() {
-
-        if (this.props.disableBack === true) {
-            return this.renderControl(<View></View>);            
-        }
 
         return this.renderControl(
             <Image
@@ -836,10 +832,6 @@ export default class VideoPlayer extends Component {
      * Render the volume slider and attach the pan handlers
      */
     renderVolume() {
-
-        if (this.props.disableVolume === true) {
-            return this.renderControl(<View></View>);            
-        }
 
         return (
             <View style={ styles.volume.container }>
@@ -869,10 +861,6 @@ export default class VideoPlayer extends Component {
      */
     renderFullscreen() {
 
-        if (this.props.disableFullScreen === true) {
-            return this.renderControl(<View></View>);
-        }
-
         let source = this.state.isFullscreen === true ? require( './assets/img/shrink.png' ) : require( './assets/img/expand.png' );
         return this.renderControl(
             <Image source={ source } />,
@@ -897,14 +885,15 @@ export default class VideoPlayer extends Component {
                     source={ require( './assets/img/bottom-vignette.png' ) }
                     style={[ styles.controls.column, styles.controls.vignette,
                 ]}>
-                    { this.renderSeekbar() }
+                    { !this.props.disableSeekbar && this.renderSeekbar() }
                     <View style={[
                         styles.controls.row,
                         styles.controls.bottomControlGroup
                     ]}>
-                        { this.renderPlayPause() }
+                        { !this.props.disablePlayPause && this.renderPlayPause() }
                         { this.renderTitle() }
-                        { this.renderTimer() }
+                        { !this.props.disableTimer && this.renderTimer() }
+
                     </View>
                 </Image>
             </Animated.View>
@@ -915,11 +904,6 @@ export default class VideoPlayer extends Component {
      * Render the seekbar and attach its handlers
      */
     renderSeekbar() {
-
-        //Check if the seekbar has been disabled before rendering.
-        if (this.props.disableSeekbar === true) {
-            return this.renderControl(<View></View>);
-        }
 
         return (
             <View style={ styles.seekbar.container }>
@@ -955,10 +939,6 @@ export default class VideoPlayer extends Component {
      * Render the play/pause button and show the respective icon
      */
     renderPlayPause() {
-
-        if (this.props.disablePlayPause === true) {
-            return this.renderControl(<View></View>);
-        }
 
         let source = this.state.paused === true ? require( './assets/img/play.png' ) : require( './assets/img/pause.png' );
         return this.renderControl(
@@ -996,10 +976,6 @@ export default class VideoPlayer extends Component {
      * Show our timer.
      */
     renderTimer() {
-
-        if (this.props.disableTimer === true) {
-            return this.renderControl(<View></View>);
-        }
 
         return this.renderControl(
             <Text style={ styles.controls.timerText }>
