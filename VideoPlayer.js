@@ -789,6 +789,11 @@ export default class VideoPlayer extends Component {
      * view and spaces them out.
      */
     renderTopControls() {
+
+        const backControl = !this.props.disableBack ? this.renderBack() : this.renderNullControl();
+        const volumeControl = !this.props.disableVolume ? this.renderVolume() : this.renderNullControl();
+        const fullscreenControl = !this.props.disableFullscreen ? this.renderFullscreen() : this.renderNullControl();
+
         return(
             <Animated.View style={[
                 styles.controls.top,
@@ -802,10 +807,10 @@ export default class VideoPlayer extends Component {
                     style={[ styles.controls.column, styles.controls.vignette,
                 ]}>
                     <View style={ styles.controls.topControlGroup }>
-                        { !this.props.disableBack && this.renderBack() }
+                        { backControl }
                         <View style={ styles.controls.pullRight }>
-                            { !this.props.disableVolume && this.renderVolume() }
-                            { !this.props.disableFullscreen && this.renderFullscreen() }
+                            { volumeControl }
+                            { fullscreenControl }
                         </View>
                     </View>
                 </Image>
@@ -873,6 +878,11 @@ export default class VideoPlayer extends Component {
      * Render bottom control group and wrap it in a holder
      */
     renderBottomControls() {
+
+        const playPauseControl = !this.props.disablePlayPause ? this.renderPlayPause() : this.renderNullControl();
+        const timerControl = !this.props.disableTimer ? this.renderTimer() : this.renderNullControl();
+        const seekbarControl = !this.props.disableSeekbar ? this.renderSeekbar() : this.renderNullControl();
+
         return(
             <Animated.View style={[
                 styles.controls.bottom,
@@ -885,14 +895,14 @@ export default class VideoPlayer extends Component {
                     source={ require( './assets/img/bottom-vignette.png' ) }
                     style={[ styles.controls.column, styles.controls.vignette,
                 ]}>
-                    { !this.props.disableSeekbar && this.renderSeekbar() }
+                    { seekbarControl }
                     <View style={[
                         styles.controls.row,
                         styles.controls.bottomControlGroup
                     ]}>
-                        { !this.props.disablePlayPause && this.renderPlayPause() }
+                        { playPauseControl }
                         { this.renderTitle() }
-                        { !this.props.disableTimer && this.renderTimer() }
+                        { timerControl }
 
                     </View>
                 </Image>
@@ -985,6 +995,14 @@ export default class VideoPlayer extends Component {
             styles.controls.timer
         );
     }
+
+    /**
+     * Renders an empty control, used to disable a control without breaking the view layout.
+     */
+    renderNullControl() {
+        return this.renderControl(<View></View>);   
+    }
+
 
     /**
      * Show loading icon
