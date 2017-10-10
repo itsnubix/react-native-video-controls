@@ -630,6 +630,18 @@ export default class VideoPlayer extends Component {
     }
 
     /**
+     * To allow basic playback management from the outside
+     * we have to handle possible props changes to state changes
+     */
+    componentWillReceiveProps(nextProps) {
+        if (this.state.paused !== nextProps.paused ) {
+            this.setState({
+                paused: nextProps.paused
+            })
+        }
+    }
+
+    /**
      * Upon mounting, calculate the position of the volume
      * bar based on the volume property supplied to it.
      */
