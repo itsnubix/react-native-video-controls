@@ -1,6 +1,6 @@
 {
   "name": "react-native-video-controls",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "A set of GUI controls for the react-native-video component",
   "license": "MIT",
   "main": "VideoPlayer.js",

@@ -1,3 +1,7 @@
+## 1.5.0 (27-10-2017
+  - [Added ability to remove controls](https://github.com/itsnubix/react-native-video-controls/pull/50)
+  - [Added ability to pass props](https://github.com/itsnubix/react-native-video-controls/pull/52)
+
 ## 1.4.1 (30-08-2017)
 Bug fixes. Updated `react-native-video` to ^2.0.0 in the peer deps and `react-native` to 47.2. Changed default title font size to 14.
 
