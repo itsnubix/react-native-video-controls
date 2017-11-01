@@ -1,4 +1,7 @@
-## 1.5.0 (27-10-2017
+## 1.5.1 (01-11-2017)
+  - [Fixed deprecation of Image tag containing children](https://github.com/itsnubix/react-native-video-controls/issues/55)
+
+## 1.5.0 (27-10-2017)
   - [Added ability to remove controls](https://github.com/itsnubix/react-native-video-controls/pull/50)
   - [Added ability to pass props](https://github.com/itsnubix/react-native-video-controls/pull/52)
 
