@@ -3,6 +3,7 @@ import Video from 'react-native-video';
 import {
     TouchableWithoutFeedback,
     TouchableHighlight,
+    ImageBackground,
     PanResponder,
     StyleSheet,
     Touchable,
@@ -814,10 +815,10 @@ export default class VideoPlayer extends Component {
                     marginTop: this.animations.topControl.marginTop,
                 }
             ]}>
-                <Image
+                <ImageBackground
                     source={ require( './assets/img/top-vignette.png' ) }
-                    style={[ styles.controls.column, styles.controls.vignette,
-                ]}>
+                    style={[ styles.controls.column ]}
+                    imageStyle={[ styles.controls.vignette ]}>
                     <View style={ styles.controls.topControlGroup }>
                         { backControl }
                         <View style={ styles.controls.pullRight }>
@@ -825,7 +826,7 @@ export default class VideoPlayer extends Component {
                             { fullscreenControl }
                         </View>
                     </View>
-                </Image>
+                </ImageBackground>
             </Animated.View>
         );
     }
@@ -903,10 +904,10 @@ export default class VideoPlayer extends Component {
                     marginBottom: this.animations.bottomControl.marginBottom,
                 }
             ]}>
-                <Image
+                <ImageBackground
                     source={ require( './assets/img/bottom-vignette.png' ) }
-                    style={[ styles.controls.column, styles.controls.vignette,
-                ]}>
+                    style={[ styles.controls.column ]}
+                    imageStyle={[ styles.controls.vignette ]}>
                     { seekbarControl }
                     <View style={[
                         styles.controls.row,
@@ -917,7 +918,7 @@ export default class VideoPlayer extends Component {
                         { timerControl }
 
                     </View>
-                </Image>
+                </ImageBackground>
             </Animated.View>
         );
     }
