@@ -1,8 +1,9 @@
 ## 2.0.2 (11-01-2018)
-Fix for #67
+Fix for [#67](https://github.com/itsnubix/react-native-video-controls/issues/67)
+  - Changed renderNullControl to return empty `<View/>`
 
 ## 2.0.1 (12-12-2017)
-Fix for #58
+Fix for [#58](https://github.com/itsnubix/react-native-video-controls/issues/58)
 
 ## 2.0.0 (02-11-2017)
 Update peer deps and version up.
