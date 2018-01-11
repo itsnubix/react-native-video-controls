@@ -33,7 +33,7 @@ export default class VideoPlayer extends Component {
             volume: this.props.volume || 1,
             rate: this.props.rate || 1,
             // Controls
-            
+
             isFullscreen: this.props.resizeMode === 'cover' || false,
             showTimeRemaining: true,
             volumeTrackWidth: 0,
@@ -487,7 +487,7 @@ export default class VideoPlayer extends Component {
 
         state.seekerFillWidth = position;
         state.seekerPosition = position;
-        
+
         if ( ! state.seeking ) {
             state.seekerOffset = position
         };
@@ -798,6 +798,15 @@ export default class VideoPlayer extends Component {
     }
 
     /**
+     * Renders an empty control, used to disable a control without breaking the view layout.
+     */
+    renderNullControl() {
+        return (
+            <View style={[ styles.controls.control ]} />
+        );
+    }
+
+    /**
      * Groups the top bar controls together in an animated
      * view and spaces them out.
      */
@@ -1008,14 +1017,6 @@ export default class VideoPlayer extends Component {
             styles.controls.timer
         );
     }
-
-    /**
-     * Renders an empty control, used to disable a control without breaking the view layout.
-     */
-    renderNullControl() {
-        return this.renderControl(<View></View>);   
-    }
-
 
     /**
      * Show loading icon
