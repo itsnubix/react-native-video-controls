@@ -1290,8 +1290,9 @@ const styles = {
             borderRadius: 12,
             position: 'relative',
             top: 8, left: 8,
-            height: 18,
-            width: 18,
+            height: 20,
+            width: 20,
+            padding: 4
         },
     })
 };
