@@ -1289,10 +1289,10 @@ const styles = {
         circle: {
             borderRadius: 12,
             position: 'relative',
-            top: 8, left: 8,
+            top: 6, left: 8,
             height: 14,
             width: 14,
-            padding: 12
+            padding: 8
         },
     })
 };
