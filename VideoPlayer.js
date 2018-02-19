@@ -44,7 +44,7 @@ export default class VideoPlayer extends Component {
             lastScreenPress: 0,
             volumeFillWidth: 0,
             seekerFillWidth: 0,
-            showControls: true,
+            showControls: this.props.showOnStart,
             volumePosition: 0,
             seekerPosition: 0,
             volumeOffset: 0,
