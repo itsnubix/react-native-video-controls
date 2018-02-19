@@ -18,6 +18,10 @@ import _ from 'lodash';
 
 export default class VideoPlayer extends Component {
 
+    static defaultProps = {
+        showOnStart: true
+    };
+
     constructor( props ) {
         super( props );
 
@@ -102,14 +106,16 @@ export default class VideoPlayer extends Component {
         /**
          * Various animations
          */
+        const initialValue = this.props.showOnStart ? 1 : 0;
+
         this.animations = {
             bottomControl: {
                 marginBottom: new Animated.Value( 0 ),
-                opacity: new Animated.Value( 1 ),
+                opacity: new Animated.Value( initialValue ),
             },
             topControl: {
                 marginTop: new Animated.Value( 0 ),
-                opacity: new Animated.Value( 1 ),
+                opacity: new Animated.Value( initialValue ),
             },
             video: {
                 opacity: new Animated.Value( 1 ),
