@@ -62,6 +62,5 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
     disableVolume={ false }          // Used to hide the Volume control.
     disableBack={ false }            // Used to hide the Back control.
     disableTimer={ false }           // Used to hide the Timer control.
-    disablePlayPause={ false }       // Used to hide the PlayPause control.
 />
 ```
