@@ -18,6 +18,19 @@ import _ from 'lodash';
 
 export default class VideoPlayer extends Component {
 
+    static defaultProps = {
+        showOnStart: true,
+        resizeMode: 'contain',
+        playWhenInactive: false,
+        playInBackground: false,
+        title: '',
+        repeat: false,
+        paused: false,
+        muted: false,
+        volume: 1,
+        rate: 1,
+    };
+
     constructor( props ) {
         super( props );
 
@@ -27,11 +40,11 @@ export default class VideoPlayer extends Component {
          */
         this.state = {
             // Video
-            resizeMode: this.props.resizeMode || 'contain',
-            paused: this.props.paused || false,
-            muted: this.props.muted || false,
-            volume: this.props.volume || 1,
-            rate: this.props.rate || 1,
+            resizeMode: this.props.resizeMode,
+            paused: this.props.paused,
+            muted: this.props.muted,
+            volume: this.props.volume,
+            rate: this.props.rate,
             // Controls
 
             isFullscreen: this.props.resizeMode === 'cover' || false,
@@ -40,7 +53,7 @@ export default class VideoPlayer extends Component {
             lastScreenPress: 0,
             volumeFillWidth: 0,
             seekerFillWidth: 0,
-            showControls: true,
+            showControls: this.props.showOnStart,
             volumePosition: 0,
             seekerPosition: 0,
             volumeOffset: 0,
@@ -56,10 +69,10 @@ export default class VideoPlayer extends Component {
          * Any options that can be set at init.
          */
         this.opts = {
-            playWhenInactive: this.props.playWhenInactive || false,
-            playInBackground: this.props.playInBackground || false,
-            repeat: this.props.repeat || false,
-            title: this.props.title || '',
+            playWhenInactive: this.props.playWhenInactive,
+            playInBackground: this.props.playInBackground,
+            repeat: this.props.repeat,
+            title: this.props.title,
         };
 
         /**
@@ -102,14 +115,16 @@ export default class VideoPlayer extends Component {
         /**
          * Various animations
          */
+        const initialValue = this.props.showOnStart ? 1 : 0;
+
         this.animations = {
             bottomControl: {
                 marginBottom: new Animated.Value( 0 ),
-                opacity: new Animated.Value( 1 ),
+                opacity: new Animated.Value( initialValue ),
             },
             topControl: {
                 marginTop: new Animated.Value( 0 ),
-                opacity: new Animated.Value( 1 ),
+                opacity: new Animated.Value( initialValue ),
             },
             video: {
                 opacity: new Animated.Value( 1 ),
