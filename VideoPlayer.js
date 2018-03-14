@@ -80,29 +80,26 @@ export default class VideoPlayer extends Component {
          */
         this.events = {
             onError: this.props.onError || this._onError.bind( this ),
+            onBack: this.props.onBack || this._onBack.bind( this ),
             onEnd: this.props.onEnd || this._onEnd.bind( this ),
             onScreenTouch: this._onScreenTouch.bind( this ),
+            onEnterFullscreen: this.props.onEnterFullscreen,
+            onExitFullscreen: this.props.onExitFullscreen,
             onLoadStart: this._onLoadStart.bind( this ),
             onProgress: this._onProgress.bind( this ),
             onLoad: this._onLoad.bind( this ),
+            onPause: this.props.onPause,
+            onPlay: this.props.onPlay,
         };
 
         /**
          * Functions used throughout the application
          */
         this.methods = {
-            // Private
             toggleFullscreen: this._toggleFullscreen.bind( this ),
             togglePlayPause: this._togglePlayPause.bind( this ),
             toggleControls: this._toggleControls.bind( this ),
             toggleTimer: this._toggleTimer.bind( this ),
-
-            // Public
-            onBack: this.props.onBack || this._onBack.bind( this ),
-            onEnterFullscreen: this.props.onEnterFullscreen,
-            onExitFullscreen: this.props.onExitFullscreen,
-            onPause: this.props.onPause,
-            onPlay: this.props.onPlay,
         };
 
         /**
@@ -429,10 +426,10 @@ export default class VideoPlayer extends Component {
         state.resizeMode = state.isFullscreen === true ? 'cover' : 'contain';
 
         if (state.isFullscreen) {
-          typeof this.props.onEnterFullscreen === 'function' && callback();
+            typeof this.events.onEnterFullscreen === 'function' && this.events.onEnterFullscreen();
         }
         else {
-          typeof this.props.onExitFullscreen === 'function' && callback();
+            typeof this.events.onExitFullscreen === 'function' && this.events.onExitFullscreen();
         }
 
         this.setState( state );
@@ -443,7 +440,15 @@ export default class VideoPlayer extends Component {
      */
     _togglePlayPause() {
         let state = this.state;
-        state.paused = ! state.paused;
+        state.paused = !state.paused;
+
+        if (state.paused) {
+            typeof this.events.onPause === 'function' && this.events.onPause();
+        }
+        else {
+            typeof this.events.onPlay === 'function' && this.events.onPlay();
+        }
+
         this.setState( state );
     }
 
@@ -880,7 +885,7 @@ export default class VideoPlayer extends Component {
                 source={ require( './assets/img/back.png' ) }
                 style={ styles.controls.back }
             />,
-            this.methods.onBack,
+            this.events.onBack,
             styles.controls.back
         );
     }
