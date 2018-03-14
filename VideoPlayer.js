@@ -91,11 +91,18 @@ export default class VideoPlayer extends Component {
          * Functions used throughout the application
          */
         this.methods = {
-            onBack: this.props.onBack || this._onBack.bind( this ),
+            // Private
             toggleFullscreen: this._toggleFullscreen.bind( this ),
             togglePlayPause: this._togglePlayPause.bind( this ),
             toggleControls: this._toggleControls.bind( this ),
             toggleTimer: this._toggleTimer.bind( this ),
+
+            // Public
+            onBack: this.props.onBack || this._onBack.bind( this ),
+            onEnterFullscreen: this.props.onEnterFullscreen,
+            onExitFullscreen: this.props.onExitFullscreen,
+            onPause: this.props.onPause,
+            onPlay: this.props.onPlay,
         };
 
         /**
@@ -417,8 +424,16 @@ export default class VideoPlayer extends Component {
      */
     _toggleFullscreen() {
         let state = this.state;
+
         state.isFullscreen = ! state.isFullscreen;
         state.resizeMode = state.isFullscreen === true ? 'cover' : 'contain';
+
+        if (state.isFullscreen) {
+          typeof this.props.onEnterFullscreen === 'function' && callback();
+        }
+        else {
+          typeof this.props.onExitFullscreen === 'function' && callback();
+        }
 
         this.setState( state );
     }
@@ -827,9 +842,9 @@ export default class VideoPlayer extends Component {
      */
     renderTopControls() {
 
-        const backControl = !this.props.disableBack ? this.renderBack() : this.renderNullControl();
-        const volumeControl = !this.props.disableVolume ? this.renderVolume() : this.renderNullControl();
-        const fullscreenControl = !this.props.disableFullscreen ? this.renderFullscreen() : this.renderNullControl();
+        const backControl = this.props.disableBack ? this.renderNullControl() : this.renderBack();
+        const volumeControl = this.props.disableVolume ? this.renderNullControl() : this.renderVolume();
+        const fullscreenControl = this.props.disableFullscreen ? this.renderNullControl() : this.renderFullscreen();
 
         return(
             <Animated.View style={[
@@ -916,9 +931,9 @@ export default class VideoPlayer extends Component {
      */
     renderBottomControls() {
 
-        const playPauseControl = !this.props.disablePlayPause ? this.renderPlayPause() : this.renderNullControl();
-        const timerControl = !this.props.disableTimer ? this.renderTimer() : this.renderNullControl();
-        const seekbarControl = !this.props.disableSeekbar ? this.renderSeekbar() : this.renderNullControl();
+        const timerControl = this.props.disableTimer ? this.renderNullControl() : this.renderTimer();
+        const seekbarControl = this.props.disableSeekbar ? this.renderNullControl() : this.renderSeekbar();
+        const playPauseControl = this.props.disablePlayPause ? this.renderNullControl() : this.renderPlayPause();
 
         return(
             <Animated.View style={[
