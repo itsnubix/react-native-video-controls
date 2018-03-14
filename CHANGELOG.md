@@ -1,8 +1,8 @@
 ## 2.2.0 (14-03-2018)
-Added in new event hooks for users to take advantage of... These are: onPlay, onPause, onEnterFullscreen and onExitFullscreen. Shout out to @dashracer and @Gregoirevda.
+Added in new event hooks for users to take advantage of... These are: onPlay, onPause, onEnterFullscreen and onExitFullscreen. Shout out to **@dashracer** and **@Gregoirevda**.
 
 ## 2.1.0 (23-02-2018)
-Added in `disablePlayPause` and `showOnStart` props. Shout out to @afilp and @batusai513.
+Added in `disablePlayPause` and `showOnStart` props. Shout out to **@afilp** and **@batusai513**.
 
 ## 2.0.2 (11-01-2018)
 Fix for [#67](https://github.com/itsnubix/react-native-video-controls/issues/67)
