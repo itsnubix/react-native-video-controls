@@ -55,12 +55,9 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
     // event callbacks
     onEnterFullscreen={ () => {} }   // Fired when the video enters fullscreen after the fullscreen button is pressed
     onExitFullscreen={ () => {} }    // Fired when the video exits fullscreen after the fullscreen button is pressed
-
+    onError={ () => {} }             // Fired when an error is encountered on load
     onPause={ () => {} }             // Fired when the video is paused after the play/pause button is pressed
     onPlay={ () => {} }              // Fire when the video begins playing after the play/pause button is pressed
-
-    onError={ () => {} }             // Fired when an error is encountered on load
-
     onBack={ () => {} }              // Function fired when back button is pressed.
     onEnd={ () => {} }               // Fired when the video is complete.
 
