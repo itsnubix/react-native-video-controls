@@ -46,8 +46,8 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
 
     // settings
     controlTimeout={ 15000 }         // hide controls after ms of inactivity.
-    showOnStart={ true }             // show or hide the controls on first render
     navigator={ navigator }          // prop from React Native <Navigator> component
+    showOnStart={ true }             // show or hide the controls on first render
     seekColor={ '#FFF' }             // fill/handle colour of the seekbar
     videoStyle={ {} }                // Style appended to <Video> component
     style={ {} }                     // Style appended to <View> container
@@ -63,10 +63,11 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
 
     // disabling individual controls
     disableFullscreen={ false }      // Used to hide the Fullscreen control.
+    disablePlayPause={ false }       // Used to hide the PlayPause control.
     disableSeekbar={ false }         // Used to hide the Seekbar control.
     disableVolume={ false }          // Used to hide the Volume control.
-    disableBack={ false }            // Used to hide the Back control.
     disableTimer={ false }           // Used to hide the Timer control.
-    disablePlayPause={ false }       // Used to hide the PlayPause control.
+    disableBack={ false }            // Used to hide the Back control.
+
 />
 ```
