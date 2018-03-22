@@ -44,10 +44,10 @@ You can pass any of the props that the `<Video />` component at [react-native-vi
 | ---------------------------- | ------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | toggleResizeModeOnFullscreen | Boolean       | true    | If true, clicking the fullscreen button will toggle the `<Video />` component between 'cover' and 'contain', set to false if you want to customize fullscreen behaviour |
 | controlTimeout               | Integer       | 15000   | Hide controls after X amount of time in milliseconds                                                                                                                    |
-| navigator                    | Navigator     | null    | If you're using the default React Native navigator and do not override the `onBack` function, you'll need to pass the navigator to the VideoPlayer for it to function   |
 | showOnStart                  | Boolean       | true    | Show or hide the controls on first render                                                                                                                               |
-| seekColor                    | String(#HEX)  | '#FFF'  | Fill/handle colour of the seekbar                                                                                                                                       |
 | videoStyle                   | StyleSheet    | null    | React Native StyleSheet object that is appended to the `<Video>` component                                                                                              |
+| navigator                    | Navigator     | null    | If you're using the default React Native navigator and do not override the `onBack` function, you'll need to pass the navigator to the VideoPlayer for it to function   |
+| seekColor                    | String(#HEX)  | '#FFF'  | Fill/handle colour of the seekbar                                                                                                                                       |
 | style                        | StyleSheet    | null    | React Native StyleSheet object that is appended to the video's parent `<View>`                                                                                          |
 
 ### Events
