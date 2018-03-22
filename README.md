@@ -40,29 +40,28 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
 ### Props
 You can pass any of the props that the `<Video />` component at [react-native-video](https://github.com/react-native-community/react-native-video) takes. Simply add them onto the `<VideoPlayer />` and it will pass them through to the `<Video />` component.  In addition, the `<VideoPlayer />` also takes these props:
 
-| Prop                           | Type          | Default | Description                                                                                                                                                         |
-| ------------------------------ | ------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `toggleResizeModeOnFullscreen` | Boolean       | true    | If true, clicking the fullscreen button will toggle the `<Video />` component between cover/contain, set to false if you want to customize fullscreen behaviour     |
-| `controlTimeout`               | Integer       | 15000   | Hide controls after X amount of time in milliseconds                                                                                                                |
-| `showOnStart`                  | Boolean       | true    | Show or hide the controls on first render                                                                                                                           |
-| `videoStyle`                   | StyleSheet    | null    | React Native StyleSheet object that is appended to the `<Video>` component                                                                                          |
-| `navigator`                    | Navigator     | null    | When using the default React Native navigator and do not override the `onBack` function, you'll need to pass the navigator to the VideoPlayer for it to function    |
-| `seekColor`                    | String(#HEX)  | '#FFF'  | Fill/handle colour of the seekbar                                                                                                                                   |
-| `style`                        | StyleSheet    | null    | React Native StyleSheet object that is appended to the video's parent `<View>`                                                                                      |
+| Prop                         | Type          | Default | Description                                                                                                                                                         |
+| ---------------------------- | ------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| toggleResizeModeOnFullscreen | Boolean       | true    | If true, clicking the fullscreen button will toggle the `<Video />` component between cover/contain, set to false if you want to customize fullscreen behaviour     |
+| controlTimeout               | Integer       | 15000   | Hide controls after X amount of time in milliseconds                                                                                                                |
+| showOnStart                  | Boolean       | true    | Show or hide the controls on first render                                                                                                                           |
+| videoStyle                   | StyleSheet    | null    | React Native StyleSheet object that is appended to the `<Video>` component                                                                                          |
+| navigator                    | Navigator     | null    | When using the default React Native navigator and do not override the `onBack` function, you'll need to pass the navigator to the VideoPlayer for it to function    |
+| seekColor                    | String(#HEX)  | '#FFF'  | Fill/handle colour of the seekbar                                                                                                                                   |
+| style                        | StyleSheet    | null    | React Native StyleSheet object that is appended to the video's parent `<View>`                                                                                      |
 
 ### Events
 These are various events that you can hook into and fire functions on in the component:
 
-
-| Callback             | Description                                                                        |
-| -------------------- | ---------------------------------------------------------------------------------- |
-| `onEnterFullscreen`  | Fired when the video enters fullscreen after the fullscreen button is pressed      |
-| `onExitFullscreen`   | Fired when the video exits fullscreen after the fullscreen button is pressed       |
-| `onError`            | Fired when an error is encountered when loading the video                          |
-| `onPause`            | Fired when the video is paused after the play/pause button is pressed              |
-| `onPlay`             | Fired when the video begins playing after the play/pause button is pressed         |
-| `onBack`             | Function fired when back button is pressed, override if using custom navigation    |
-| `onEnd`              | Fired when the video is complete                                                   |
+| Callback           | Description                                                                        |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| onEnterFullscreen  | Fired when the video enters fullscreen after the fullscreen button is pressed      |
+| onExitFullscreen   | Fired when the video exits fullscreen after the fullscreen button is pressed       |
+| onError            | Fired when an error is encountered when loading the video                          |
+| onPause            | Fired when the video is paused after the play/pause button is pressed              |
+| onPlay             | Fired when the video begins playing after the play/pause button is pressed         |
+| onBack             | Function fired when back button is pressed, override if using custom navigation    |
+| onEnd              | Fired when the video is complete                                                   |
 
 ### Controls
 These are the various controls that you can turn on/off as needed. All of these props default to false, override them to disable any controls
