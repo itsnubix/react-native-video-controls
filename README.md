@@ -40,7 +40,7 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
 ### Props
 You can pass any of the props that the `<Video />` component at [react-native-video](https://github.com/react-native-community/react-native-video) takes. Simply add them onto the `<VideoPlayer />` and it will pass them through to the `<Video />` component.  In addition, the `<VideoPlayer />` also takes these props:
 
-|:Prop                         |:Type          |:Default |:Description                                                                                                                                                             |
+| Prop                         | Type          | Default | Description                                                                                                                                                             |
 | ---------------------------- | ------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | toggleResizeModeOnFullscreen | Boolean       | true    | If true, clicking the fullscreen button will toggle the `<Video />` component between 'cover' and 'contain', set to false if you want to customize fullscreen behaviour |
 | controlTimeout               | Integer       | 15000   | Hide controls after X amount of time in milliseconds                                                                                                                    |
