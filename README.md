@@ -45,12 +45,13 @@ The `<VideoPlayer>` component can take a number of inputs to customize it as nee
     // Pass any prop that the <Video> element may accept
 
     // settings
-    controlTimeout={ 15000 }         // hide controls after ms of inactivity.
-    navigator={ navigator }          // prop from React Native <Navigator> component
-    showOnStart={ true }             // show or hide the controls on first render
-    seekColor={ '#FFF' }             // fill/handle colour of the seekbar
-    videoStyle={ {} }                // Style appended to <Video> component
-    style={ {} }                     // Style appended to <View> container
+    toggleResizeModeOnFullscreen={ true }  // Set to false if you want to override the fullscreen functionality
+    controlTimeout={ 15000 }               // hide controls after ms of inactivity.
+    navigator={ navigator }                // prop from React Native <Navigator> component
+    showOnStart={ true }                   // show or hide the controls on first render
+    seekColor={ '#FFF' }                   // fill/handle colour of the seekbar
+    videoStyle={ {} }                      // Style appended to <Video> component
+    style={ {} }                           // Style appended to <View> container
 
     // event callbacks
     onEnterFullscreen={ () => {} }   // Fired when the video enters fullscreen after the fullscreen button is pressed

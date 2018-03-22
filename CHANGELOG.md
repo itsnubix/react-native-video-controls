@@ -1,3 +1,7 @@
+## 2.2.1 (22-03-2018)
+Fix for [#86](https://github.com/itsnubix/react-native-video-controls/issues/86)
+  - Added `toggleResizeModeOnFullscreen` prop which defaults to `true`
+
 ## 2.2.0 (14-03-2018)
 Added in new event hooks for users to take advantage of... These are: onPlay, onPause, onEnterFullscreen and onExitFullscreen. Shout out to **@dashracer** and **@Gregoirevda**.
 

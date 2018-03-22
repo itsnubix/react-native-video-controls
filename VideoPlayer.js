@@ -19,16 +19,17 @@ import _ from 'lodash';
 export default class VideoPlayer extends Component {
 
     static defaultProps = {
-        showOnStart: true,
-        resizeMode: 'contain',
-        playWhenInactive: false,
-        playInBackground: false,
-        title: '',
-        repeat: false,
-        paused: false,
-        muted: false,
-        volume: 1,
-        rate: 1,
+        toggleResizeModeOnFullscreen:   true,
+        playInBackground:               false,
+        playWhenInactive:               false,
+        showOnStart:                    true,
+        resizeMode:                     'contain',
+        paused:                         false,
+        repeat:                         false,
+        volume:                         1,
+        muted:                          false,
+        title:                          '',
+        rate:                           1,
     };
 
     constructor( props ) {
@@ -423,7 +424,10 @@ export default class VideoPlayer extends Component {
         let state = this.state;
 
         state.isFullscreen = ! state.isFullscreen;
-        state.resizeMode = state.isFullscreen === true ? 'cover' : 'contain';
+
+        if (this.props.toggleResizeModeOnFullscreen) {
+            state.resizeMode = state.isFullscreen === true ? 'cover' : 'contain';
+        }
 
         if (state.isFullscreen) {
             typeof this.events.onEnterFullscreen === 'function' && this.events.onEnterFullscreen();
