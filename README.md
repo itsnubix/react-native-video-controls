@@ -31,14 +31,21 @@ import VideoPlayer from 'react-native-video-controls';
     source={{ uri: 'https://vjs.zencdn.net/v/oceans.mp4' }}
     navigator={ this.props.navigator }
 />
+```
 
+To play a local file, use require syntax like so:
+
+```js
+<VideoPlayer source={ require('path/to/file') } />
 ```
 
 ## API
 The `<VideoPlayer>` component can take a number of inputs to customize it as needed. They are outlined below:
 
 ### Props
-You can pass any of the props that the `<Video />` component at [react-native-video](https://github.com/react-native-community/react-native-video) takes. Simply add them onto the `<VideoPlayer />` and it will pass them through to the `<Video />` component.  In addition, the `<VideoPlayer />` also takes these props:
+You can pass any of the props that the `<Video />` component at [react-native-video](https://github.com/react-native-community/react-native-video) takes. Simply add them onto the `<VideoPlayer />` and it will pass them through to the `<Video />` component.
+
+In addition, the `<VideoPlayer />` also takes these props:
 
 | Prop                         | Type          | Default | Description                                                                                                                                                         |
 | ---------------------------- | ------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
