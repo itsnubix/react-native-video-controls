@@ -22,9 +22,9 @@ export default class VideoPlayer extends Component {
         toggleResizeModeOnFullscreen:   true,
         playInBackground:               false,
         playWhenInactive:               false,
-        showOnStart:                    true,
+        showOnStart:                    true, // Show controller on start
         resizeMode:                     'contain',
-        paused:                         false,
+        paused:                         true, // Pause video on start
         repeat:                         false,
         volume:                         1,
         muted:                          false,
