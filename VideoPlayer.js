@@ -10,7 +10,8 @@ import {
     Easing,
     Image,
     View,
-    Text
+    Text,
+    ImageBackground
 } from 'react-native';
 import _ from 'lodash';
 
@@ -789,14 +790,14 @@ export default class VideoPlayer extends Component {
                     marginTop: this.animations.topControl.marginTop,
                 }
             ]}>
-                <Image
+                <ImageBackground
                     source={ require( './assets/img/top-vignette.png' ) }
                     style={[ styles.controls.column, styles.controls.vignette,
                 ]}>
                     <View style={ styles.controls.topControlGroup }>
                         { this.renderBack() }
                     </View>
-                </Image>
+                </ImageBackground>
             </Animated.View>
         );
     }
@@ -868,7 +869,7 @@ export default class VideoPlayer extends Component {
                     marginBottom: this.animations.bottomControl.marginBottom,
                 }
             ]}>
-                <Image source={ require( './assets/img/bottom-vignette.png' ) }
+                <ImageBackground source={ require( './assets/img/bottom-vignette.png' ) }
                        style={[ styles.controls.column, styles.controls.vignette,]}>
                     <View style={[styles.player.container, styles.controls.seekbar, {marginBottom: 8}]}>
                         { this.renderSeekbar() }
@@ -880,7 +881,7 @@ export default class VideoPlayer extends Component {
                         { this.renderTimer() }
                     </View>
                     {this.renderSeekHandle()}
-                </Image>
+                </ImageBackground>
             </Animated.View>
         );
     }
