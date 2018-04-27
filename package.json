@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "lodash": "^4.16.4",
-    "react-native-video": "^1.0.0"
+    "react-native-video": "^2.0.0"
   },
   "peerDependencies": {
     "react-native": "^0.42.0"
