@@ -22,9 +22,9 @@ export default class VideoPlayer extends Component {
         toggleResizeModeOnFullscreen:   true,
         playInBackground:               false,
         playWhenInactive:               false,
-        showOnStart:                    true,
+        showOnStart:                    true, // Show controller on start
         resizeMode:                     'contain',
-        paused:                         false,
+        paused:                         true, // Pause video on start
         repeat:                         false,
         volume:                         1,
         muted:                          false,
@@ -1274,7 +1274,7 @@ const styles = {
         timerText: {
             backgroundColor: 'transparent',
             color: '#FFF',
-            fontSize: 11,
+            fontSize: 15,
             textAlign: 'right',
         },
     }),
@@ -1290,12 +1290,12 @@ const styles = {
         },
         track: {
             backgroundColor: '#333',
-            height: 1,
+            height: 3,
             marginLeft: 7,
         },
         fill: {
             backgroundColor: '#FFF',
-            height: 1,
+            height: 3,
         },
         handle: {
             position: 'absolute',
@@ -1313,14 +1313,14 @@ const styles = {
         },
         track: {
             backgroundColor: '#333',
-            height: 1,
+            height: 3,
             position: 'relative',
             top: 14,
             width: '100%'
         },
         fill: {
             backgroundColor: '#FFF',
-            height: 1,
+            height: 3,
             width: '100%'
         },
         handle: {
@@ -1332,9 +1332,9 @@ const styles = {
         circle: {
             borderRadius: 12,
             position: 'relative',
-            top: 8, left: 8,
-            height: 12,
-            width: 12,
+            top: 6, left: 8,
+            height: 18,
+            width: 18,
         },
     })
 };
