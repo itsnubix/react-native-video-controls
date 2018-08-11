@@ -189,6 +189,9 @@ export default class VideoPlayer extends Component {
 
         state.duration = data.duration;
         state.loading = false;
+        if (state.error === true) {
+            state.error = false
+        }
         this.setState( state );
 
         if ( state.showControls ) {
