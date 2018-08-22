@@ -15,6 +15,7 @@ import {
     Text
 } from 'react-native';
 import _ from 'lodash';
+import { I18nManager } from 'react-native';
 
 export default class VideoPlayer extends Component {
 
@@ -1191,7 +1192,7 @@ const styles = {
     }),
     controls: StyleSheet.create({
         row: {
-            flexDirection: 'row',
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
             height: null,
@@ -1217,7 +1218,7 @@ const styles = {
             textAlign: 'center',
         },
         pullRight: {
-            flexDirection: 'row',
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
             alignItems: 'center',
             justifyContent: 'center',
         },
@@ -1235,7 +1236,7 @@ const styles = {
             alignSelf: 'stretch',
             alignItems: 'center',
             justifyContent: 'space-between',
-            flexDirection: 'row',
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
             width: null,
             margin: 12,
             marginBottom: 18,
@@ -1249,10 +1250,10 @@ const styles = {
             marginBottom: 0,
         },
         volume: {
-            flexDirection: 'row',
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
         },
         fullscreen: {
-            flexDirection: 'row',
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
         },
         playPause: {
             position: 'relative',
@@ -1282,7 +1283,7 @@ const styles = {
         container: {
             alignItems: 'center',
             justifyContent: 'flex-start',
-            flexDirection: 'row',
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
             height: 1,
             marginLeft: 20,
             marginRight: 20,
@@ -1292,26 +1293,31 @@ const styles = {
             backgroundColor: '#333',
             height: 1,
             marginLeft: 7,
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
         },
         fill: {
             backgroundColor: '#FFF',
             height: 1,
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
         },
         handle: {
             position: 'absolute',
             marginTop: -24,
             marginLeft: -24,
             padding: 16,
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
         }
     }),
     seekbar: StyleSheet.create({
         container: {
             alignSelf: 'stretch',
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
             height: 28,
             marginLeft: 20,
             marginRight: 20
         },
         track: {
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
             backgroundColor: '#333',
             height: 1,
             position: 'relative',
@@ -1319,17 +1325,20 @@ const styles = {
             width: '100%'
         },
         fill: {
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
             backgroundColor: '#FFF',
             height: 1,
             width: '100%'
         },
         handle: {
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
             position: 'absolute',
             marginLeft: -7,
             height: 28,
             width: 28,
         },
         circle: {
+            flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
             borderRadius: 12,
             position: 'relative',
             top: 8, left: 8,
