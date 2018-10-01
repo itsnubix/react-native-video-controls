@@ -97,7 +97,7 @@ export default class VideoPlayer extends Component {
          * Functions used throughout the application
          */
         this.methods = {
-            toggleFullscreen: this._toggleFullscreen.bind( this ),
+            toggleFullscreen: this.props.onToggleFullscreen || this._toggleFullscreen.bind( this ),
             togglePlayPause: this._togglePlayPause.bind( this ),
             toggleControls: this._toggleControls.bind( this ),
             toggleTimer: this._toggleTimer.bind( this ),
