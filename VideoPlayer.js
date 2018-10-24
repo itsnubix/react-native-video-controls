@@ -858,7 +858,7 @@ export default class VideoPlayer extends Component {
         const backControl = this.props.disableBack ? this.renderNullControl() : this.renderBack();
         const volumeControl = this.props.disableVolume ? this.renderNullControl() : this.renderVolume();
         const fullscreenControl = this.props.disableFullscreen ? this.renderNullControl() : this.renderFullscreen();
-        const airPlayButton = this.props.airPlayButton;
+        const airPlayButton = !this.props.airPlayButton ? this.renderNullControl() : this.props.airPlayButton;
 
         return(
             <Animated.View style={[
