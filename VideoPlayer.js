@@ -1113,26 +1113,31 @@ export default class VideoPlayer extends Component {
                 style={[ styles.player.container, this.styles.containerStyle ]}
             >
                 <View style={[ styles.player.container, this.styles.containerStyle ]}>
-                    <Video
-                        { ...this.props }
-                        ref={ videoPlayer => this.player.ref = videoPlayer }
+                    {!this.props.isGoogleCastConnected ?
+                        <Video
+                            { ...this.props }
+                            ref={ videoPlayer => this.player.ref = videoPlayer }
 
-                        resizeMode={ this.state.resizeMode }
-                        volume={ this.state.volume }
-                        paused={ this.state.paused }
-                        muted={ this.state.muted }
-                        rate={ this.state.rate }
+                            resizeMode={ this.state.resizeMode }
+                            volume={ this.state.volume }
+                            paused={ this.state.paused }
+                            muted={ this.state.muted }
+                            rate={ this.state.rate }
 
-                        onLoadStart={ this.events.onLoadStart }
-                        onProgress={ this.events.onProgress }
-                        onError={ this.events.onError }
-                        onLoad={ this.events.onLoad }
-                        onEnd={ this.events.onEnd }
+                            onLoadStart={ this.events.onLoadStart }
+                            onProgress={ this.events.onProgress }
+                            onError={ this.events.onError }
+                            onLoad={ this.events.onLoad }
+                            onEnd={ this.events.onEnd }
 
-                        style={[ styles.player.video, this.styles.videoStyle ]}
+                            style={[ styles.player.video, this.styles.videoStyle ]}
 
-                        source={ this.props.source }
-                    />
+                            source={ this.props.source }
+                        />
+                        :
+                        <View/>
+                    }
+
                     { this.renderError() }
                     { this.renderTopControls() }
                     { this.renderLoader() }
