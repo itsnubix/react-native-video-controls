@@ -313,7 +313,7 @@ export default class VideoPlayer extends Component {
      * screen so they're not interactable
      */
     hideControlAnimation() {
-        this.events.onHideControl();
+        if (this.events.onHideControl) this.events.onHideControl();
         Animated.parallel([
             Animated.timing(
                 this.animations.topControl.opacity,
@@ -340,7 +340,7 @@ export default class VideoPlayer extends Component {
      * fade in.
      */
     showControlAnimation() {
-        this.events.onShowControl();
+        if (this.events.onShowControl) this.events.onShowControl();
         Animated.parallel([
             Animated.timing(
                 this.animations.topControl.opacity,
