@@ -681,6 +681,13 @@ export default class VideoPlayer extends Component {
                 paused: nextProps.paused
             })
         }
+
+        if(this.styles.videoStyle !== nextProps.videoStyle){
+            this.styles.videoStyle = nextProps.videoStyle;
+        }
+        if(this.styles.containerStyle !== nextProps.style){
+            this.styles.containerStyle = nextProps.style;
+        }
     }
 
     /**
