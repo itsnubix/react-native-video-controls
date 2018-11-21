@@ -30,6 +30,7 @@ export default class VideoPlayer extends Component {
         muted:                          false,
         title:                          '',
         rate:                           1,
+        isFullScreen:                   false,
     };
 
     constructor( props ) {
@@ -48,7 +49,7 @@ export default class VideoPlayer extends Component {
             rate: this.props.rate,
             // Controls
 
-            isFullscreen: this.props.resizeMode === 'cover' || false,
+            isFullscreen: this.props.isFullScreen || this.props.resizeMode === 'cover' || false,
             showTimeRemaining: true,
             volumeTrackWidth: 0,
             lastScreenPress: 0,
@@ -186,9 +187,9 @@ export default class VideoPlayer extends Component {
      */
     _onLoad( data = {} ) {
         let state = this.state;
-
-        state.duration = data.duration;
         state.loading = false;
+        state.duration = data.duration;
+        
         this.setState( state );
 
         if ( state.showControls ) {
@@ -646,6 +647,7 @@ export default class VideoPlayer extends Component {
      * @return {float} volume handle position in px based on volume
      */
     calculateVolumePositionFromVolume() {
+        console.log(this.player.volumeWidth / this.state.volume);
         return this.player.volumeWidth / this.state.volume;
     }
 
@@ -681,7 +683,6 @@ export default class VideoPlayer extends Component {
                 paused: nextProps.paused
             })
         }
-
         if(this.styles.videoStyle !== nextProps.videoStyle){
             this.styles.videoStyle = nextProps.videoStyle;
         }
