@@ -739,10 +739,10 @@ export default class VideoPlayer extends Component {
 
                 if ( ! state.loading ) {
                     const time = this.calculateTimeFromSeekerPosition();
-                    const timeDifference = Math.abs(state.currentTime - time);
+                    const timeDifference = Math.abs( state.currentTime - time );
 
-                    if (time < state.duration && timeDifference >= this.player.scrubbingTimeStep) {
-                        this.seekTo(time);
+                    if ( time < state.duration && timeDifference >= this.player.scrubbingTimeStep ) {
+                        this.seekTo( time );
                     }
                 }
             },
