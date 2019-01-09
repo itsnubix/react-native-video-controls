@@ -108,6 +108,7 @@ export default class VideoPlayer extends Component {
          */
         this.player = {
             controlTimeoutDelay: this.props.controlTimeout || 15000,
+            scrubbingTimeStep: this.props.scrubbingTimeStep || 500,
             volumePanResponder: PanResponder,
             seekPanResponder: PanResponder,
             controlTimeout: null,
@@ -734,6 +735,16 @@ export default class VideoPlayer extends Component {
             onPanResponderMove: ( evt, gestureState ) => {
                 const position = this.state.seekerOffset + gestureState.dx;
                 this.setSeekerPosition( position );
+                const state = this.state;
+
+                if ( ! state.loading ) {
+                    const time = this.calculateTimeFromSeekerPosition();
+                    const timeDifference = Math.abs(state.currentTime - time);
+
+                    if (time < state.duration && timeDifference >= this.player.scrubbingTimeStep) {
+                        this.seekTo(time);
+                    }
+                }
             },
 
             /**
