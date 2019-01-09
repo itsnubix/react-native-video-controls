@@ -3,6 +3,7 @@ import Video from 'react-native-video';
 import {
     TouchableWithoutFeedback,
     TouchableHighlight,
+    InteractionManager,
     ImageBackground,
     PanResponder,
     StyleSheet,
@@ -60,6 +61,8 @@ export default class VideoPlayer extends Component {
             volumeOffset: 0,
             seekerOffset: 0,
             seeking: false,
+            originallyPaused: false,
+            seekingDuringSeek: false,
             loading: false,
             currentTime: 0,
             error: false,
@@ -88,6 +91,7 @@ export default class VideoPlayer extends Component {
             onExitFullscreen: this.props.onExitFullscreen,
             onLoadStart: this._onLoadStart.bind( this ),
             onProgress: this._onProgress.bind( this ),
+            onSeek: this._onSeek.bind( this ),
             onLoad: this._onLoad.bind( this ),
             onPause: this.props.onPause,
             onPlay: this.props.onPlay,
@@ -209,18 +213,43 @@ export default class VideoPlayer extends Component {
      */
     _onProgress( data = {} ) {
         let state = this.state;
-        state.currentTime = data.currentTime;
 
-        if ( ! state.seeking ) {
-            const position = this.calculateSeekerPosition();
-            this.setSeekerPosition( position );
+        if ( ! state.seekingDuringSeek ) {
+            state.currentTime = data.currentTime;
+
+            if (!state.seeking) {
+                const position = this.calculateSeekerPosition();
+                this.setSeekerPosition(position);
+            }
+
+            if (typeof this.props.onProgress === 'function') {
+                this.props.onProgress(...arguments);
+            }
+
+            this.setState(state);
         }
+    }
 
-        if ( typeof this.props.onProgress === 'function' ) {
-            this.props.onProgress(...arguments);
+    /**
+     * For onSeek we clear seekingDuringSeek if set.
+     *
+     * @param {object} data The video meta data
+     */
+    _onSeek( data = {} ) {
+        let state = this.state;
+        if ( state.seekingDuringSeek ) {
+            state.seekingDuringSeek = false;
+            state.currentTime = data.currentTime;
+
+            if ( ! state.seeking ) {
+                const time = this.calculateTimeFromSeekerPosition();
+                this.seekTo( time );
+                this.setControlTimeout();
+                state.paused = state.originallyPaused;
+            }
+
+            this.setState( state );
         }
-
-        this.setState( state );
     }
 
     /**
@@ -726,6 +755,9 @@ export default class VideoPlayer extends Component {
                 let state = this.state;
                 this.clearControlTimeout();
                 state.seeking = true;
+                state.originallyPaused = state.paused;
+                state.seekingDuringSeek = false;
+                state.paused = true;
                 this.setState( state );
             },
 
@@ -735,14 +767,19 @@ export default class VideoPlayer extends Component {
             onPanResponderMove: ( evt, gestureState ) => {
                 const position = this.state.seekerOffset + gestureState.dx;
                 this.setSeekerPosition( position );
-                const state = this.state;
+                let state = this.state;
 
-                if ( ! state.loading ) {
+                if ( ! state.loading && ! state.seekingDuringSeek ) {
                     const time = this.calculateTimeFromSeekerPosition();
-                    const timeDifference = Math.abs( state.currentTime - time );
+                    const timeDifference = Math.abs( state.currentTime - time ) * 1000;
 
                     if ( time < state.duration && timeDifference >= this.player.scrubbingTimeStep ) {
-                        this.seekTo( time );
+                        state.seekingDuringSeek = true;
+
+                        this.setState( state );
+                        setTimeout(() => {
+                            this.player.ref.seek( time, this.player.scrubbingTimeStep );
+                        }, 1);
                     }
                 }
             },
@@ -758,9 +795,12 @@ export default class VideoPlayer extends Component {
                 if ( time >= state.duration && ! state.loading ) {
                     state.paused = true;
                     this.events.onEnd();
+                } else if ( state.seekingDuringSeek ) {
+                    state.seeking = false;
                 } else {
                     this.seekTo( time );
                     this.setControlTimeout();
+                    state.paused = state.originallyPaused;
                     state.seeking = false;
                 }
                 this.setState( state );
@@ -1133,6 +1173,7 @@ export default class VideoPlayer extends Component {
                         onError={ this.events.onError }
                         onLoad={ this.events.onLoad }
                         onEnd={ this.events.onEnd }
+                        onSeek={ this.events.onSeek }
 
                         style={[ styles.player.video, this.styles.videoStyle ]}
 
