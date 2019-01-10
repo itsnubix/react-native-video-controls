@@ -51,7 +51,6 @@ export default class VideoPlayer extends Component {
             isFullscreen: this.props.resizeMode === 'cover' || false,
             showTimeRemaining: true,
             volumeTrackWidth: 0,
-            lastScreenPress: 0,
             volumeFillWidth: 0,
             seekerFillWidth: 0,
             showControls: this.props.showOnStart,
@@ -114,6 +113,7 @@ export default class VideoPlayer extends Component {
             volumePanResponder: PanResponder,
             seekPanResponder: PanResponder,
             controlTimeout: null,
+            tapActionTimeout: null,
             volumeWidth: 150,
             iconOffset: 7,
             seekWidth: 0,
@@ -277,24 +277,29 @@ export default class VideoPlayer extends Component {
     /**
      * This is a single and double tap listener
      * when the user taps the screen anywhere.
-     * One tap toggles controls, two toggles
-     * fullscreen mode.
+     * One tap toggles controls and/or toggles pause,
+     * two toggles fullscreen mode.
      */
     _onScreenTouch() {
-        let state = this.state;
-        const time = new Date().getTime();
-        const delta =  time - state.lastScreenPress;
-
-        state.lastScreenPress = time;
-
-        this.setState( state );
-
-        if ( delta < 300 ) {
+        if ( this.player.tapActionTimeout ) {
+            clearTimeout( this.player.tapActionTimeout );
+            this.player.tapActionTimeout = 0;
             this.methods.toggleFullscreen();
-        } else if ( this.player.tapAnywhereToPause && state.showControls ) {
-            this.methods.togglePlayPause();
+            const state = this.state;
+            if ( state.showControls ) {
+                this.resetControlTimeout();
+            }
         } else {
-            this.methods.toggleControls();
+            this.player.tapActionTimeout = setTimeout( ()=> {
+                const state = this.state;
+                if ( this.player.tapAnywhereToPause && state.showControls ) {
+                    this.methods.togglePlayPause();
+                    this.resetControlTimeout();
+                } else {
+                    this.methods.toggleControls();
+                }
+                this.player.tapActionTimeout = 0;
+            }, 300 );
         }
     }
 
@@ -758,7 +763,7 @@ export default class VideoPlayer extends Component {
                 let state = this.state;
                 this.clearControlTimeout();
 
-                const position = evt.locationX;
+                const position = evt.nativeEvent.locationX;
                 this.setSeekerPosition( position );
 
                 state.seeking = true;
@@ -1041,11 +1046,13 @@ export default class VideoPlayer extends Component {
     renderSeekbar() {
 
         return (
-            <View style={ styles.seekbar.container } >
+            <View style={ styles.seekbar.container }
+                  collapsable={false}
+                  { ...this.player.seekPanResponder.panHandlers }
+            >
                 <View
                     style={ styles.seekbar.track }
                     onLayout={ event => this.player.seekerWidth = event.nativeEvent.layout.width }
-                    { ...this.player.seekPanResponder.panHandlers }
                 >
                     <View style={[
                         styles.seekbar.fill,
