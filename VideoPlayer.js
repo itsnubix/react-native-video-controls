@@ -217,16 +217,16 @@ export default class VideoPlayer extends Component {
         if ( ! state.scrubbing ) {
             state.currentTime = data.currentTime;
 
-            if (!state.seeking) {
+            if ( ! state.seeking ) {
                 const position = this.calculateSeekerPosition();
-                this.setSeekerPosition(position);
+                this.setSeekerPosition( position );
             }
 
-            if (typeof this.props.onProgress === 'function') {
-                this.props.onProgress(...arguments);
+            if ( typeof this.props.onProgress === 'function' ) {
+                this.props.onProgress( ...arguments );
             }
 
-            this.setState(state);
+            this.setState( state );
         }
     }
 
@@ -791,9 +791,9 @@ export default class VideoPlayer extends Component {
                         state.scrubbing = true;
 
                         this.setState( state );
-                        setTimeout(() => {
+                        setTimeout( () => {
                             this.player.ref.seek( time, this.player.scrubbingTimeStep );
-                        }, 1);
+                        }, 1 );
                     }
                 }
             },
