@@ -3,7 +3,6 @@ import Video from 'react-native-video';
 import {
     TouchableWithoutFeedback,
     TouchableHighlight,
-    InteractionManager,
     ImageBackground,
     PanResponder,
     StyleSheet,
@@ -62,7 +61,7 @@ export default class VideoPlayer extends Component {
             seekerOffset: 0,
             seeking: false,
             originallyPaused: false,
-            seekingDuringSeek: false,
+            scrubbing: false,
             loading: false,
             currentTime: 0,
             error: false,
@@ -112,7 +111,6 @@ export default class VideoPlayer extends Component {
          */
         this.player = {
             controlTimeoutDelay: this.props.controlTimeout || 15000,
-            scrubbingTimeStep: this.props.scrubbingTimeStep || 500,
             volumePanResponder: PanResponder,
             seekPanResponder: PanResponder,
             controlTimeout: null,
@@ -120,6 +118,8 @@ export default class VideoPlayer extends Component {
             iconOffset: 7,
             seekWidth: 0,
             ref: Video,
+            scrubbingTimeStep: this.props.scrubbing || 0,
+            tapAnywhereToPause: this.props.tapAnywhereToPause,
         };
 
         /**
@@ -214,7 +214,7 @@ export default class VideoPlayer extends Component {
     _onProgress( data = {} ) {
         let state = this.state;
 
-        if ( ! state.seekingDuringSeek ) {
+        if ( ! state.scrubbing ) {
             state.currentTime = data.currentTime;
 
             if (!state.seeking) {
@@ -231,19 +231,19 @@ export default class VideoPlayer extends Component {
     }
 
     /**
-     * For onSeek we clear seekingDuringSeek if set.
+     * For onSeek we clear scrubbing if set.
      *
      * @param {object} data The video meta data
      */
     _onSeek( data = {} ) {
         let state = this.state;
-        if ( state.seekingDuringSeek ) {
-            state.seekingDuringSeek = false;
+        if ( state.scrubbing ) {
+            state.scrubbing = false;
             state.currentTime = data.currentTime;
 
+            // Seeking may be false here if the user released the seek bar while the player was still processing
+            // the last seek command. In this case, perform the steps that have been postponed.
             if ( ! state.seeking ) {
-                const time = this.calculateTimeFromSeekerPosition();
-                this.seekTo( time );
                 this.setControlTimeout();
                 state.paused = state.originallyPaused;
             }
@@ -285,14 +285,17 @@ export default class VideoPlayer extends Component {
         const time = new Date().getTime();
         const delta =  time - state.lastScreenPress;
 
-        if ( delta < 300 ) {
-            this.methods.toggleFullscreen();
-        }
-
-        this.methods.toggleControls();
         state.lastScreenPress = time;
 
         this.setState( state );
+
+        if ( delta < 300 ) {
+            this.methods.toggleFullscreen();
+        } else if ( this.player.tapAnywhereToPause && state.showControls ) {
+            this.methods.togglePlayPause();
+        } else {
+            this.methods.toggleControls();
+        }
     }
 
 
@@ -756,8 +759,10 @@ export default class VideoPlayer extends Component {
                 this.clearControlTimeout();
                 state.seeking = true;
                 state.originallyPaused = state.paused;
-                state.seekingDuringSeek = false;
-                state.paused = true;
+                state.scrubbing = false;
+                if ( this.player.scrubbingTimeStep > 0 ) {
+                    state.paused = true;
+                }
                 this.setState( state );
             },
 
@@ -769,12 +774,12 @@ export default class VideoPlayer extends Component {
                 this.setSeekerPosition( position );
                 let state = this.state;
 
-                if ( ! state.loading && ! state.seekingDuringSeek ) {
+                if ( this.player.scrubbingTimeStep > 0 && ! state.loading && ! state.scrubbing ) {
                     const time = this.calculateTimeFromSeekerPosition();
                     const timeDifference = Math.abs( state.currentTime - time ) * 1000;
 
                     if ( time < state.duration && timeDifference >= this.player.scrubbingTimeStep ) {
-                        state.seekingDuringSeek = true;
+                        state.scrubbing = true;
 
                         this.setState( state );
                         setTimeout(() => {
@@ -795,7 +800,7 @@ export default class VideoPlayer extends Component {
                 if ( time >= state.duration && ! state.loading ) {
                     state.paused = true;
                     this.events.onEnd();
-                } else if ( state.seekingDuringSeek ) {
+                } else if ( state.scrubbing ) {
                     state.seeking = false;
                 } else {
                     this.seekTo( time );
