@@ -1053,24 +1053,30 @@ export default class VideoPlayer extends Component {
                 <View
                     style={ styles.seekbar.track }
                     onLayout={ event => this.player.seekerWidth = event.nativeEvent.layout.width }
+                    pointerEvents={'none'}
                 >
-                    <View style={[
-                        styles.seekbar.fill,
-                        {
-                            width: this.state.seekerFillWidth,
-                            backgroundColor: this.props.seekColor || '#FFF'
-                        }
-                    ]}/>
+                    <View
+                        style={[
+                            styles.seekbar.fill,
+                            {
+                                width: this.state.seekerFillWidth,
+                                backgroundColor: this.props.seekColor || '#FFF'
+                            }
+                        ]}
+                        pointerEvents={'none'}
+                    />
                 </View>
                 <View
                     style={[
                         styles.seekbar.handle,
                         { left: this.state.seekerPosition }
                     ]}
+                    pointerEvents={'none'}
                 >
                     <View style={[
                         styles.seekbar.circle,
                         { backgroundColor: this.props.seekColor || '#FFF' } ]}
+                        pointerEvents={'none'}
                     />
                 </View>
             </View>
