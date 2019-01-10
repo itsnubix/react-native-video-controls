@@ -563,14 +563,14 @@ export default class VideoPlayer extends Component {
         state.seekerPosition = position;
 
         if ( ! state.seeking ) {
-            state.seekerOffset = position
-        };
+            state.seekerOffset = position;
+        }
 
         this.setState( state );
     }
 
     /**
-     * Contrain the location of the seeker to the
+     * Constrain the location of the seeker to the
      * min/max value based on how big the
      * seeker is.
      *
@@ -757,6 +757,10 @@ export default class VideoPlayer extends Component {
             onPanResponderGrant: ( evt, gestureState ) => {
                 let state = this.state;
                 this.clearControlTimeout();
+
+                const position = evt.locationX;
+                this.setSeekerPosition( position );
+
                 state.seeking = true;
                 state.originallyPaused = state.paused;
                 state.scrubbing = false;
@@ -1037,10 +1041,11 @@ export default class VideoPlayer extends Component {
     renderSeekbar() {
 
         return (
-            <View style={ styles.seekbar.container }>
+            <View style={ styles.seekbar.container } >
                 <View
                     style={ styles.seekbar.track }
                     onLayout={ event => this.player.seekerWidth = event.nativeEvent.layout.width }
+                    { ...this.player.seekPanResponder.panHandlers }
                 >
                     <View style={[
                         styles.seekbar.fill,
@@ -1055,7 +1060,6 @@ export default class VideoPlayer extends Component {
                         styles.seekbar.handle,
                         { left: this.state.seekerPosition }
                     ]}
-                    { ...this.player.seekPanResponder.panHandlers }
                 >
                     <View style={[
                         styles.seekbar.circle,
