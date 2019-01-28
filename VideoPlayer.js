@@ -928,6 +928,7 @@ export default class VideoPlayer extends Component {
                         { left: this.state.volumePosition }
                     ]}
                     { ...this.player.volumePanResponder.panHandlers }
+                    testID="video-volume-pin"
                 >
                     <Image style={ styles.volume.icon } source={ require( './assets/img/volume.png' ) } />
                 </View>
@@ -1011,6 +1012,7 @@ export default class VideoPlayer extends Component {
                         { left: this.state.seekerPosition }
                     ]}
                     { ...this.player.seekPanResponder.panHandlers }
+                    testID="video-seekbar-pin"
                 >
                     <View style={[
                         styles.seekbar.circle,
@@ -1027,7 +1029,7 @@ export default class VideoPlayer extends Component {
     renderPlayPause() {
 
         const source = this.state.paused === true ? require( './assets/img/play.png' ) : require( './assets/img/pause.png' );
-        const testIDSuffix = this.state.paused === true ? 'pause' : 'play';
+        const testIDSuffix = this.state.paused === true ? 'play' : 'pause';
 
         return this.renderControl(
             <Image source={ source } testID={`video-${testIDSuffix}`} />,
