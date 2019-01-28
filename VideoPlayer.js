@@ -1029,7 +1029,7 @@ export default class VideoPlayer extends Component {
     renderPlayPause() {
 
         const source = this.state.paused === true ? require( './assets/img/play.png' ) : require( './assets/img/pause.png' );
-        const testIDSuffix = this.state.paused === true ? 'pause' : 'play';
+        const testIDSuffix = this.state.paused === true ? 'play' : 'pause';
 
         return this.renderControl(
             <Image source={ source } testID={`video-${testIDSuffix}`} />,
