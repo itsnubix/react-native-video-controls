@@ -900,6 +900,7 @@ export default class VideoPlayer extends Component {
             <Image
                 source={ require( './assets/img/back.png' ) }
                 style={ styles.controls.back }
+                testID="video-back"
             />,
             this.events.onBack,
             styles.controls.back
@@ -912,7 +913,7 @@ export default class VideoPlayer extends Component {
     renderVolume() {
 
         return (
-            <View style={ styles.volume.container }>
+            <View style={ styles.volume.container } testID="video-volume">
                 <View style={[
                     styles.volume.fill,
                     { width: this.state.volumeFillWidth }
@@ -939,9 +940,11 @@ export default class VideoPlayer extends Component {
      */
     renderFullscreen() {
 
-        let source = this.state.isFullscreen === true ? require( './assets/img/shrink.png' ) : require( './assets/img/expand.png' );
+        const source = this.state.isFullscreen === true ? require( './assets/img/shrink.png' ) : require( './assets/img/expand.png' );
+        const testIDSuffix = this.state.isFullscreen === true ? 'shrink' : 'expand';
+
         return this.renderControl(
-            <Image source={ source } />,
+            <Image source={ source } testID={`video-fullscreen-${testIDSuffix}`} />,
             this.methods.toggleFullscreen,
             styles.controls.fullscreen
         );
@@ -989,7 +992,7 @@ export default class VideoPlayer extends Component {
     renderSeekbar() {
 
         return (
-            <View style={ styles.seekbar.container }>
+            <View style={ styles.seekbar.container } testID="video-seekbar">
                 <View
                     style={ styles.seekbar.track }
                     onLayout={ event => this.player.seekerWidth = event.nativeEvent.layout.width }
@@ -1023,9 +1026,11 @@ export default class VideoPlayer extends Component {
      */
     renderPlayPause() {
 
-        let source = this.state.paused === true ? require( './assets/img/play.png' ) : require( './assets/img/pause.png' );
+        const source = this.state.paused === true ? require( './assets/img/play.png' ) : require( './assets/img/pause.png' );
+        const testIDSuffix = this.state.paused === true ? 'pause' : 'play';
+
         return this.renderControl(
-            <Image source={ source } />,
+            <Image source={ source } testID={`video-${testIDSuffix}`} />,
             this.methods.togglePlayPause,
             styles.controls.playPause
         );
@@ -1045,7 +1050,7 @@ export default class VideoPlayer extends Component {
                     <Text style={[
                         styles.controls.text,
                         styles.controls.titleText
-                    ]} numberOfLines={ 1 }>
+                    ]} numberOfLines={ 1 } testID="video-title">
                         { this.opts.title || '' }
                     </Text>
                 </View>
@@ -1061,7 +1066,7 @@ export default class VideoPlayer extends Component {
     renderTimer() {
 
         return this.renderControl(
-            <Text style={ styles.controls.timerText }>
+            <Text style={ styles.controls.timerText } testID="video-timer">
                 { this.calculateTime() }
             </Text>,
             this.methods.toggleTimer,
@@ -1075,7 +1080,7 @@ export default class VideoPlayer extends Component {
     renderLoader() {
         if ( this.state.loading ) {
             return (
-                <View style={ styles.loader.container }>
+                <View style={ styles.loader.container } testID="video-loader">
                     <Animated.Image source={ require( './assets/img/loader-icon.png' ) } style={[
                         styles.loader.icon,
                         { transform: [
@@ -1094,7 +1099,7 @@ export default class VideoPlayer extends Component {
     renderError() {
         if ( this.state.error ) {
             return (
-                <View style={ styles.error.container }>
+                <View style={ styles.error.container } testID="video-error">
                     <Image source={ require( './assets/img/error-icon.png' ) } style={ styles.error.icon } />
                     <Text style={ styles.error.text }>
                         Video unavailable
@@ -1114,7 +1119,7 @@ export default class VideoPlayer extends Component {
                 onPress={ this.events.onScreenTouch }
                 style={[ styles.player.container, this.styles.containerStyle ]}
             >
-                <View style={[ styles.player.container, this.styles.containerStyle ]}>
+                <View style={[ styles.player.container, this.styles.containerStyle ]} testID="video">
                     <Video
                         { ...this.props }
                         ref={ videoPlayer => this.player.ref = videoPlayer }
