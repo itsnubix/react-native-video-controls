@@ -64,6 +64,7 @@ export default class VideoPlayer extends Component {
             currentTime: 0,
             error: false,
             duration: 0,
+            isCC: this.props.isCC
         };
 
         /**
@@ -91,6 +92,7 @@ export default class VideoPlayer extends Component {
             onLoad: this._onLoad.bind( this ),
             onPause: this.props.onPause,
             onPlay: this.props.onPlay,
+            onCC: this.props.onCC,
         };
 
         /**
@@ -101,6 +103,7 @@ export default class VideoPlayer extends Component {
             togglePlayPause: this._togglePlayPause.bind( this ),
             toggleControls: this._toggleControls.bind( this ),
             toggleTimer: this._toggleTimer.bind( this ),
+            toggleCC: this._toggleCC.bind(this),
         };
 
         /**
@@ -488,6 +491,17 @@ export default class VideoPlayer extends Component {
         else {
             console.warn( 'Warning: _onBack requires navigator property to function. Either modify the onBack prop or pass a navigator prop' );
         }
+    }
+
+    /**
+     * Toggle CC state on on <Video> component
+     */
+    _toggleCC() {
+      let state = this.state;
+      state.isCC = !state.isCC;
+      typeof this.events.onCC === 'function' && this.events.onCC(state.isCC);
+
+      this.setState( state );
     }
 
     /**
@@ -959,6 +973,7 @@ export default class VideoPlayer extends Component {
         const timerControl = this.props.disableTimer ? this.renderNullControl() : this.renderTimer();
         const seekbarControl = this.props.disableSeekbar ? this.renderNullControl() : this.renderSeekbar();
         const playPauseControl = this.props.disablePlayPause ? this.renderNullControl() : this.renderPlayPause();
+        const ccControl = this.props.disableCC ? this.renderNullControl() : this.renderCCButton();
 
         return(
             <Animated.View style={[
@@ -979,8 +994,10 @@ export default class VideoPlayer extends Component {
                     ]}>
                         { playPauseControl }
                         { this.renderTitle() }
-                        { timerControl }
-
+                        <View style={styles.controls.row}>
+                          { ccControl }
+                          { timerControl }
+                        </View>
                     </View>
                 </ImageBackground>
             </Animated.View>
@@ -1075,6 +1092,26 @@ export default class VideoPlayer extends Component {
             styles.controls.timer
         );
     }
+
+    /**
+     * Render the caption control and attach its handlers
+     */
+     renderCCButton() {
+       let style, testIDSuffix;
+        if( this.state.isCC === true ) {
+          style = [styles.controls.cc, styles.controls.ccOn];
+          testIDSuffix = "on";
+        }
+        else{
+          style = [styles.controls.cc, styles.controls.ccOff];
+          testIDSuffix = "off";
+       }
+
+       return this.renderControl(
+            <Text style={style} numberOfLines={ 1 } testID={`video-CC-${testIDSuffix}`}>cc</Text>,
+            this.methods.toggleCC,
+       )
+     }
 
     /**
      * Show loading icon
@@ -1292,6 +1329,19 @@ const styles = {
             fontSize: 11,
             textAlign: 'right',
         },
+        cc: {
+          zIndex: 0,
+          backgroundColor: 'transparent',
+          fontWeight: 'bold',
+          fontSize: 14,
+          textAlign: 'right',
+        },
+        ccOn: {
+          color: '#FFF',
+        },
+        ccOff: {
+          color: '#CCC',
+        }
     }),
     volume: StyleSheet.create({
         container: {
