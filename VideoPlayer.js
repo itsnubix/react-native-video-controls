@@ -1079,13 +1079,21 @@ export default class VideoPlayer extends Component {
     }
 
     /**
-     * Render the seekbar and attach its handlers
+     * Render the caption control and attach its handlers
      */
      renderCCButton() {
-       let style = (this.state.isCC) ? [styles.controls.cc, styles.controls.ccOn] : [styles.controls.cc, styles.controls.ccOff];
+       let style, testIDSuffix;
+        if( this.state.isCC === true ) {
+          style = [styles.controls.cc, styles.controls.ccOn];
+          testIDSuffix = "on";
+        }
+        else{
+          style = [styles.controls.cc, styles.controls.ccOff];
+          testIDSuffix = "off";
+       }
 
        return this.renderControl(
-           <Text style={style} numberOfLines={ 1 }>cc</Text>,
+            <Text style={style} numberOfLines={ 1 } testID={`video-CC-${testIDSuffix}`}>cc</Text>,
             this.methods.toggleCC,
        )
      }
