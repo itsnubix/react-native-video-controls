@@ -1108,7 +1108,7 @@ export default class VideoPlayer extends Component {
        }
 
        return this.renderControl(
-            <Text style={style} numberOfLines={ 1 } testID={`video-CC-${testIDSuffix}`}>cc</Text>,
+            <Image source={ require( './assets/img/cc.png' ) } style={ style } testID={`video-CC-${testIDSuffix}`}/>,
             this.methods.toggleCC,
        )
      }
@@ -1331,16 +1331,12 @@ const styles = {
         },
         cc: {
           zIndex: 0,
-          backgroundColor: 'transparent',
-          fontWeight: 'bold',
-          fontSize: 14,
-          textAlign: 'right',
         },
         ccOn: {
-          color: '#FFF',
+          opacity: 1,
         },
         ccOff: {
-          color: '#CCC',
+          opacity: 0.6,
         }
     }),
     volume: StyleSheet.create({
