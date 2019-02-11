@@ -12,8 +12,7 @@ import {
     Easing,
     Image,
     View,
-    Text,
-    ImageBackground
+    Text
 } from 'react-native';
 import _ from 'lodash';
 
