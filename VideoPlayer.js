@@ -112,7 +112,7 @@ export default class VideoPlayer extends Component {
             seekPanResponder: PanResponder,
             controlTimeout: null,
             volumeWidth: 150,
-            iconOffset: 7,
+            iconOffset: 0,
             seekWidth: 0,
             ref: Video,
         };
@@ -646,7 +646,7 @@ export default class VideoPlayer extends Component {
      * @return {float} volume handle position in px based on volume
      */
     calculateVolumePositionFromVolume() {
-        return this.player.volumeWidth / this.state.volume;
+        return this.player.volumeWidth * this.state.volume;
     }
 
 
@@ -1302,6 +1302,9 @@ const styles = {
             marginTop: -24,
             marginLeft: -24,
             padding: 16,
+        },
+        icon: {
+            marginLeft:7
         }
     }),
     seekbar: StyleSheet.create({
