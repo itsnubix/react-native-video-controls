@@ -20,6 +20,7 @@ export default class VideoPlayer extends Component {
 
     static defaultProps = {
         toggleResizeModeOnFullscreen:   true,
+        isScreenReaderEnabled:          false,
         playInBackground:               false,
         playWhenInactive:               false,
         showOnStart:                    true,
@@ -825,9 +826,12 @@ export default class VideoPlayer extends Component {
      * consistent <TouchableHighlight>
      * wrapper and styling.
      */
-    renderControl( children, callback, style = {} ) {
+    renderControl( children, callback, style = {}, accessibilityLabel ) {
         return (
             <TouchableHighlight
+                accessible={true}
+                accessibilityLabel={accessibilityLabel ? accessibilityLabel : 'Button'}
+                accessibilityTraits='button'
                 underlayColor="transparent"
                 activeOpacity={ 0.3 }
                 onPress={()=>{
@@ -890,6 +894,20 @@ export default class VideoPlayer extends Component {
     }
 
     /**
+     * Render view with accessibility feature
+     */
+    renderReaderBackControls() {
+
+        const renderReaderBack = this.props.disableBack ? this.renderNullControl() : this.renderReaderBack();
+
+        return(
+          <View style={styles.controls.left}>
+              { renderReaderBack }
+          </View>
+        );
+    }
+
+    /**
      * Back button control
      */
     renderBack() {
@@ -901,6 +919,22 @@ export default class VideoPlayer extends Component {
             />,
             this.events.onBack,
             styles.controls.back
+        );
+    }
+
+    /**
+     * Back button control for accessibility feature
+     */
+    renderReaderBack() {
+
+        return this.renderControl(
+          <Image
+            source={ require( './assets/img/back.png' ) }
+            style={ styles.controls.back }
+          />,
+          this.events.onBack,
+          styles.controls.fullBtn,
+          'Back button'
         );
     }
 
@@ -1142,6 +1176,7 @@ export default class VideoPlayer extends Component {
                     { this.renderTopControls() }
                     { this.renderLoader() }
                     { this.renderBottomControls() }
+                    { this.props.isScreenReaderEnabled && this.renderReaderBackControls() }
                 </View>
             </TouchableWithoutFeedback>
         );
@@ -1287,6 +1322,18 @@ const styles = {
             color: '#FFF',
             fontSize: 11,
             textAlign: 'right',
+        },
+        left: {
+            position: 'absolute',
+            left: 0,
+            width: '20%',
+            height: '100%',
+        },
+        fullBtn: {
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
         },
     }),
     volume: StyleSheet.create({
