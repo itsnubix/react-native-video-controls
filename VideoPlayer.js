@@ -48,7 +48,7 @@ export default class VideoPlayer extends Component {
             rate: this.props.rate,
             // Controls
 
-            isFullscreen: this.props.resizeMode === 'cover' || false,
+            isFullscreen: this.props.isFullScreen !== undefined ? this.props.isFullscreen : (this.props.resizeMode === 'cover' || false),
             showTimeRemaining: true,
             volumeTrackWidth: 0,
             lastScreenPress: 0,
@@ -155,7 +155,7 @@ export default class VideoPlayer extends Component {
     componentDidUpdate = prevProps => {
       const {isFullscreen} = this.props;
 
-      if (prevProps.isFullscreen !== isFullscreen) {
+      if (this.state.isFullscreen !== isFullscreen) {
         this.setState({
           isFullscreen
         });
