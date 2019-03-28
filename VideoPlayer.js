@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Video from 'react-native-video';
 import {
+    NativeModules,
     TouchableWithoutFeedback,
     TouchableHighlight,
     ImageBackground,
@@ -31,6 +32,7 @@ export default class VideoPlayer extends Component {
         muted:                          false,
         title:                          '',
         rate:                           1,
+        disablePip:                     true
     };
 
     constructor( props ) {
@@ -65,6 +67,10 @@ export default class VideoPlayer extends Component {
             currentTime: 0,
             error: false,
             duration: 0,
+
+            pip: false,
+            pipImages: null,
+            pipSupported: false
         };
 
         /**
@@ -94,6 +100,26 @@ export default class VideoPlayer extends Component {
             onPlay: this.props.onPlay,
             onShowControl: this.props.onShowControl,
             onHideControl: this.props.onHideControl,
+            onPictureInPictureStatusChanged: (status) => {
+
+                if (!status.isActive) {
+                    this.setState({
+                        pip: false
+                    });
+                }
+
+                if (this.props.onPictureInPictureStatusChanged) {
+                    this.props.onPictureInPictureStatusChanged(status)
+                }
+            },
+            onRestoreUserInterfaceForPictureInPictureStop: () => {
+                if (this.props.onRestoreUserInterfaceForPictureInPictureStop) {
+                    this.props.onRestoreUserInterfaceForPictureInPictureStop();
+                }
+                if (this.player.ref) {
+                    this.player.ref.restoreUserInterfaceForPictureInPictureStopCompleted(true);
+                }
+            }
         };
 
         /**
@@ -104,6 +130,7 @@ export default class VideoPlayer extends Component {
             togglePlayPause: this._togglePlayPause.bind( this ),
             toggleControls: this._toggleControls.bind( this ),
             toggleTimer: this._toggleTimer.bind( this ),
+            togglePip: this._togglePip.bind(this)
         };
 
         /**
@@ -210,6 +237,11 @@ export default class VideoPlayer extends Component {
      * @param {object} data The video meta data
      */
     _onProgress( data = {} ) {
+
+        if (this.props.disableSeekbar) {
+            return false;
+        }
+
         let state = this.state;
         state.currentTime = data.currentTime;
 
@@ -473,6 +505,12 @@ export default class VideoPlayer extends Component {
         this.setState( state );
     }
 
+    _togglePip() {
+        const state = this.state;
+        state.pip = !state.pip;
+        this.setState(state);
+    }
+
     /**
      * The default 'onBack' function pops the navigator
      * and as such the video player requires a
@@ -700,6 +738,8 @@ export default class VideoPlayer extends Component {
         this.mounted = true;
 
         this.setState( state );
+
+        this.initPip();
     }
 
     /**
@@ -805,6 +845,28 @@ export default class VideoPlayer extends Component {
                 this.setState( state );
             }
         });
+    }
+
+    initPip() {
+
+        if (!this.props.disablePip) {
+
+            const { RNVideoControls } = NativeModules;
+
+            RNVideoControls.getPictureInPictureImages((err, images) => {
+
+                this.setState({
+                    pipImages: images
+                })
+            });
+
+            RNVideoControls.isPictureInPictureSupported((err, supported) => {
+
+                this.setState({
+                    pipSupported: supported
+                })
+            });
+        }
     }
 
 
@@ -988,6 +1050,14 @@ export default class VideoPlayer extends Component {
         const seekbarControl = this.props.disableSeekbar ? this.renderNullControl() : this.renderSeekbar();
         const playPauseControl = this.props.disablePlayPause ? this.renderNullControl() : this.renderPlayPause();
 
+        let pipControl = null;
+        if (!this.props.disablePip && this.state.pipSupported && this.state.pipImages) {
+            pipControl = this.renderPipControl();
+        }
+        else {
+            pipControl = this.renderNullControl();
+        }
+
         return(
             <Animated.View style={[
                 styles.controls.bottom,
@@ -1008,10 +1078,27 @@ export default class VideoPlayer extends Component {
                         { playPauseControl }
                         { this.renderTitle() }
                         { timerControl }
-
+                        { pipControl }
                     </View>
                 </ImageBackground>
             </Animated.View>
+        );
+    }
+
+    /**
+     * Pip button control
+     */
+    renderPipControl() {
+
+        const { pipImages, pip } = this.state;
+
+        return this.renderControl(
+            <Image
+                source={{ uri: 'data:image/png;base64,' + (pip ? pipImages.stopImage : pipImages.startImage) }}
+                style={styles.controls.pipImage}
+            />,
+            this.methods.togglePip,
+            styles.controls.pip
         );
     }
 
@@ -1152,6 +1239,8 @@ export default class VideoPlayer extends Component {
                             { ...this.props }
                             ref={ videoPlayer => this.player.ref = videoPlayer }
 
+                            pictureInPicture={ this.state.pip }
+
                             resizeMode={ this.state.resizeMode }
                             volume={ this.state.volume }
                             paused={ this.state.paused }
@@ -1163,6 +1252,9 @@ export default class VideoPlayer extends Component {
                             onError={ this.events.onError }
                             onLoad={ this.events.onLoad }
                             onEnd={ this.events.onEnd }
+
+                            onPictureInPictureStatusChanged={this.events.onPictureInPictureStatusChanged}
+                            onRestoreUserInterfaceForPictureInPictureStop={this.events.onRestoreUserInterfaceForPictureInPictureStop}
 
                             style={[ styles.player.video, this.styles.videoStyle ]}
 
@@ -1304,6 +1396,16 @@ const styles = {
             position: 'relative',
             width: 80,
             zIndex: 0
+        },
+        pip: {
+            position: 'relative',
+            zIndex: 0
+        },
+        pipImage: {
+            width: 51,
+            height: 51,
+            resizeMode: 'contain',
+            tintColor: 'rgba(255, 255, 255, 0.5)'
         },
         title: {
             alignItems: 'center',
