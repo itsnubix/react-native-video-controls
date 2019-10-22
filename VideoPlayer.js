@@ -147,6 +147,8 @@ export default class VideoPlayer extends Component {
             videoStyle: this.props.videoStyle || {},
             containerStyle: this.props.style || {}
         };
+        this.initSeekPanResponder();
+        this.initVolumePanResponder();
     }
 
 
@@ -662,14 +664,7 @@ export default class VideoPlayer extends Component {
     |
     */
 
-    /**
-     * Before mounting, init our seekbar and volume bar
-     * pan responders.
-     */
-    componentWillMount() {
-        this.initSeekPanResponder();
-        this.initVolumePanResponder();
-    }
+    
 
     /**
      * To allow basic playback management from the outside
