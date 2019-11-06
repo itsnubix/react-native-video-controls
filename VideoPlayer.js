@@ -1,20 +1,18 @@
-import React, { Component } from 'react';
-import Video from 'react-native-video';
 import {
-    TouchableWithoutFeedback,
-    TouchableHighlight,
+    Animated,
+    Easing,
+    Image,
     ImageBackground,
     PanResponder,
     StyleSheet,
-    Touchable,
-    Animated,
-    Platform,
-    Easing,
-    Image,
-    View,
-    Text
+    Text,
+    TouchableHighlight,
+    TouchableWithoutFeedback,
+    View
 } from 'react-native';
-import _ from 'lodash';
+import React, { Component } from 'react';
+
+import Video from 'react-native-video';
 
 export default class VideoPlayer extends Component {
 
@@ -509,7 +507,7 @@ export default class VideoPlayer extends Component {
             this.state.duration
         );
 
-        const formattedMinutes = _.padStart( Math.floor( time / 60 ).toFixed( 0 ), 2, 0 );
+        const formattedMinutes = String.prototype.padStart(Math.floor( time / 60 ).toFixed( 0 ), 2, 0 );
         const formattedSeconds = _.padStart( Math.floor( time % 60 ).toFixed( 0 ), 2 , 0 );
 
         return `${ symbol }${ formattedMinutes }:${ formattedSeconds }`;
