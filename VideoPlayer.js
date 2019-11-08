@@ -6,9 +6,8 @@ import {
     ImageBackground,
     PanResponder,
     StyleSheet,
-    Touchable,
     Animated,
-    Platform,
+    SafeAreaView,
     Easing,
     Image,
     View,
@@ -871,13 +870,13 @@ export default class VideoPlayer extends Component {
                     source={ require( './assets/img/top-vignette.png' ) }
                     style={[ styles.controls.column ]}
                     imageStyle={[ styles.controls.vignette ]}>
-                    <View style={ styles.controls.topControlGroup }>
-                        { backControl }
-                        <View style={ styles.controls.pullRight }>
-                            { volumeControl }
-                            { fullscreenControl }
-                        </View>
-                    </View>
+                    <SafeAreaView style={styles.controls.topControlGroup}>
+                      {backControl}
+                      <View style={styles.controls.pullRight}>
+                        {volumeControl}
+                        {fullscreenControl}
+                      </View>
+                    </SafeAreaView>
                 </ImageBackground>
             </Animated.View>
         );
@@ -961,15 +960,12 @@ export default class VideoPlayer extends Component {
                     style={[ styles.controls.column ]}
                     imageStyle={[ styles.controls.vignette ]}>
                     { seekbarControl }
-                    <View style={[
-                        styles.controls.row,
-                        styles.controls.bottomControlGroup
-                    ]}>
-                        { playPauseControl }
-                        { this.renderTitle() }
-                        { timerControl }
-
-                    </View>
+                    <SafeAreaView
+                      style={[styles.controls.row, styles.controls.bottomControlGroup]}>
+                      {playPauseControl}
+                      {this.renderTitle()}
+                      {timerControl}
+                    </SafeAreaView>
                 </ImageBackground>
             </Animated.View>
         );
