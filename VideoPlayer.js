@@ -6,9 +6,8 @@ import {
     ImageBackground,
     PanResponder,
     StyleSheet,
-    Touchable,
     Animated,
-    Platform,
+    SafeAreaView,
     Easing,
     Image,
     View,
@@ -115,8 +114,8 @@ export default class VideoPlayer extends Component {
             controlTimeout: null,
             tapActionTimeout: null,
             volumeWidth: 150,
-            iconOffset: 7,
-            seekWidth: 0,
+            iconOffset: 0,
+            seekerWidth: 0,
             ref: Video,
             scrubbingTimeStep: this.props.scrubbing || 0,
             tapAnywhereToPause: this.props.tapAnywhereToPause,
@@ -684,7 +683,7 @@ export default class VideoPlayer extends Component {
      * @return {float} volume handle position in px based on volume
      */
     calculateVolumePositionFromVolume() {
-        return this.player.volumeWidth / this.state.volume;
+        return this.player.volumeWidth * this.state.volume;
     }
 
 
@@ -936,13 +935,13 @@ export default class VideoPlayer extends Component {
                     source={ require( './assets/img/top-vignette.png' ) }
                     style={[ styles.controls.column ]}
                     imageStyle={[ styles.controls.vignette ]}>
-                    <View style={ styles.controls.topControlGroup }>
-                        { backControl }
-                        <View style={ styles.controls.pullRight }>
-                            { volumeControl }
-                            { fullscreenControl }
-                        </View>
-                    </View>
+                    <SafeAreaView style={styles.controls.topControlGroup}>
+                      {backControl}
+                      <View style={styles.controls.pullRight}>
+                        {volumeControl}
+                        {fullscreenControl}
+                      </View>
+                    </SafeAreaView>
                 </ImageBackground>
             </Animated.View>
         );
@@ -1026,15 +1025,12 @@ export default class VideoPlayer extends Component {
                     style={[ styles.controls.column ]}
                     imageStyle={[ styles.controls.vignette ]}>
                     { seekbarControl }
-                    <View style={[
-                        styles.controls.row,
-                        styles.controls.bottomControlGroup
-                    ]}>
-                        { playPauseControl }
-                        { this.renderTitle() }
-                        { timerControl }
-
-                    </View>
+                    <SafeAreaView
+                      style={[styles.controls.row, styles.controls.bottomControlGroup]}>
+                      {playPauseControl}
+                      {this.renderTitle()}
+                      {timerControl}
+                    </SafeAreaView>
                 </ImageBackground>
             </Animated.View>
         );
@@ -1376,6 +1372,9 @@ const styles = {
             marginTop: -24,
             marginLeft: -24,
             padding: 16,
+        },
+        icon: {
+            marginLeft:7
         }
     }),
     seekbar: StyleSheet.create({
