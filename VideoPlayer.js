@@ -1329,11 +1329,11 @@ const styles = {
             width: 28,
         },
         circle: {
-            borderRadius: 12,
+            borderRadius: 16,
             position: 'relative',
             top: 8, left: 8,
-            height: 12,
-            width: 12,
+            height: 16,
+            width: 16,
         },
     })
 };
