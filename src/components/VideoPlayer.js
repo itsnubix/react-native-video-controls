@@ -6,18 +6,13 @@ import {
   Text,
   View,
 } from 'react-native';
-import {Control, Error, Loader} from 'react-native-video-controls';
-import React, {Component} from 'react';
+import { Control } from 'react-native-video-controls';
+import React, { Component } from 'react';
 
 import Video from 'react-native-video';
-import {theme} from 'react-native-video-controls/src/assets/styles/theme';
+import { theme } from 'react-native-video-controls/src/assets/styles/theme';
 
 class VideoPlayer extends Component {
-  /**
-   * Default props to use
-   *
-   * @return  {Object}
-   */
   static defaultProps = {
     title: null,
     muted: false,
@@ -59,21 +54,33 @@ class VideoPlayer extends Component {
         <Text style={this._theme.currentTime}>{this.currentTime}</Text>
         <Text style={this._theme.duration}>{this.duration}</Text>
       </View>,
-      this.renderSeekbar(),
+      <View style={this._theme.seekbarContainer}>
+        <View onLayout={this._onSeekbarLayout} style={this._theme.seekbarTrack}>
+          <View style={[this._theme.seekbarFill]}>
+            <View
+              style={this._theme.seekbarHandle}
+              {...this._seekbarPanResponder}
+            />
+          </View>
+        </View>
+      </View>,
     ],
 
     loaderView: (
-      <Image
-        source={require('react-native-video-controls/src/assets/img/loader.png')}
-      />
+      <View>
+        <Image
+          source={require('react-native-video-controls/src/assets/img/loader.png')}
+        />
+      </View>
+    ),
+
+    errorView: (
+      <View>
+        <Text>Error!</Text>
+      </View>
     ),
   };
 
-  /**
-   * Property types
-   *
-   * @return  {Object}
-   */
   static propTypes = {
     muted: PropTypes.bool,
     paused: PropTypes.bool,
@@ -82,14 +89,9 @@ class VideoPlayer extends Component {
     topControls: PropTypes.array,
     middleControls: PropTypes.array,
     bottomControls: PropTypes.array,
-    loaderView: PropTypes.element,
+    loader: PropTypes.element,
   };
 
-  /**
-   * The starting state
-   *
-   * @return  {Object}
-   */
   state = {
     isMuted: this.props.muted,
     isPaused: this.props.paused,
@@ -150,7 +152,7 @@ class VideoPlayer extends Component {
     return this.state.isLoading;
   }
 
-  get isDone() {
+  get isFinished() {
     return this.state.isPaused && this.currentTime >= this.duration;
   }
 
@@ -162,60 +164,22 @@ class VideoPlayer extends Component {
     return !this.state.isSeeking;
   }
 
-  get seekbarHandlePosition() {
-    return this._seekbarHandlePosition;
-  }
-
-  set seekbarHandlePosition(position) {
-    if (position < 0) {
-      position = 0;
-    }
-
-    if (position > 1) {
-      position = 1;
-    }
-
-    this._seekbarHandlePosition = position;
-  }
-
   seekTo(time) {
     console.log(time);
   }
 
   pause() {
-    console.log('pause');
+    this.setState(() => ({ playing: false }));
   }
 
   play() {
-    console.log('play');
+    this.setState(() => ({ playing: true }));
   }
 
   clearErrors() {
-    this.setState(() => ({error: null}));
+    this.setState(() => ({ error: null }));
   }
 
-  renderSeekbar() {
-    const width = this.seekerPosition;
-
-    return (
-      <View style={this._theme.seekbarContainer}>
-        <View onLayout={this._onSeekbarLayout} style={this._theme.seekbarTrack}>
-          <View style={[this._theme.seekbarFill, {width}]}>
-            <View
-              style={this._theme.seekbarHandle}
-              {...this._seekbarPanResponder}
-            />
-          </View>
-        </View>
-      </View>
-    );
-  }
-
-  /**
-   * The components styles
-   *
-   * @return  {react-native/StyleSheet}
-   */
   _theme = this.props.theme || theme;
 
   _seekerPosition = 0;
@@ -238,18 +202,18 @@ class VideoPlayer extends Component {
       })),
 
     onPanResponderMove: (event, gesture) => {
-      this._seekerPosition = gesture.dx / ;
+      this._seekerPosition = gesture.dx;
     },
   });
 
-  _onSeekbarLayout(event) {
+  _onSeekbarLayout = event => {
     this._seekerWidth = event.nativeEvent.layout.width;
-  }
+  };
 
   _onError = error => {
-    this.setState(() => ({error}));
+    this.setState(() => ({ error }));
 
-    this._performPropCallback('onError');
+    this._performPropCallback('onError', error);
   };
 
   _onLoad = event => {
@@ -258,13 +222,13 @@ class VideoPlayer extends Component {
       duration: event.duration,
     }));
 
-    this._performPropCallback('onLoad');
+    this._performPropCallback('onLoad', event);
   };
 
   _onLoadStart = event => {
-    this.setState(() => ({isLoading: true}));
+    this.setState(() => ({ isLoading: true }));
 
-    this._performPropCallback('onLoadStart');
+    this._performPropCallback('onLoadStart', event);
   };
 
   _onProgress = event => {
@@ -276,28 +240,13 @@ class VideoPlayer extends Component {
   };
 
   _onEnd = event => {
-    this._performPropCallback('onEnd');
+    this._performPropCallback('onEnd', event);
   };
 
-  /**
-   * Check if a callback has been pass with the associated name
-   *
-   * @param   {string}  name
-   *
-   * @return  {bool}
-   */
   _hasPropCallback(name) {
     return typeof this.props[name] === 'function';
   }
 
-  /**
-   * If available, fires off a callback passed to the component
-   *
-   * @param   {string}  name
-   * @param   {mixed}  payload
-   *
-   * @return  {void}
-   */
   _performPropCallback(name, payload = null) {
     if (this._hasPropCallback(name)) {
       this.props[name](payload);
@@ -313,14 +262,14 @@ class VideoPlayer extends Component {
   }
 
   _onError(error) {
-    this.setState(() => ({error}));
+    this.setState(() => ({ error }));
 
     this._performPropCallback('onError');
   }
 
   render() {
     return (
-      <View style={this._theme.container}>
+      <View style={this._theme.playerContainer}>
         <Video
           {...this.props}
           ref={component => (this._videoReference = component)}
@@ -335,7 +284,7 @@ class VideoPlayer extends Component {
         />
 
         {this.hasNoErrors && !this.isNotLoading && (
-          <View style={this._theme.controls}>
+          <View style={this._theme.controlsContainer}>
             <SafeAreaView style={this._theme.controlsContainer}>
               <View style={this._theme.topControlsContainer}>
                 {this.props.topControls.join()}
@@ -352,11 +301,9 @@ class VideoPlayer extends Component {
           </View>
         )}
 
-        {this.hasErrors && <Error error={this.state.error} />}
+        {this.hasErrors && this.props.errorView}
 
-        {this.isLoading && (
-          <Loader theme={this._theme} scene={this.props.loaderView} />
-        )}
+        {this.isLoading && this.props.loaderView}
       </View>
     );
   }

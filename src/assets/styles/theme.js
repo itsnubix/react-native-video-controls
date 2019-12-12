@@ -1,8 +1,29 @@
 import {StyleSheet} from 'react-native';
 
 const theme = StyleSheet.create({
-  player: {},
-  control: {},
+  playerContainer: {},
+
+  video: {},
+
+  controlsContainer: {},
+  topControlsContainer: {},
+  middleControlsContainer: {},
+  bottomControlsContainer: {},
+
+  titleText: {},
+
+  backControl: {},
+
+  playPauseRestartControl: {},
+
+  timerContainer: {},
+  currentTimeText: {},
+  durationText: {},
+
+  seekbarContainer: {},
+  seekbarTrack: {},
+  seekbarFill: {},
+  seekbarHandle: {},
 });
 
 export {theme};
