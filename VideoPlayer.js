@@ -29,6 +29,7 @@ export default class VideoPlayer extends Component {
         muted:                          false,
         title:                          '',
         rate:                           1,
+        isFullscreen:                   false,
     };
 
     constructor( props ) {
@@ -47,7 +48,7 @@ export default class VideoPlayer extends Component {
             rate: this.props.rate,
             // Controls
 
-            isFullscreen: this.props.resizeMode === 'cover' || false,
+            isFullscreen: this.props.isFullScreen || this.props.resizeMode === 'cover' || false,
             showTimeRemaining: true,
             volumeTrackWidth: 0,
             lastScreenPress: 0,
@@ -679,6 +680,14 @@ export default class VideoPlayer extends Component {
             this.setState({
                 paused: nextProps.paused
             })
+        }
+
+        if(this.styles.videoStyle !== nextProps.videoStyle){
+            this.styles.videoStyle = nextProps.videoStyle;
+        }
+
+        if(this.styles.containerStyle !== nextProps.style){
+            this.styles.containerStyle = nextProps.style;
         }
     }
 
