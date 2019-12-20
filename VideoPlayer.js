@@ -695,7 +695,9 @@ export default class VideoPlayer extends Component {
         this.setVolumePosition( position );
         state.volumeOffset = position;
         this.mounted = true;
-        this.setState({uri: this.props.source.uri});
+        if(this.props.source) {
+            this.setState({uri: this.props.source.uri});
+        }
         this.loadAnimation(); // this one does not go
         if(this.props.source && this.props.source.uri && this.props.source.uri.includes('theplatform.com')) {
             axios.get(this.props.source.uri)
