@@ -15,6 +15,7 @@ import {
     Text
 } from 'react-native';
 import _ from 'lodash';
+import axios from 'axios';
 
 export default class VideoPlayer extends Component {
 
@@ -60,10 +61,11 @@ export default class VideoPlayer extends Component {
             volumeOffset: 0,
             seekerOffset: 0,
             seeking: false,
-            loading: false,
+            loading: true,
             currentTime: 0,
             error: false,
             duration: 0,
+            uri: null
         };
 
         /**
@@ -693,7 +695,21 @@ export default class VideoPlayer extends Component {
         this.setVolumePosition( position );
         state.volumeOffset = position;
         this.mounted = true;
-
+        if(this.props.source) {
+            this.setState({uri: this.props.source.uri});
+        }
+        this.loadAnimation(); // this one does not go
+        if(this.props.source && this.props.source.uri && this.props.source.uri.includes('theplatform.com')) {
+            axios.get(this.props.source.uri)
+            .then(res => {
+                if(this.mounted) {
+                    this.setState({uri: res.request.responseURL});
+                }
+            })
+            .catch(err => {
+                this.setState({error: true, loading: false});
+            });
+        }
         this.setState( state );
     }
 
@@ -1108,7 +1124,8 @@ export default class VideoPlayer extends Component {
                 style={[ styles.player.container, this.styles.containerStyle ]}
             >
                 <View style={[ styles.player.container, this.styles.containerStyle ]}>
-                    <Video
+                    { this.state.uri && 
+                        <Video
                         { ...this.props }
                         ref={ videoPlayer => this.player.ref = videoPlayer }
 
@@ -1126,8 +1143,9 @@ export default class VideoPlayer extends Component {
 
                         style={[ styles.player.video, this.styles.videoStyle ]}
 
-                        source={ this.props.source }
-                    />
+                        source={ {uri: this.state.uri } }
+                        />
+                    }
                     { this.renderError() }
                     { this.renderTopControls() }
                     { this.renderLoader() }

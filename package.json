@@ -1,6 +1,6 @@
 {
   "name": "react-native-video-controls",
-  "version": "2.2.3-ES",
+  "version": "2.2.5-ES",
   "description": "A set of GUI controls for the react-native-video component",
   "license": "MIT",
   "main": "VideoPlayer.js",
@@ -19,7 +19,8 @@
     "url": "git@github.com:itsnubix/react-native-video-controls.git"
   },
   "dependencies": {
-    "lodash": "^4.16.4"
+    "lodash": "^4.16.4",
+    "axios": "^0.19.0"
   },
   "peerDependencies": {
     "react-native": ">=0.46.0",
