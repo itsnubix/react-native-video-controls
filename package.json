@@ -25,5 +25,8 @@
   "peerDependencies": {
     "react-native": ">=0.46.0",
     "react-native-video": "^2.0.0"
+  },
+  "publishConfig": {
+    "registry": "https://repo.eachscape.net/repository/npm-internal"
   }
 }
