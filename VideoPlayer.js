@@ -109,7 +109,7 @@ export default class VideoPlayer extends Component {
          * Player information
          */
         this.player = {
-            controlTimeoutDelay: this.props.controlTimeout || 15000,
+            controlTimeoutDelay: this.props.controlTimeout || 5000,
             volumePanResponder: PanResponder,
             seekPanResponder: PanResponder,
             controlTimeout: null,
@@ -695,19 +695,18 @@ export default class VideoPlayer extends Component {
         this.setVolumePosition( position );
         state.volumeOffset = position;
         this.mounted = true;
-        if(this.props.source) {
-            this.setState({uri: this.props.source.uri});
-        }
+        // if(this.props.source) {
+        //     this.setState({uri: this.props.source.uri});
+        // }
         this.loadAnimation(); // this one does not go
         if(this.props.source && this.props.source.uri && this.props.source.uri.includes('theplatform.com')) {
+            this.setState({loading: true});
             axios.get(this.props.source.uri)
             .then(res => {
-                if(this.mounted) {
-                    this.setState({uri: res.request.responseURL});
-                }
+                this.mounted && this.setState({uri: res.request.responseURL, loading: false});    
             })
             .catch(err => {
-                this.setState({error: true, loading: false});
+                this.mounted && this.setState({error: true, loading: false});
             });
         }
         this.setState( state );
@@ -960,9 +959,9 @@ export default class VideoPlayer extends Component {
      */
     renderBottomControls() {
 
-        const timerControl = this.props.disableTimer ? this.renderNullControl() : this.renderTimer();
-        const seekbarControl = this.props.disableSeekbar ? this.renderNullControl() : this.renderSeekbar();
-        const playPauseControl = this.props.disablePlayPause ? this.renderNullControl() : this.renderPlayPause();
+        const timerControl = this.props.disableTimer || this.state.loading ? this.renderNullControl() : this.renderTimer();
+        const seekbarControl = this.props.disableSeekbar || this.state.loading ? this.renderNullControl() : this.renderSeekbar();
+        const playPauseControl = this.props.disablePlayPause || this.state.loading ? this.renderNullControl() : this.renderPlayPause();
 
         return(
             <Animated.View style={[
