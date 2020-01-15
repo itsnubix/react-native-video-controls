@@ -853,7 +853,7 @@ export default class VideoPlayer extends Component {
               padding: 10,
               backgroundColor: this.state.resolution === item.height ? 'rgba(0, 0, 0, 0.5)' : 'white',
             }}>
-            <Text style={{color: this.state.resolution === item.height ? 'white' : 'regular'}}>
+            <Text style={{color: this.state.resolution === item.height ? 'white' : 'black'}}>
               {`${item.height}p`}
             </Text>
           </TouchableOpacity>
