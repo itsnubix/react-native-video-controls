@@ -1162,7 +1162,7 @@ export default class VideoPlayer extends Component {
         return (
             <TouchableWithoutFeedback
                 onPress={ this.events.onScreenTouch }
-                style={[ styles.player.container, this.styles.containerStyle, {backgroundColor: 'red'} ]}
+                style={[ styles.player.container, this.styles.containerStyle]}
             >
                 <View style={[ styles.player.container, this.styles.containerStyle ]}>
                     <Video
