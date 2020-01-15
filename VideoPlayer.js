@@ -11,8 +11,11 @@ import {
     Easing,
     Image,
     View,
-    Text
+    Text,
+    FlatList,
+    TouchableOpacity,
 } from 'react-native';
+import Modal from './Modal';
 import _ from 'lodash';
 
 export default class VideoPlayer extends Component {
@@ -30,6 +33,8 @@ export default class VideoPlayer extends Component {
         title:                          '',
         rate:                           1,
         isFullscreen:                   false,
+        onPressRendition:               () => {},
+        rendition:                      [],
     };
 
     constructor( props ) {
@@ -64,6 +69,10 @@ export default class VideoPlayer extends Component {
             currentTime: 0,
             error: false,
             duration: 0,
+            showRendition: false,
+            onPressRendition: this.props.onPressRendition,
+            resolution: this.props.resolution,
+            rendition: this.props.rendition,
         };
 
         /**
@@ -81,7 +90,7 @@ export default class VideoPlayer extends Component {
          */
         this.events = {
             onError: this.props.onError || this._onError.bind( this ),
-            onBack: this.props.onBack || this._onBack.bind( this ),
+            onSetting: this.props.onSetting || this._onSetting.bind( this ),
             onEnd: this.props.onEnd || this._onEnd.bind( this ),
             onScreenTouch: this._onScreenTouch.bind( this ),
             onEnterFullscreen: this.props.onEnterFullscreen,
@@ -425,7 +434,7 @@ export default class VideoPlayer extends Component {
     _toggleFullscreen() {
         let state = this.state;
 
-        state.isFullscreen = ! state.isFullscreen;
+        state.isFullscreen = true;
 
         if (this.props.toggleResizeModeOnFullscreen) {
             state.resizeMode = state.isFullscreen === true ? 'cover' : 'contain';
@@ -468,18 +477,10 @@ export default class VideoPlayer extends Component {
         this.setState( state );
     }
 
-    /**
-     * The default 'onBack' function pops the navigator
-     * and as such the video player requires a
-     * navigator prop by default.
-     */
-    _onBack() {
-        if ( this.props.navigator && this.props.navigator.pop ) {
-            this.props.navigator.pop();
-        }
-        else {
-            console.warn( 'Warning: _onBack requires navigator property to function. Either modify the onBack prop or pass a navigator prop' );
-        }
+    _onSetting() {
+        let state = this.state;
+        state.showRendition = ! state.showRendition;
+        this.setState( state );
     }
 
     /**
@@ -823,6 +824,43 @@ export default class VideoPlayer extends Component {
     |
     */
 
+    renderFooter = () => (
+        <TouchableOpacity
+            onPress={() => this.setState({showRendition: false})}
+            style={{
+                borderTopWidth: 1,
+                borderColor: 'gray',
+                flexDirection: 'row',
+                padding: 10,
+                alignItems: 'center'
+            }}>
+             <Image
+                source={ require( './assets/img/close.png' ) }
+                style={ styles.controls.setting }
+            />
+            <Text style={{marginLeft: 10}}>Cancel</Text>
+        </TouchableOpacity>
+    );
+
+    renderItem = ({item}) => {
+        return (
+          <TouchableOpacity
+            onPress={() => {
+                this.setState({showRendition: false})
+                this.props.onPressRendition(item)
+            }}
+            style={{
+              padding: 10,
+              backgroundColor: this.state.resolution === item.height ? 'rgba(0, 0, 0, 0.5)' : 'white',
+            }}>
+            <Text style={{color: this.state.resolution === item.height ? 'white' : 'regular'}}>
+              {`${item.height}p`}
+            </Text>
+          </TouchableOpacity>
+        );
+      };
+
+
     /**
      * Standard render control function that handles
      * everything except the sliders. Adds a
@@ -831,6 +869,21 @@ export default class VideoPlayer extends Component {
      */
     renderControl( children, callback, style = {} ) {
         return (
+            <>
+            { this.state.showRendition &&
+                <Modal position="bottom">
+                    <FlatList
+                        bounces={false}
+                        keyExtractor={item => item.height.toString()}
+                        data={this.state.rendition}
+                        contentContainerStyle={{
+                        backgroundColor: 'white',
+                        }}
+                        ListFooterComponent={this.renderFooter}
+                        renderItem={this.renderItem}
+                    />
+                </Modal>
+            }   
             <TouchableHighlight
                 underlayColor="transparent"
                 activeOpacity={ 0.3 }
@@ -845,6 +898,7 @@ export default class VideoPlayer extends Component {
             >
                 { children }
             </TouchableHighlight>
+            </>
         );
     }
 
@@ -863,7 +917,7 @@ export default class VideoPlayer extends Component {
      */
     renderTopControls() {
 
-        const backControl = this.props.disableBack ? this.renderNullControl() : this.renderBack();
+        const settingControl = this.props.disableSetting ? this.renderNullControl() : this.renderSetting();
         const volumeControl = this.props.disableVolume ? this.renderNullControl() : this.renderVolume();
         const fullscreenControl = this.props.disableFullscreen ? this.renderNullControl() : this.renderFullscreen();
 
@@ -880,7 +934,7 @@ export default class VideoPlayer extends Component {
                     style={[ styles.controls.column ]}
                     imageStyle={[ styles.controls.vignette ]}>
                     <SafeAreaView style={styles.controls.topControlGroup}>
-                      {backControl}
+                      {settingControl}
                       <View style={styles.controls.pullRight}>
                         {volumeControl}
                         {fullscreenControl}
@@ -892,18 +946,17 @@ export default class VideoPlayer extends Component {
     }
 
     /**
-     * Back button control
+     * Setting button control
      */
-    renderBack() {
+    renderSetting() {
 
-        return this.renderControl(
+        return this.state.rendition.length > 0 ? this.renderControl(
             <Image
-                source={ require( './assets/img/back.png' ) }
-                style={ styles.controls.back }
+                source={ require( './assets/img/setting-white.png' ) }
+                style={ styles.controls.setting }
             />,
-            this.events.onBack,
-            styles.controls.back
-        );
+            this.events.onSetting
+        ) : <View style={styles.controls.setting} />;
     }
 
     /**
@@ -939,7 +992,7 @@ export default class VideoPlayer extends Component {
      */
     renderFullscreen() {
 
-        let source = this.state.isFullscreen === true ? require( './assets/img/shrink.png' ) : require( './assets/img/expand.png' );
+        let source = require( './assets/img/expand.png' );
         return this.renderControl(
             <Image source={ source } />,
             this.methods.toggleFullscreen,
@@ -1109,7 +1162,7 @@ export default class VideoPlayer extends Component {
         return (
             <TouchableWithoutFeedback
                 onPress={ this.events.onScreenTouch }
-                style={[ styles.player.container, this.styles.containerStyle ]}
+                style={[ styles.player.container, this.styles.containerStyle, {backgroundColor: 'red'} ]}
             >
                 <View style={[ styles.player.container, this.styles.containerStyle ]}>
                     <Video
@@ -1195,6 +1248,10 @@ const styles = {
         },
     }),
     controls: StyleSheet.create({
+        setting: {
+            height: 24,
+            width: 24,
+        },
         row: {
             flexDirection: 'row',
             alignItems: 'center',
