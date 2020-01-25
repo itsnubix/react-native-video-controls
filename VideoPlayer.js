@@ -695,9 +695,6 @@ export default class VideoPlayer extends Component {
         this.setVolumePosition( position );
         state.volumeOffset = position;
         this.mounted = true;
-        if(this.props.source && this.props.source.uri) {
-            state.uri = this.props.source.uri;
-        }
         this.loadAnimation(); // this one does not go
         if(this.props.source && this.props.source.uri) {
             if(this.props.source.uri.includes('theplatform.com')) {
@@ -709,6 +706,9 @@ export default class VideoPlayer extends Component {
                 .catch(err => {
                     this.mounted && this.setState({error: true, loading: false});
                 });
+            }
+            else {
+                state.uri = this.props.source.uri;
             }
         }
         this.setState( state );
