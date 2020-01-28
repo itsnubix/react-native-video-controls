@@ -695,19 +695,21 @@ export default class VideoPlayer extends Component {
         this.setVolumePosition( position );
         state.volumeOffset = position;
         this.mounted = true;
-        // if(this.props.source) {
-        //     this.setState({uri: this.props.source.uri});
-        // }
         this.loadAnimation(); // this one does not go
-        if(this.props.source && this.props.source.uri && this.props.source.uri.includes('theplatform.com')) {
-            this.setState({loading: true});
-            axios.get(this.props.source.uri)
-            .then(res => {
-                this.mounted && this.setState({uri: res.request.responseURL, loading: false});    
-            })
-            .catch(err => {
-                this.mounted && this.setState({error: true, loading: false});
-            });
+        if(this.props.source && this.props.source.uri) {
+            if(this.props.source.uri.includes('theplatform.com')) {
+                state.loading = true;
+                axios.get(this.props.source.uri)
+                .then(res => {
+                    this.mounted && this.setState({uri: res.request.responseURL, loading: false});
+                })
+                .catch(err => {
+                    this.mounted && this.setState({error: true, loading: false});
+                });
+            }
+            else {
+                state.uri = this.props.source.uri;
+            }
         }
         this.setState( state );
     }
@@ -1123,7 +1125,7 @@ export default class VideoPlayer extends Component {
                 style={[ styles.player.container, this.styles.containerStyle ]}
             >
                 <View style={[ styles.player.container, this.styles.containerStyle ]}>
-                    { this.state.uri && 
+                    { this.state.uri &&
                         <Video
                         { ...this.props }
                         ref={ videoPlayer => this.player.ref = videoPlayer }
@@ -1356,3 +1358,4 @@ const styles = {
         },
     })
 };
+
