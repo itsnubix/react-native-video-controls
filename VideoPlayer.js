@@ -112,7 +112,7 @@ export default class VideoPlayer extends Component {
             seekPanResponder: PanResponder,
             controlTimeout: null,
             volumeWidth: 150,
-            iconOffset: 0,
+            iconOffset: 7,
             seekWidth: 0,
             ref: Video,
         };
@@ -147,6 +147,7 @@ export default class VideoPlayer extends Component {
             videoStyle: this.props.videoStyle || {},
             containerStyle: this.props.style || {}
         };
+
         this.initSeekPanResponder();
         this.initVolumePanResponder();
     }
@@ -648,7 +649,7 @@ export default class VideoPlayer extends Component {
      * @return {float} volume handle position in px based on volume
      */
     calculateVolumePositionFromVolume() {
-        return this.player.volumeWidth * this.state.volume;
+        return this.player.volumeWidth / this.state.volume;
     }
 
 
@@ -664,19 +665,26 @@ export default class VideoPlayer extends Component {
     |
     */
 
-    
+    // /**
+    //  * Before mounting, init our seekbar and volume bar
+    //  * pan responders.
+    //  */
+    // componentWillMount() {
+    //     this.initSeekPanResponder();
+    //     this.initVolumePanResponder();
+    // }
 
     /**
      * To allow basic playback management from the outside
      * we have to handle possible props changes to state changes
      */
-    componentWillReceiveProps(nextProps) {
-        if (this.state.paused !== nextProps.paused ) {
-            this.setState({
-                paused: nextProps.paused
-            })
-        }
-    }
+    // componentWillReceiveProps(nextProps) {
+    //     if (this.state.paused !== nextProps.paused ) {
+    //         this.setState({
+    //             paused: nextProps.paused
+    //         })
+    //     }
+    // }
 
     /**
      * Upon mounting, calculate the position of the volume
@@ -925,7 +933,7 @@ export default class VideoPlayer extends Component {
      * Render fullscreen toggle and set icon based on the fullscreen state.
      */
     renderFullscreen() {
-
+        return null;
         let source = this.state.isFullscreen === true ? require( './assets/img/shrink.png' ) : require( './assets/img/expand.png' );
         return this.renderControl(
             <Image source={ source } />,
@@ -1116,7 +1124,7 @@ export default class VideoPlayer extends Component {
                         onProgress={ this.events.onProgress }
                         onError={ this.events.onError }
                         onLoad={ this.events.onLoad }
-                        onEnd={ this.events.onEnd }
+                        onEnd={ ()=>this.events.onEnd(this.props.videoIndex) }
 
                         style={[ styles.player.video, this.styles.videoStyle ]}
 
@@ -1297,9 +1305,6 @@ const styles = {
             marginTop: -24,
             marginLeft: -24,
             padding: 16,
-        },
-        icon: {
-            marginLeft:7
         }
     }),
     seekbar: StyleSheet.create({
@@ -1313,7 +1318,7 @@ const styles = {
             backgroundColor: '#333',
             height: 1,
             position: 'relative',
-            top: 17,
+            top: 18.5,
             width: '100%'
         },
         fill: {
@@ -1328,11 +1333,11 @@ const styles = {
             width: 28,
         },
         circle: {
-            borderRadius: 18,
+            borderRadius: 20,
             position: 'relative',
             top: 8, left: 8,
-            height: 18,
-            width: 18,
+            height: 20,
+            width: 20,
         },
     })
 };
