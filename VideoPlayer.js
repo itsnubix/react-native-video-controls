@@ -666,7 +666,7 @@ export default class VideoPlayer extends Component {
      * Before mounting, init our seekbar and volume bar
      * pan responders.
      */
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.initSeekPanResponder();
         this.initVolumePanResponder();
     }
@@ -675,7 +675,7 @@ export default class VideoPlayer extends Component {
      * To allow basic playback management from the outside
      * we have to handle possible props changes to state changes
      */
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.state.paused !== nextProps.paused ) {
             this.setState({
                 paused: nextProps.paused
