@@ -996,7 +996,6 @@ export default class VideoPlayer extends Component {
      * Render the seekbar and attach its handlers
      */
     renderSeekbar() {
-
         return (
             <View style={ styles.seekbar.container }>
                 <View
@@ -1006,7 +1005,7 @@ export default class VideoPlayer extends Component {
                     <View style={[
                         styles.seekbar.fill,
                         {
-                            width: this.state.seekerFillWidth,
+                            width: Number.isNaN(this.state.seekerFillWidth) ? 0 : this.state.seekerFillWidth,
                             backgroundColor: this.props.seekColor || '#FFF'
                         }
                     ]}/>
@@ -1015,7 +1014,7 @@ export default class VideoPlayer extends Component {
                     hitSlop={{top: 50, bottom: 50, left: 50, right: 50}}
                     style={[
                         styles.seekbar.handle,
-                        { left: this.state.seekerPosition }
+                        { left: Number.isNaN(this.state.seekerPosition) ? 0 : this.state.seekerPosition }
                     ]}
                     { ...this.player.seekPanResponder.panHandlers }
                 >
