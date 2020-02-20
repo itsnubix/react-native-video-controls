@@ -1022,7 +1022,7 @@ export default class VideoPlayer extends Component {
 
         let source = this.state.paused === true ? require( './assets/img/play.png' ) : require( './assets/img/pause.png' );
         return this.renderControl(
-            <Image source={ source } />,
+            <Image style={styles.controls.playPauseIcon} source={ source } />,
             this.methods.togglePlayPause,
             styles.controls.playPause
         );
@@ -1162,7 +1162,7 @@ const styles = {
             right: 0,
             bottom: 0,
             left: 0,
-        },
+        }
     }),
     error: StyleSheet.create({
         container: {
@@ -1247,11 +1247,9 @@ const styles = {
         },
         bottomControlGroup: {
             alignSelf: 'stretch',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginLeft: 12,
-            marginRight: 12,
-            marginBottom: 0,
+            marginLeft: '43%',
+            marginRight: 10,
+            marginBottom: 20,
         },
         volume: {
             flexDirection: 'row',
@@ -1261,8 +1259,12 @@ const styles = {
         },
         playPause: {
             position: 'relative',
-            width: 80,
             zIndex: 0
+        },
+        playPauseIcon: {
+            height: 22,
+            width: 22,
+            resizeMode: 'contain'
         },
         title: {
             alignItems: 'center',
@@ -1279,7 +1281,7 @@ const styles = {
         timerText: {
             backgroundColor: 'transparent',
             color: '#FFF',
-            fontSize: 11,
+            fontSize: 14,
             textAlign: 'right',
         },
     }),
@@ -1300,7 +1302,7 @@ const styles = {
         },
         fill: {
             backgroundColor: '#FFF',
-            height: 1,
+            height: 3,
         },
         handle: {
             position: 'absolute',
@@ -1315,20 +1317,20 @@ const styles = {
     seekbar: StyleSheet.create({
         container: {
             alignSelf: 'stretch',
-            height: 28,
+            height: 40,
             marginLeft: 20,
             marginRight: 20
         },
         track: {
             backgroundColor: '#333',
-            height: 1,
+            height: 5,
             position: 'relative',
             top: 14,
             width: '100%'
         },
         fill: {
             backgroundColor: '#FFF',
-            height: 1,
+            height: 5,
             width: '100%'
         },
         handle: {
@@ -1338,11 +1340,11 @@ const styles = {
             width: 28,
         },
         circle: {
-            borderRadius: 12,
+            borderRadius: 15,
             position: 'relative',
             top: 8, left: 8,
-            height: 12,
-            width: 12,
+            height: 20,
+            width: 20,
         },
     })
 };
