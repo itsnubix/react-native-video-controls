@@ -149,6 +149,9 @@ export default class VideoPlayer extends Component {
             videoStyle: this.props.videoStyle || {},
             containerStyle: this.props.style || {}
         };
+
+        this.initSeekPanResponder();
+        this.initVolumePanResponder();
     }
 
 
@@ -584,10 +587,12 @@ export default class VideoPlayer extends Component {
      * @param {float} time time to seek to in ms
      */
     seekTo( time = 0 ) {
-        let state = this.state;
-        state.currentTime = time;
-        this.player.ref.seek( time );
-        this.setState( state );
+        if(!isNaN(time)) {
+            let state = this.state;
+            state.currentTime = time;
+            this.player.ref.seek( time );
+            this.setState( state );
+        }
     }
 
     /**
@@ -651,8 +656,6 @@ export default class VideoPlayer extends Component {
         return this.player.volumeWidth / this.state.volume;
     }
 
-
-
     /**
     | -------------------------------------------------------
     | React Component functions
@@ -665,23 +668,15 @@ export default class VideoPlayer extends Component {
     */
 
     /**
-     * Before mounting, init our seekbar and volume bar
-     * pan responders.
-     */
-    componentWillMount() {
-        this.initSeekPanResponder();
-        this.initVolumePanResponder();
-    }
-
-    /**
      * To allow basic playback management from the outside
      * we have to handle possible props changes to state changes
      */
-    componentWillReceiveProps(nextProps) {
-        if (this.state.paused !== nextProps.paused ) {
-            this.setState({
-                paused: nextProps.paused
-            })
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.paused !== prevState.paused ) {
+            return ({paused: nextProps.paused});
+        } else {
+            return null;
         }
     }
 
@@ -689,6 +684,8 @@ export default class VideoPlayer extends Component {
      * Upon mounting, calculate the position of the volume
      * bar based on the volume property supplied to it.
      */
+
+
     componentDidMount() {
         const position = this.calculateVolumePositionFromVolume();
         let state = this.state;
@@ -696,6 +693,7 @@ export default class VideoPlayer extends Component {
         state.volumeOffset = position;
         this.mounted = true;
         this.loadAnimation(); // this one does not go
+        this.setState( state );
         if(this.props.source && this.props.source.uri) {
             if(this.props.source.uri.includes('theplatform.com')) {
                 state.loading = true;
@@ -711,7 +709,6 @@ export default class VideoPlayer extends Component {
                 state.uri = this.props.source.uri;
             }
         }
-        this.setState( state );
     }
 
     /**
