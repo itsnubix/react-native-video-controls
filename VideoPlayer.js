@@ -693,7 +693,6 @@ export default class VideoPlayer extends Component {
         state.volumeOffset = position;
         this.mounted = true;
         this.loadAnimation(); // this one does not go
-        this.setState( state );
         if(this.props.source && this.props.source.uri) {
             if(this.props.source.uri.includes('theplatform.com')) {
                 state.loading = true;
@@ -709,6 +708,7 @@ export default class VideoPlayer extends Component {
                 state.uri = this.props.source.uri;
             }
         }
+        this.setState( state );
     }
 
     /**
