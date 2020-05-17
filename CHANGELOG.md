@@ -1,4 +1,8 @@
-## 2.5.0 (17-05-2020)
+## 2.5.1 (17-05-2020)
+
+[#177](https://github.com/itsnubix/react-native-video-controls/pull/177)
+
+## 2.5.0 (16-05-2020)
 
 Linting
 
