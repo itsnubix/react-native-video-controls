@@ -1,8 +1,23 @@
+## 2.5.0 (17-05-2020)
+
+Linting
+
+Add show/hide callbacks [#164](https://github.com/itsnubix/react-native-video-controls/issues/164)
+
+Add ability to set controlAnimationTiming [#172](https://github.com/itsnubix/react-native-video-controls/issues/172)
+
+Fix for useNativeDriver animations [#178](https://github.com/itsnubix/react-native-video-controls/issues/178)
+
+## 2.4.0 (??-??-2020)
+
+At some point this got bumped to 2.4.0... ¯\\\_(ツ)\_/¯
+
 ## 2.3.0 (07-11-2019)
 
 Fix for notched phone [#144](https://github.com/itsnubix/react-native-video-controls/issues/144)
 
 Fix initialized seekerWidth [#143](https://github.com/itsnubix/react-native-video-controls/pull/143)
+
 Increase lodash version [#157](https://github.com/itsnubix/react-native-video-controls/pull/157)
 
 ## 2.2.2 (22-03-2018)
