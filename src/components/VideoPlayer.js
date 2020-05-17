@@ -8,11 +8,10 @@ import {
 } from 'react-native';
 import { Control } from 'react-native-video-controls';
 import React, { Component } from 'react';
-
 import Video from 'react-native-video';
 import { theme } from 'react-native-video-controls/src/assets/styles/theme';
 
-class VideoPlayer extends Component {
+export default class VideoPlayer extends Component {
   static defaultProps = {
     title: null,
     muted: false,
@@ -180,7 +179,7 @@ class VideoPlayer extends Component {
     this.setState(() => ({ error: null }));
   }
 
-  _theme = this.props.theme || theme;
+  _theme = {...this.props.theme, ...theme};
 
   _seekerPosition = 0;
 
@@ -308,5 +307,3 @@ class VideoPlayer extends Component {
     );
   }
 }
-
-export default VideoPlayer;
