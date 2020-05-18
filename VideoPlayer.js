@@ -19,7 +19,7 @@ export default class VideoPlayer extends Component {
   static defaultProps = {
     toggleResizeModeOnFullscreen: true,
     controlAnimationTiming: 500,
-    doubleTapTime: 300,
+    doubleTapTime: 130,
     playInBackground: false,
     playWhenInactive: false,
     resizeMode: 'contain',
