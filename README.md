@@ -65,6 +65,7 @@ In addition, the `<VideoPlayer />` also takes these props:
 | seekColor                    | String(#HEX) | '#FFF'  | Fill/handle colour of the seekbar                                                                                                                                |
 | style                        | StyleSheet   | null    | React Native StyleSheet object that is appended to the video's parent `<View>`                                                                                   |
 | tapAnywhereToPause           | Boolean      | false   | If true, single tapping anywhere on the video (other than a control) toggles between playing and paused.                                                         |
+
 ### Events
 
 These are various events that you can hook into and fire functions on in the component:

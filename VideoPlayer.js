@@ -19,6 +19,7 @@ export default class VideoPlayer extends Component {
   static defaultProps = {
     toggleResizeModeOnFullscreen: true,
     controlAnimationTiming: 500,
+    doubleTapTime: 300,
     playInBackground: false,
     playWhenInactive: false,
     resizeMode: 'contain',
@@ -50,23 +51,23 @@ export default class VideoPlayer extends Component {
 
       isFullscreen:
         this.props.isFullScreen || this.props.resizeMode === 'cover' || false,
-            showTimeRemaining: true,
-            volumeTrackWidth: 0,
-            volumeFillWidth: 0,
-            seekerFillWidth: 0,
-            showControls: this.props.showOnStart,
-            volumePosition: 0,
-            seekerPosition: 0,
-            volumeOffset: 0,
-            seekerOffset: 0,
-            seeking: false,
-            originallyPaused: false,
-            scrubbing: false,
-            loading: false,
-            currentTime: 0,
-            error: false,
-            duration: 0,
-        };
+      showTimeRemaining: true,
+      volumeTrackWidth: 0,
+      volumeFillWidth: 0,
+      seekerFillWidth: 0,
+      showControls: this.props.showOnStart,
+      volumePosition: 0,
+      seekerPosition: 0,
+      volumeOffset: 0,
+      seekerOffset: 0,
+      seeking: false,
+      originallyPaused: false,
+      scrubbing: false,
+      loading: false,
+      currentTime: 0,
+      error: false,
+      duration: 0,
+    };
 
     /**
      * Any options that can be set at init.
@@ -92,11 +93,11 @@ export default class VideoPlayer extends Component {
       onHideControls: this.props.onHideControls,
       onLoadStart: this._onLoadStart.bind(this),
       onProgress: this._onProgress.bind(this),
-      onSeek: this._onSeek.bind( this ),
-            onLoad: this._onLoad.bind( this ),
-            onPause: this.props.onPause,
-            onPlay: this.props.onPlay,
-        };
+      onSeek: this._onSeek.bind(this),
+      onLoad: this._onLoad.bind(this),
+      onPause: this.props.onPause,
+      onPlay: this.props.onPlay,
+    };
 
     /**
      * Functions used throughout the application
@@ -117,13 +118,13 @@ export default class VideoPlayer extends Component {
       seekPanResponder: PanResponder,
       controlTimeout: null,
       tapActionTimeout: null,
-            volumeWidth: 150,
-            iconOffset: 0,
-            seekerWidth: 0,
-            ref: Video,
-            scrubbingTimeStep: this.props.scrubbing || 0,
-            tapAnywhereToPause: this.props.tapAnywhereToPause,
-        };
+      volumeWidth: 150,
+      iconOffset: 0,
+      seekerWidth: 0,
+      ref: Video,
+      scrubbingTimeStep: this.props.scrubbing || 0,
+      tapAnywhereToPause: this.props.tapAnywhereToPause,
+    };
 
     /**
      * Various animations
@@ -206,52 +207,51 @@ export default class VideoPlayer extends Component {
     }
   }
 
-    /**
-     * For onprogress we fire listeners that
-     * update our seekbar and timer.
-     *
-     * @param {object} data The video meta data
-     */
-    _onProgress( data = {} ) {
-        let state = this.state;
+  /**
+   * For onprogress we fire listeners that
+   * update our seekbar and timer.
+   *
+   * @param {object} data The video meta data
+   */
+  _onProgress(data = {}) {
+    let state = this.state;
+    if (!state.scrubbing) {
+      state.currentTime = data.currentTime;
 
-        if ( ! state.scrubbing ) {
-            state.currentTime = data.currentTime;
+      if (!state.seeking) {
+        const position = this.calculateSeekerPosition();
+        this.setSeekerPosition(position);
+      }
 
-            if ( ! state.seeking ) {
-                const position = this.calculateSeekerPosition();
-                this.setSeekerPosition( position );
-            }
+      if (typeof this.props.onProgress === 'function') {
+        this.props.onProgress(...arguments);
+      }
 
-            if ( typeof this.props.onProgress === 'function' ) {
-                this.props.onProgress( ...arguments );
-            }
-
-            this.setState( state );
-        }
+      this.setState(state);
     }
+  }
 
-    /**
-     * For onSeek we clear scrubbing if set.
-     *
-     * @param {object} data The video meta data
-     */
-    _onSeek( data = {} ) {
-        let state = this.state;
-        if ( state.scrubbing ) {
-            state.scrubbing = false;
-            state.currentTime = data.currentTime;
+  /**
+   * For onSeek we clear scrubbing if set.
+   *
+   * @param {object} data The video meta data
+   */
+  _onSeek(data = {}) {
+    let state = this.state;
+    if (state.scrubbing) {
+      state.scrubbing = false;
+      state.currentTime = data.currentTime;
 
-            // Seeking may be false here if the user released the seek bar while the player was still processing
-            // the last seek command. In this case, perform the steps that have been postponed.
-            if ( ! state.seeking ) {
-                this.setControlTimeout();
-                state.paused = state.originallyPaused;
-            }
+      // Seeking may be false here if the user released the seek bar while the player was still processing
+      // the last seek command. In this case, perform the steps that have been postponed.
+      if (!state.seeking) {
+        this.setControlTimeout();
+        state.paused = state.originallyPaused;
+      }
 
-            this.setState( state );
-        }
+      this.setState(state);
     }
+  }
 
   /**
    * It is suggested that you override this
@@ -275,32 +275,32 @@ export default class VideoPlayer extends Component {
     this.setState(state);
   }
 
-    /**
-     * This is a single and double tap listener
-     * when the user taps the screen anywhere.
-     * One tap toggles controls and/or toggles pause,
-     * two toggles fullscreen mode.
+  /**
+   * This is a single and double tap listener
+   * when the user taps the screen anywhere.
+   * One tap toggles controls and/or toggles pause,
+   * two toggles fullscreen mode.
    */
   _onScreenTouch() {
-    if ( this.player.tapActionTimeout ) {
-            clearTimeout( this.player.tapActionTimeout );
-            this.player.tapActionTimeout = 0;
-            this.methods.toggleFullscreen();
-            const state = this.state;
-            if ( state.showControls ) {
-                this.resetControlTimeout();
-            }
+    if (this.player.tapActionTimeout) {
+      clearTimeout(this.player.tapActionTimeout);
+      this.player.tapActionTimeout = 0;
+      this.methods.toggleFullscreen();
+      const state = this.state;
+      if (state.showControls) {
+        this.resetControlTimeout();
+      }
+    } else {
+      this.player.tapActionTimeout = setTimeout(() => {
+        const state = this.state;
+        if (this.player.tapAnywhereToPause && state.showControls) {
+          this.methods.togglePlayPause();
+          this.resetControlTimeout();
         } else {
-            this.player.tapActionTimeout = setTimeout( ()=> {
-                const state = this.state;
-                if ( this.player.tapAnywhereToPause && state.showControls ) {
-                    this.methods.togglePlayPause();
-                    this.resetControlTimeout();
-                } else {
-                    this.methods.toggleControls();
-                }
-                this.player.tapActionTimeout = 0;
-            }, 300 );
+          this.methods.toggleControls();
+        }
+        this.player.tapActionTimeout = 0;
+      }, this.props.doubleTapTime);
     }
   }
 
@@ -584,7 +584,7 @@ export default class VideoPlayer extends Component {
    * seeker is.
    *
    * @param {float} val position of seeker handle in px
-   * @return {float} contrained position of seeker handle in px
+   * @return {float} constrained position of seeker handle in px
    */
   constrainToSeekerMinMax(val = 0) {
     if (val <= 0) {
@@ -761,49 +761,47 @@ export default class VideoPlayer extends Component {
       onStartShouldSetPanResponder: (evt, gestureState) => true,
       onMoveShouldSetPanResponder: (evt, gestureState) => true,
 
-            /**
-             * When we start the pan tell the machine that we're
-             * seeking. This stops it from updating the seekbar
-             * position in the onProgress listener.
-             */
-            onPanResponderGrant: ( evt, gestureState ) => {
-                let state = this.state;
-                this.clearControlTimeout();
-
-                const position = evt.nativeEvent.locationX;
-                this.setSeekerPosition( position );
-
-                state.seeking = true;
-                state.originallyPaused = state.paused;
-                state.scrubbing = false;
-                if ( this.player.scrubbingTimeStep > 0 ) {
-                    state.paused = true;
-                }
+      /**
+       * When we start the pan tell the machine that we're
+       * seeking. This stops it from updating the seekbar
+       * position in the onProgress listener.
+       */
+      onPanResponderGrant: (evt, gestureState) => {
+        let state = this.state;
+        this.clearControlTimeout();
+        const position = evt.nativeEvent.locationX;
+        this.setSeekerPosition(position);
+        state.seeking = true;
+        state.originallyPaused = state.paused;
+        state.scrubbing = false;
+        if (this.player.scrubbingTimeStep > 0) {
+          state.paused = true;
+        }
         this.setState(state);
       },
 
-            /**
-             * When panning, update the seekbar position, duh.
-             */
-            onPanResponderMove: ( evt, gestureState ) => {
-                const position = this.state.seekerOffset + gestureState.dx;
-                this.setSeekerPosition( position );
-                let state = this.state;
+      /**
+       * When panning, update the seekbar position, duh.
+       */
+      onPanResponderMove: (evt, gestureState) => {
+        const position = this.state.seekerOffset + gestureState.dx;
+        this.setSeekerPosition(position);
+        let state = this.state;
 
-                if ( this.player.scrubbingTimeStep > 0 && ! state.loading && ! state.scrubbing ) {
-                    const time = this.calculateTimeFromSeekerPosition();
-                    const timeDifference = Math.abs( state.currentTime - time ) * 1000;
+        if (this.player.scrubbingTimeStep > 0 && !state.loading && !state.scrubbing) {
+          const time = this.calculateTimeFromSeekerPosition();
+          const timeDifference = Math.abs(state.currentTime - time) * 1000;
 
-                    if ( time < state.duration && timeDifference >= this.player.scrubbingTimeStep ) {
-                        state.scrubbing = true;
+          if (time < state.duration && timeDifference >= this.player.scrubbingTimeStep) {
+            state.scrubbing = true;
 
-                        this.setState( state );
-                        setTimeout( () => {
-                            this.player.ref.seek( time, this.player.scrubbingTimeStep );
-                        }, 1 );
-                    }
-                }
-            },
+            this.setState(state);
+            setTimeout( () => {
+              this.player.ref.seek(time, this.player.scrubbingTimeStep);
+            }, 1);
+          }
+        }
+      },
 
       /**
        * On release we update the time and seek to it in the video.
@@ -816,12 +814,12 @@ export default class VideoPlayer extends Component {
         if (time >= state.duration && !state.loading) {
           state.paused = true;
           this.events.onEnd();
-        } else if ( state.scrubbing ) {
-                    state.seeking = false;
-                } else {
+        } else if (state.scrubbing) {
+          state.seeking = false;
+        } else {
           this.seekTo(time);
           this.setControlTimeout();
-                    state.paused = state.originallyPaused;
+          state.paused = state.originallyPaused;
           state.seeking = false;
         }
         this.setState(state);
@@ -1053,15 +1051,13 @@ export default class VideoPlayer extends Component {
       <View
         style={styles.seekbar.container}
         collapsable={false}
-        {...this.player.seekPanResponder.panHandlers}
-      >
+        {...this.player.seekPanResponder.panHandlers}>
         <View
           style={styles.seekbar.track}
           onLayout={event =>
             (this.player.seekerWidth = event.nativeEvent.layout.width)
           }
-          pointerEvents={'none'}
-        >
+          pointerEvents={'none'}>
           <View
             style={[
               styles.seekbar.fill,
@@ -1189,26 +1185,22 @@ export default class VideoPlayer extends Component {
           <Video
             {...this.props}
             ref={videoPlayer => (this.player.ref = videoPlayer)}
-
-                        resizeMode={ this.state.resizeMode }
-                        volume={ this.state.volume }
-                        paused={ this.state.paused }
-                        muted={ this.state.muted }
-                        rate={ this.state.rate }
-
-                        onLoadStart={ this.events.onLoadStart }
-                        onProgress={ this.events.onProgress }
-                        onError={ this.events.onError }
-                        onLoad={ this.events.onLoad }
-                        onEnd={ this.events.onEnd }
-                        onSeek={ this.events.onSeek }
-
-                        style={[ styles.player.video, this.styles.videoStyle ]}
-
-                        source={ this.props.source }
-                    />
-                    { this.renderError() }
-                    { this.renderLoader()}
+            resizeMode={this.state.resizeMode}
+            volume={this.state.volume}
+            paused={this.state.paused}
+            muted={this.state.muted}
+            rate={this.state.rate}
+            onLoadStart={this.events.onLoadStart}
+            onProgress={this.events.onProgress}
+            onError={this.events.onError}
+            onLoad={this.events.onLoad}
+            onEnd={this.events.onEnd}
+            onSeek={this.events.onSeek}
+            style={[styles.player.video, this.styles.videoStyle]}
+            source={this.props.source}
+          />
+          {this.renderError()}
+          {this.renderLoader()}
           {this.renderTopControls()}
           {this.renderBottomControls()}
         </View>
