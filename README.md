@@ -57,12 +57,15 @@ In addition, the `<VideoPlayer />` also takes these props:
 | ---------------------------- | ------------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | toggleResizeModeOnFullscreen | Boolean      | true    | If true, clicking the fullscreen button will toggle the `<Video />` component between cover/contain, set to false if you want to customize fullscreen behaviour  |
 | controlAnimationTiming       | Integer      | 500     | The amountof time (in milliseconds) to animate the controls in and out.                                                                                          |
+| doubleTapTime                | Integer      | 130     | Tapping twice within this amount of time in milliseconds is considered a double tap. Single taps will not be actioned until this time has expired.               |
 | controlTimeout               | Integer      | 15000   | Hide controls after X amount of time in milliseconds                                                                                                             |
+| scrubbing                    | Integer      | 0       | If > 0, enable live scrubbing when moving the seek bar. The provided value is the minimum time step of the scrubbing in milliseconds.                            |
 | showOnStart                  | Boolean      | true    | Show or hide the controls on first render                                                                                                                        |
 | videoStyle                   | StyleSheet   | null    | React Native StyleSheet object that is appended to the `<Video>` component                                                                                       |
 | navigator                    | Navigator    | null    | When using the default React Native navigator and do not override the `onBack` function, you'll need to pass the navigator to the VideoPlayer for it to function |
 | seekColor                    | String(#HEX) | '#FFF'  | Fill/handle colour of the seekbar                                                                                                                                |
 | style                        | StyleSheet   | null    | React Native StyleSheet object that is appended to the video's parent `<View>`                                                                                   |
+| tapAnywhereToPause           | Boolean      | false   | If true, single tapping anywhere on the video (other than a control) toggles between playing and paused.                                                         |
 
 ### Events
 
