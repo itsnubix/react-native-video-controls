@@ -1,5 +1,5 @@
 {
-  "name": "react-native-video-controls",
+  "name": "@congmingpai/react-native-video-controls",
   "version": "2.6.0",
   "description": "A set of GUI controls for the react-native-video component",
   "license": "MIT",
@@ -16,14 +16,14 @@
   "author": "Nubix (https://github.com/itsnubix)",
   "repository": {
     "type": "git",
-    "url": "git@github.com:itsnubix/react-native-video-controls.git"
+    "url": "git@github.com:congmingpai/react-native-video-controls.git"
   },
   "dependencies": {
     "lodash": "^4.16.4"
   },
   "peerDependencies": {
     "react-native": ">=0.46.0",
-    "react-native-video": "^2.0.0"
+    "@congmingpai/react-native-video": "^4.4.5"
   },
   "devDependencies": {
     "@react-native-community/eslint-config": "^0.0.5",
