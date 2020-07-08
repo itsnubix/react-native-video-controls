@@ -11,6 +11,7 @@
     "react video player"
   ],
   "scripts": {
+    "lint": "eslint .",
     "test": "echo \"No test specified\" && exit 1"
   },
   "author": "Nubix (https://github.com/itsnubix)",
