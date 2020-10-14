@@ -433,7 +433,8 @@ export default class VideoPlayer extends Component {
       let state = this.state;
       state.showControls = false;
       this.hideControlAnimation();
-      this.events.onHideControls();
+      typeof this.events.onHideControls === 'function' &&
+        this.events.onHideControls();
 
       this.setState(state);
     }
