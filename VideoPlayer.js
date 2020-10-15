@@ -726,6 +726,12 @@ export default class VideoPlayer extends Component {
       this.styles.videoStyle = nextProps.videoStyle;
     }
 
+    if (this.state.volume !== nextProps.volume) {
+      this.setState({
+        volume: nextProps.volume
+      })
+    }
+
     if (this.styles.containerStyle !== nextProps.style) {
       this.styles.containerStyle = nextProps.style;
     }
