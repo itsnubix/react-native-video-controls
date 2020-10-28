@@ -14,7 +14,6 @@ import {
     Text,
 } from 'react-native';
 import _ from 'lodash';
-import axios from 'axios';
 
 export default class VideoPlayer extends Component {
 
@@ -280,8 +279,8 @@ export default class VideoPlayer extends Component {
      */
 
     _onSelectedTextTrackChanged() {
-        if(typeof this.props.selectedTextTrackChanged === 'function') {
-            this.props.selectedTextTrackChanged(this.state.selectedTextTrack == null ? VideoPlayer.EN_CAPTIONS : null);
+        if(typeof this.props.onSelectedTextTrackChanged === 'function') {
+            this.props.onSelectedTextTrackChanged(this.state.selectedTextTrack == null ? VideoPlayer.EN_CAPTIONS : null);
         }
     }
 
