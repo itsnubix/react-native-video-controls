@@ -709,27 +709,14 @@ export default class VideoPlayer extends Component {
 
 
     componentDidMount() {
-        const position = this.calculateVolumePositionFromVolume();
         let state = this.state;
+
+        const position = this.calculateVolumePositionFromVolume();
         this.setVolumePosition( position );
         state.volumeOffset = position;
         this.mounted = true;
         this.loadAnimation(); // this one does not go
-        if(this.props.source && this.props.source.uri) {
-            if(this.props.source.uri.includes('theplatform.com')) {
-                state.loading = true;
-                axios.get(this.props.source.uri, {headers: this.props.headers})
-                .then(res => {
-                    this.mounted && this.setState({uri: res.request.responseURL, loading: false});
-                })
-                .catch(err => {
-                    this.mounted && this.setState({error: true, loading: false});
-                });
-            }
-            else {
-                state.uri = this.props.source.uri;
-            }
-        }
+
         this.setState( state );
     }
 
@@ -1165,7 +1152,7 @@ export default class VideoPlayer extends Component {
                 style={[ styles.player.container, this.styles.containerStyle ]}
             >
                 <View style={[ styles.player.container, this.styles.containerStyle ]}>
-                    { this.state.uri &&
+                    { this.props.source &&
                         <Video
                         { ...this.props }
                         ref={ videoPlayer => this.player.ref = videoPlayer }
@@ -1185,7 +1172,7 @@ export default class VideoPlayer extends Component {
                         selectedTrackChanged={this.events.selectedTrackChanged}
                         style={[ styles.player.video, this.styles.videoStyle ]}
 
-                        source={ {uri: this.state.uri } }
+                        source={ this.props.source }
                         />
                     }
                     { this.renderError() }
@@ -1339,24 +1326,23 @@ const styles = {
             textAlign: 'right',
         },
         closedCaptionsEnabled: {
-            borderColor: 'white', 
-            borderWidth: 1, 
-            padding: 5, 
+            borderColor: 'white',
+            borderWidth: 1,
+            padding: 5,
             borderRadius: 5,
             opacity: 0.8,
             backgroundColor: 'lightgrey'
         },
         closedCaptionsDisabled: {
-            borderColor: 'white', 
-            borderWidth: 1, 
-            padding: 5, 
+            borderColor: 'white',
+            borderWidth: 1,
+            padding: 5,
             borderRadius: 5,
             opacity: 0.3,
             backgroundColor: 'transparent'
-            
         },
         closedCaptionsText: {
-            fontSize: 10, 
+            fontSize: 10,
             color: 'white'
         }
     }),
