@@ -3,21 +3,22 @@ import Video from 'react-native-video';
 import {
     TouchableWithoutFeedback,
     TouchableHighlight,
+    TouchableOpacity,
     ImageBackground,
     PanResponder,
     StyleSheet,
-    Touchable,
     Animated,
-    Platform,
     Easing,
     Image,
     View,
-    Text
+    Text,
 } from 'react-native';
 import _ from 'lodash';
 import axios from 'axios';
 
 export default class VideoPlayer extends Component {
+
+    static EN_CAPTIONS = {type: "language", value: "en"};
 
     static defaultProps = {
         toggleResizeModeOnFullscreen:   true,
@@ -65,7 +66,8 @@ export default class VideoPlayer extends Component {
             currentTime: 0,
             error: false,
             duration: 0,
-            source: null
+            uri: null,
+            selectedTextTrack: this.props.selectedTextTrack
         };
 
         /**
@@ -91,6 +93,7 @@ export default class VideoPlayer extends Component {
             onLoadStart: this._onLoadStart.bind( this ),
             onProgress: this._onProgress.bind( this ),
             onLoad: this._onLoad.bind( this ),
+            onSelectedTextTrackChanged: this._onSelectedTextTrackChanged.bind(this),
             onPause: this.props.onPause,
             onPlay: this.props.onPlay,
         };
@@ -103,6 +106,7 @@ export default class VideoPlayer extends Component {
             togglePlayPause: this._togglePlayPause.bind( this ),
             toggleControls: this._toggleControls.bind( this ),
             toggleTimer: this._toggleTimer.bind( this ),
+            toggleClosedCaptions: this._toggleClosedCaptions.bind(this)
         };
 
         /**
@@ -268,6 +272,17 @@ export default class VideoPlayer extends Component {
         state.lastScreenPress = time;
 
         this.setState( state );
+    }
+
+    /**
+     * This is a listener to bubble up the toggled
+     * selectedTextTrack, after user taps on CC button
+     */
+
+    _onSelectedTextTrackChanged() {
+        if(typeof this.props.selectedTextTrackChanged === 'function') {
+            this.props.selectedTextTrackChanged(this.state.selectedTextTrack == null ? VideoPlayer.EN_CAPTIONS : null);
+        }
     }
 
 
@@ -471,6 +486,13 @@ export default class VideoPlayer extends Component {
         let state = this.state;
         state.showTimeRemaining = ! state.showTimeRemaining;
         this.setState( state );
+    }
+
+    _toggleClosedCaptions() {
+        if(this.state) {
+            this.events.onSelectedTextTrackChanged(this.state.selectedTextTrack != null ? null : VideoPlayer.EN_CAPTIONS);
+            this.setState({selectedTextTrack: this.state.selectedTextTrack != null ? null : VideoPlayer.EN_CAPTIONS});
+        }
     }
 
     /**
@@ -687,15 +709,14 @@ export default class VideoPlayer extends Component {
 
 
     componentDidMount() {
-        const position = this.calculateVolumePositionFromVolume();
         let state = this.state;
+
+        const position = this.calculateVolumePositionFromVolume();
         this.setVolumePosition( position );
         state.volumeOffset = position;
         this.mounted = true;
         this.loadAnimation(); // this one does not go
-        if(this.props.source) {
-            state.source = this.props.source;
-        }
+
         this.setState( state );
     }
 
@@ -851,6 +872,7 @@ export default class VideoPlayer extends Component {
         );
     }
 
+
     /**
      * Groups the top bar controls together in an animated
      * view and spaces them out.
@@ -929,6 +951,21 @@ export default class VideoPlayer extends Component {
     }
 
     /**
+     * Render the close caption enable disable button
+     */
+
+
+    renderCloseCaptionsToggle() {
+        const { selectedTextTrack } = this.state;
+        const enabledClosedCaptions = selectedTextTrack != null;
+        return (
+            <TouchableOpacity onPress={this.methods.toggleClosedCaptions} style={enabledClosedCaptions ? styles.controls.closedCaptionsEnabled : styles.controls.closedCaptionsDisabled}>
+                <Text style={styles.controls.closedCaptionsText}>CC</Text>
+            </TouchableOpacity>
+        )
+    }
+
+    /**
      * Render fullscreen toggle and set icon based on the fullscreen state.
      */
     renderFullscreen() {
@@ -949,6 +986,7 @@ export default class VideoPlayer extends Component {
         const timerControl = this.props.disableTimer || this.state.loading ? this.renderNullControl() : this.renderTimer();
         const seekbarControl = this.props.disableSeekbar || this.state.loading ? this.renderNullControl() : this.renderSeekbar();
         const playPauseControl = this.props.disablePlayPause || this.state.loading ? this.renderNullControl() : this.renderPlayPause();
+        const closedCaptionsControl = this.props.disablePlayPause || this.state.loading ? this.renderNullControl() : this.renderCloseCaptionsToggle();
 
         return(
             <Animated.View style={[
@@ -969,8 +1007,13 @@ export default class VideoPlayer extends Component {
                     ]}>
                         { playPauseControl }
                         { this.renderTitle() }
+                        <View style={[
+                        styles.controls.row,
+                        styles.controls.bottomControlGroup
+                    ]}>
+                        { closedCaptionsControl }
                         { timerControl }
-
+                    </View>
                     </View>
                 </ImageBackground>
             </Animated.View>
@@ -1109,7 +1152,7 @@ export default class VideoPlayer extends Component {
                 style={[ styles.player.container, this.styles.containerStyle ]}
             >
                 <View style={[ styles.player.container, this.styles.containerStyle ]}>
-                    { this.state.source &&
+                    { this.props.source &&
                         <Video
                         { ...this.props }
                         ref={ videoPlayer => this.player.ref = videoPlayer }
@@ -1125,10 +1168,11 @@ export default class VideoPlayer extends Component {
                         onError={ this.events.onError }
                         onLoad={ this.events.onLoad }
                         onEnd={ this.events.onEnd }
-
+                        selectedTextTrack={this.state.selectedTextTrack}
+                        selectedTrackChanged={this.events.selectedTrackChanged}
                         style={[ styles.player.video, this.styles.videoStyle ]}
 
-                        source={this.state.source}
+                        source={ this.props.source }
                         />
                     }
                     { this.renderError() }
@@ -1281,6 +1325,26 @@ const styles = {
             fontSize: 11,
             textAlign: 'right',
         },
+        closedCaptionsEnabled: {
+            borderColor: 'white',
+            borderWidth: 1,
+            padding: 5,
+            borderRadius: 5,
+            opacity: 0.8,
+            backgroundColor: 'lightgrey'
+        },
+        closedCaptionsDisabled: {
+            borderColor: 'white',
+            borderWidth: 1,
+            padding: 5,
+            borderRadius: 5,
+            opacity: 0.3,
+            backgroundColor: 'transparent'
+        },
+        closedCaptionsText: {
+            fontSize: 10,
+            color: 'white'
+        }
     }),
     volume: StyleSheet.create({
         container: {
