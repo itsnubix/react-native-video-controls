@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Video from 'react-native-video';
 import {
+  I18nManager,
   TouchableWithoutFeedback,
   TouchableHighlight,
   ImageBackground,
@@ -1331,7 +1332,7 @@ const styles = {
       marginBottom: 0,
     },
     volume: {
-      flexDirection: 'row',
+      flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
     },
     fullscreen: {
       flexDirection: 'row',
