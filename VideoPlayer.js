@@ -540,11 +540,6 @@ export default class VideoPlayer extends Component {
    * or duration. Formatted to look as 00:00.
    */
   calculateTime() {
-    if (this.state.showTimeRemaining) {
-      const time = this.state.duration - this.state.currentTime;
-      return `-${this.formatTime(time)}`;
-    }
-
     const currentSeconds = Math.floor(this.state.currentTime);
     const playableDuration = Math.floor(this.state.duration);
 
@@ -574,22 +569,6 @@ export default class VideoPlayer extends Component {
       minutes,
     )}:${this.padNumber(secs)}`;
   };
-
-  /**
-   * Format a time string as mm:ss
-   *
-   * @param {int} time time in milliseconds
-   * @return {string} formatted time string in mm:ss format
-   */
-  formatTime(time = 0) {
-    const symbol = this.state.showRemainingTime ? '-' : '';
-    time = Math.min(Math.max(time, 0), this.state.duration);
-
-    const formattedMinutes = padStart(Math.floor(time / 60).toFixed(0), 2, 0);
-    const formattedSeconds = padStart(Math.floor(time % 60).toFixed(0), 2, 0);
-
-    return `${symbol}${formattedMinutes}:${formattedSeconds}`;
-  }
 
   /**
    * Set the position of the seekbar's components
@@ -1032,15 +1011,10 @@ export default class VideoPlayer extends Component {
 
   handleMuted = () => {
     if (this.state.isMuted) {
-      this.setState({volumne: 1, isMuted: false});
+      this.setState({volume: 1, isMuted: false});
       return;
     }
-
-    this.setState({volumne: 0, isMuted: true});
-  }
-
-  handleRewind = () => {
-    this.player.ref.seek(0);
+    this.setState({volume: 0, isMuted: true});
   }
 
   handlePlayPause = () => {
@@ -1085,11 +1059,6 @@ export default class VideoPlayer extends Component {
                 name={this.state.paused ? 'play' : 'pause'}
               />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={customStyles.controlWidth}
-              onPress={this.handleRewind}>
-              <Icon color={theme.colors.white} size={ICON_SIZE} name={'backward'} />
-            </TouchableOpacity>
             <TouchableOpacity style={customStyles.volumeWidth} onPress={this.handleMuted}>
               <Icon
                 color={theme.colors.white}
@@ -1097,7 +1066,6 @@ export default class VideoPlayer extends Component {
                 name={this.state.isMuted ? 'volume-off' : 'volume-up'}
               />
             </TouchableOpacity>
-            {this.renderTitle()}
             {timerControl}
             <TouchableOpacity
               style={customStyles.fullScreenButton}>
@@ -1126,8 +1094,7 @@ export default class VideoPlayer extends Component {
           style={styles.seekbar.track}
           onLayout={event =>
             (this.player.seekerWidth = event.nativeEvent.layout.width)
-          }
-          pointerEvents={'none'}>
+          }>
           <View
             style={[
               styles.seekbar.fill,
@@ -1136,7 +1103,6 @@ export default class VideoPlayer extends Component {
                 backgroundColor: this.props.seekColor || '#FFF',
               },
             ]}
-            pointerEvents={'none'}
           />
         </View>
         <View
@@ -1147,7 +1113,6 @@ export default class VideoPlayer extends Component {
               styles.seekbar.circle,
               {backgroundColor: this.props.seekColor || '#FFF'},
             ]}
-            pointerEvents={'none'}
           />
         </View>
       </View>
@@ -1167,25 +1132,6 @@ export default class VideoPlayer extends Component {
       this.methods.togglePlayPause,
       styles.controls.playPause,
     );
-  }
-
-  /**
-   * Render our title...if supplied.
-   */
-  renderTitle() {
-    if (this.opts.title) {
-      return (
-        <View style={[styles.controls.control, styles.controls.title]}>
-          <Text
-            style={[styles.controls.text, styles.controls.titleText]}
-            numberOfLines={1}>
-            {this.opts.title || ''}
-          </Text>
-        </View>
-      );
-    }
-
-    return null;
   }
 
   /**
@@ -1285,7 +1231,6 @@ export default class VideoPlayer extends Component {
           />
           {this.renderError()}
           {this.renderLoader()}
-          {/*{this.renderTopControls()}*/}
           {this.renderBottomControls()}
         </View>
       </TouchableWithoutFeedback>
@@ -1302,7 +1247,7 @@ const customStyles = StyleSheet.create({
   },
   fullScreenButton: {
     position: 'absolute',
-    right: -115,
+    right: -152,
   }
 });
 
@@ -1364,15 +1309,11 @@ const styles = {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      height: null,
-      width: null,
     },
     column: {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'space-between',
-      height: null,
-      width: null,
     },
     vignette: {
       resizeMode: 'stretch',
@@ -1417,16 +1358,10 @@ const styles = {
       justifyContent: 'space-between',
       marginHorizontal: 20,
       marginBottom: 0,
-    },
-    volume: {
-      flexDirection: 'row',
-    },
-    fullscreen: {
-      flexDirection: 'row',
+      top: 1
     },
     playPause: {
       position: 'relative',
-      width: 80,
       zIndex: 0,
     },
     title: {
@@ -1440,12 +1375,16 @@ const styles = {
     },
     timer: {
       width: 160,
+      top: 3,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     timerText: (theme) => ({
       color: theme.colors.white,
       fontFamily: theme.Fonts.openSans.bold,
       fontSize: 14,
       textAlign: 'right',
+      alignItems: 'center',
     }),
   }),
   volume: StyleSheet.create({
@@ -1480,34 +1419,33 @@ const styles = {
   seekbar: StyleSheet.create({
     container: {
       alignSelf: 'stretch',
-      height: 16,
+      height: 20,
       marginHorizontal: 20,
     },
     track: {
       backgroundColor: 'rgba(255, 255, 255, 0.5)',
-      height: 1,
+      height: 4,
       position: 'relative',
       top: 14,
-      width: '100%',
     },
     fill: {
       backgroundColor: '#FFF',
-      height: 1,
-      width: '100%',
+      height: 4,
     },
     handle: {
       position: 'absolute',
       marginLeft: -7,
-      height: 30,
+      height: 50,
       width: 28,
+      marginBottom: 10,
     },
     circle: {
       borderRadius: 12,
       position: 'relative',
       top: 10,
       left: 1,
-      height: 9,
-      width: 9,
+      height: 13,
+      width: 13,
     },
   }),
 };
