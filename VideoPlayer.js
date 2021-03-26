@@ -1032,11 +1032,10 @@ export default class VideoPlayer extends Component {
 
   handleMuted = () => {
     if (this.state.isMuted) {
-      this.setState({volumne: 1, isMuted: false});
+      this.setState({volume: 1, isMuted: false});
       return;
     }
-
-    this.setState({volumne: 0, isMuted: true});
+    this.setState({volume: 0, isMuted: true});
   }
 
   handleRewind = () => {
@@ -1417,6 +1416,7 @@ const styles = {
       justifyContent: 'space-between',
       marginHorizontal: 20,
       marginBottom: 0,
+      top: 1
     },
     volume: {
       flexDirection: 'row',
@@ -1440,12 +1440,16 @@ const styles = {
     },
     timer: {
       width: 160,
+      top: 3,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     timerText: (theme) => ({
       color: theme.colors.white,
       fontFamily: theme.Fonts.openSans.bold,
       fontSize: 14,
       textAlign: 'right',
+      alignItems: 'center',
     }),
   }),
   volume: StyleSheet.create({
