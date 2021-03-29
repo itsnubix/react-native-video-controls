@@ -37,6 +37,7 @@ export default class VideoPlayer extends Component {
     rate: 1,
   };
 
+
   constructor(props) {
     super(props);
 
@@ -72,6 +73,7 @@ export default class VideoPlayer extends Component {
       error: false,
       duration: 0,
       isMuted: false,
+      orientation: this.props.orientation
     };
 
     /**
@@ -129,6 +131,7 @@ export default class VideoPlayer extends Component {
       ref: Video,
       scrubbingTimeStep: this.props.scrubbing || 0,
       tapAnywhereToPause: this.props.tapAnywhereToPause,
+      orientation : this.props.orientation
     };
 
     /**
@@ -164,15 +167,15 @@ export default class VideoPlayer extends Component {
   }
 
   /**
-    | -------------------------------------------------------
-    | Events
-    | -------------------------------------------------------
-    |
-    | These are the events that the <Video> component uses
-    | and can be overridden by assigning it as a prop.
-    | It is suggested that you override onEnd.
-    |
-    */
+   | -------------------------------------------------------
+   | Events
+   | -------------------------------------------------------
+   |
+   | These are the events that the <Video> component uses
+   | and can be overridden by assigning it as a prop.
+   | It is suggested that you override onEnd.
+   |
+   */
 
   /**
    * When load starts we display a loading icon
@@ -210,6 +213,7 @@ export default class VideoPlayer extends Component {
     if (typeof this.props.onLoad === 'function') {
       this.props.onLoad(...arguments);
     }
+
   }
 
   /**
@@ -310,16 +314,16 @@ export default class VideoPlayer extends Component {
   }
 
   /**
-    | -------------------------------------------------------
-    | Methods
-    | -------------------------------------------------------
-    |
-    | These are all of our functions that interact with
-    | various parts of the class. Anything from
-    | calculating time remaining in a video
-    | to handling control operations.
-    |
-    */
+   | -------------------------------------------------------
+   | Methods
+   | -------------------------------------------------------
+   |
+   | These are all of our functions that interact with
+   | various parts of the class. Anything from
+   | calculating time remaining in a video
+   | to handling control operations.
+   |
+   */
 
   /**
    * Set a timeout when the controls are shown
@@ -439,7 +443,7 @@ export default class VideoPlayer extends Component {
       state.showControls = false;
       this.hideControlAnimation();
       typeof this.events.onHideControls === 'function' &&
-        this.events.onHideControls();
+      this.events.onHideControls();
 
       this.setState(state);
     }
@@ -457,12 +461,12 @@ export default class VideoPlayer extends Component {
       this.showControlAnimation();
       this.setControlTimeout();
       typeof this.events.onShowControls === 'function' &&
-        this.events.onShowControls();
+      this.events.onShowControls();
     } else {
       this.hideControlAnimation();
       this.clearControlTimeout();
       typeof this.events.onHideControls === 'function' &&
-        this.events.onHideControls();
+      this.events.onHideControls();
     }
 
     this.setState(state);
@@ -484,11 +488,13 @@ export default class VideoPlayer extends Component {
 
     if (state.isFullscreen) {
       typeof this.events.onEnterFullscreen === 'function' &&
-        this.events.onEnterFullscreen();
+      this.events.onEnterFullscreen();
     } else {
       typeof this.events.onExitFullscreen === 'function' &&
-        this.events.onExitFullscreen();
+      this.events.onExitFullscreen();
     }
+
+
 
     this.setState(state);
   }
@@ -540,6 +546,11 @@ export default class VideoPlayer extends Component {
    * or duration. Formatted to look as 00:00.
    */
   calculateTime() {
+    if (this.state.showTimeRemaining) {
+      const time = this.state.duration - this.state.currentTime;
+      return `-${this.formatTime(time)}`;
+    }
+
     const currentSeconds = Math.floor(this.state.currentTime);
     const playableDuration = Math.floor(this.state.duration);
 
@@ -569,6 +580,22 @@ export default class VideoPlayer extends Component {
       minutes,
     )}:${this.padNumber(secs)}`;
   };
+
+  /**
+   * Format a time string as mm:ss
+   *
+   * @param {int} time time in milliseconds
+   * @return {string} formatted time string in mm:ss format
+   */
+  formatTime(time = 0) {
+    const symbol = this.state.showRemainingTime ? '-' : '';
+    time = Math.min(Math.max(time, 0), this.state.duration);
+
+    const formattedMinutes = padStart(Math.floor(time / 60).toFixed(0), 2, 0);
+    const formattedSeconds = padStart(Math.floor(time % 60).toFixed(0), 2, 0);
+
+    return `${symbol}${formattedMinutes}:${formattedSeconds}`;
+  }
 
   /**
    * Set the position of the seekbar's components
@@ -703,15 +730,15 @@ export default class VideoPlayer extends Component {
   }
 
   /**
-    | -------------------------------------------------------
-    | React Component functions
-    | -------------------------------------------------------
-    |
-    | Here we're initializing our listeners and getting
-    | the component ready using the built-in React
-    | Component methods
-    |
-    */
+   | -------------------------------------------------------
+   | React Component functions
+   | -------------------------------------------------------
+   |
+   | Here we're initializing our listeners and getting
+   | the component ready using the built-in React
+   | Component methods
+   |
+   */
 
   /**
    * Before mounting, init our seekbar and volume bar
@@ -892,16 +919,16 @@ export default class VideoPlayer extends Component {
   }
 
   /**
-    | -------------------------------------------------------
-    | Rendering
-    | -------------------------------------------------------
-    |
-    | This section contains all of our render methods.
-    | In addition to the typical React render func
-    | we also have all the render methods for
-    | the controls.
-    |
-    */
+   | -------------------------------------------------------
+   | Rendering
+   | -------------------------------------------------------
+   |
+   | This section contains all of our render methods.
+   | In addition to the typical React render func
+   | we also have all the render methods for
+   | the controls.
+   |
+   */
 
   /**
    * Standard render control function that handles
@@ -1017,14 +1044,24 @@ export default class VideoPlayer extends Component {
     this.setState({volume: 0, isMuted: true});
   }
 
+  handleRewind = () => {
+    this.player.ref.seek(0);
+  }
+
   handlePlayPause = () => {
     this.setState({paused: !this.state.paused});
+  }
+
+  handleFullscreen = () => {
+    this.props.orientationLocker.lockToLandscape();
   }
 
   /**
    * Render bottom control group and wrap it in a holder
    */
   renderBottomControls() {
+
+
     const timerControl = this.props.disableTimer
       ? this.renderNullControl()
       : this.renderTimer();
@@ -1059,6 +1096,11 @@ export default class VideoPlayer extends Component {
                 name={this.state.paused ? 'play' : 'pause'}
               />
             </TouchableOpacity>
+            <TouchableOpacity
+              style={customStyles.controlWidth}
+              onPress={this.handleRewind}>
+              <Icon color={theme.colors.white} size={ICON_SIZE} name={'backward'} />
+            </TouchableOpacity>
             <TouchableOpacity style={customStyles.volumeWidth} onPress={this.handleMuted}>
               <Icon
                 color={theme.colors.white}
@@ -1066,9 +1108,10 @@ export default class VideoPlayer extends Component {
                 name={this.state.isMuted ? 'volume-off' : 'volume-up'}
               />
             </TouchableOpacity>
+            {this.renderTitle()}
             {timerControl}
             <TouchableOpacity
-              style={customStyles.fullScreenButton}>
+              style={customStyles.fullScreenButton} onPress={this.handleFullscreen}>
               <Icon
                 color={theme.colors.white}
                 size={ICON_SIZE}
@@ -1094,7 +1137,8 @@ export default class VideoPlayer extends Component {
           style={styles.seekbar.track}
           onLayout={event =>
             (this.player.seekerWidth = event.nativeEvent.layout.width)
-          }>
+          }
+          pointerEvents={'none'}>
           <View
             style={[
               styles.seekbar.fill,
@@ -1103,6 +1147,7 @@ export default class VideoPlayer extends Component {
                 backgroundColor: this.props.seekColor || '#FFF',
               },
             ]}
+            pointerEvents={'none'}
           />
         </View>
         <View
@@ -1113,6 +1158,7 @@ export default class VideoPlayer extends Component {
               styles.seekbar.circle,
               {backgroundColor: this.props.seekColor || '#FFF'},
             ]}
+            pointerEvents={'none'}
           />
         </View>
       </View>
@@ -1135,12 +1181,31 @@ export default class VideoPlayer extends Component {
   }
 
   /**
+   * Render our title...if supplied.
+   */
+  renderTitle() {
+    if (this.opts.title) {
+      return (
+        <View style={[styles.controls.control, styles.controls.title]}>
+          <Text
+            style={[styles.controls.text, styles.controls.titleText]}
+            numberOfLines={1}>
+            {this.opts.title || ''}
+          </Text>
+        </View>
+      );
+    }
+
+    return null;
+  }
+
+  /**
    * Show our timer.
    */
   renderTimer() {
     return this.renderControl(
       <Text style={styles.controls.timerText(this.props.theme)}>{this.calculateTime()}</Text>,
-     () => {},
+      () => {},
       styles.controls.timer,
     );
   }
@@ -1231,6 +1296,7 @@ export default class VideoPlayer extends Component {
           />
           {this.renderError()}
           {this.renderLoader()}
+          {/*{this.renderTopControls()}*/}
           {this.renderBottomControls()}
         </View>
       </TouchableWithoutFeedback>
@@ -1247,7 +1313,7 @@ const customStyles = StyleSheet.create({
   },
   fullScreenButton: {
     position: 'absolute',
-    right: -152,
+    right: -115,
   }
 });
 
@@ -1309,11 +1375,15 @@ const styles = {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+      height: null,
+      width: null,
     },
     column: {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'space-between',
+      height: null,
+      width: null,
     },
     vignette: {
       resizeMode: 'stretch',
@@ -1340,7 +1410,7 @@ const styles = {
     },
     bottom: {
       alignItems: 'stretch',
-      flex: 2,
+      flex: 1,
       justifyContent: 'flex-end',
     },
     topControlGroup: {
@@ -1358,10 +1428,18 @@ const styles = {
       justifyContent: 'space-between',
       marginHorizontal: 20,
       marginBottom: 0,
+      right: 0,
       top: 1
+    },
+    volume: {
+      flexDirection: 'row',
+    },
+    fullscreen: {
+      flexDirection: 'row',
     },
     playPause: {
       position: 'relative',
+      width: 80,
       zIndex: 0,
     },
     title: {
@@ -1419,33 +1497,34 @@ const styles = {
   seekbar: StyleSheet.create({
     container: {
       alignSelf: 'stretch',
-      height: 20,
+      height: 16,
       marginHorizontal: 20,
     },
     track: {
       backgroundColor: 'rgba(255, 255, 255, 0.5)',
-      height: 4,
+      height: 1,
       position: 'relative',
       top: 14,
+      width: '100%',
     },
     fill: {
       backgroundColor: '#FFF',
-      height: 4,
+      height: 1,
+      width: '100%',
     },
     handle: {
       position: 'absolute',
       marginLeft: -7,
-      height: 50,
+      height: 30,
       width: 28,
-      marginBottom: 10,
     },
     circle: {
       borderRadius: 12,
       position: 'relative',
       top: 10,
       left: 1,
-      height: 13,
-      width: 13,
+      height: 9,
+      width: 9,
     },
   }),
 };
