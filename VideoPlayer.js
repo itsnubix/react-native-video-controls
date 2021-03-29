@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import padStart from 'lodash/padStart';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import LinearGradient from "react-native-linear-gradient";
 
 const ICON_SIZE = 20;
 
@@ -965,6 +966,7 @@ export default class VideoPlayer extends Component {
    * view and spaces them out.
    */
   renderTopControls() {
+
     const backControl = this.props.disableBack
       ? this.renderNullControl()
       : this.renderBack();
@@ -975,6 +977,16 @@ export default class VideoPlayer extends Component {
       ? this.renderNullControl()
       : this.renderFullscreen();
 
+    const theme = this.props.theme;
+
+    /*const renderDownArrow = () =>{
+      return this.props.orientation === 'portrait' ? (
+        <SafeAreaView style={styles.controls.topControlGroup}>
+         <Icon name={'chevron-down'} size={ICON_SIZE} color={this.props.theme.colors.white} />
+        </SafeAreaView>
+      ):(<></>)
+    }*/
+
     return (
       <Animated.View
         style={[
@@ -984,17 +996,18 @@ export default class VideoPlayer extends Component {
             marginTop: this.animations.topControl.marginTop,
           },
         ]}>
-        <ImageBackground
-          source={require('./assets/img/top-vignette.png')}
-          style={[styles.controls.column]}
-          imageStyle={[styles.controls.vignette]}>
-          <SafeAreaView style={styles.controls.topControlGroup}>
-            <Icon name={'chevron-down'} size={ICON_SIZE} color={this.props.theme.colors.white} />
-          </SafeAreaView>
-        </ImageBackground>
+        {/* Shadow overlay for top side only */}
+        <LinearGradient
+          colors={theme.colors.blackTransparentOverlayTop}
+          style={{flex: 1 }}
+        />
+        {/* <View>
+          {renderDownArrow()}
+        </View>*/}
       </Animated.View>
     );
   }
+
 
 
   /**
@@ -1073,22 +1086,38 @@ export default class VideoPlayer extends Component {
       : this.renderPlayPause();
     const { theme } = this.props
 
+    const renderFullscreenButton = () => {
+      return this.props.orientation === 'portrait' ? (
+        <TouchableOpacity
+          style={customStyles.fullScreenButton} onPress={this.handleFullscreen}>
+          <Icon
+            color={theme.colors.white}
+            size={ICON_SIZE}
+            name={'arrows-alt'}
+          />
+        </TouchableOpacity>
+      ) : (<></>)
+    }
+
     return (
       <Animated.View
         style={[
-          styles.controls.bottom,
+          customStyles.bottom(this.props.orientation),
           {
             opacity: this.animations.bottomControl.opacity,
             marginBottom: this.animations.bottomControl.marginBottom,
           },
         ]}>
-        <ImageBackground
-          source={require('./assets/img/bottom-vignette.png')}
-          style={[styles.controls.column]}
-          imageStyle={[styles.controls.vignette]}>
+        {/* Shadow overlay bottom only */}
+        <LinearGradient
+          colors={theme.colors.blackTransparentOverlayBottom}
+          style={customStyles.bottomShadowOverlay}
+        />
+        {/* Removed the previous Image Background, will do our own opacity controller */}
+        <View>
           {seekbarControl}
           <SafeAreaView
-            style={[styles.controls.row, styles.controls.bottomControlGroup]}>
+            style={[styles.controls.row(this.props.orientation), styles.controls.bottomControlGroup]}>
             <TouchableOpacity style={customStyles.controlWidth} onPress={this.handlePlayPause}>
               <Icon
                 color={theme.colors.white}
@@ -1110,16 +1139,9 @@ export default class VideoPlayer extends Component {
             </TouchableOpacity>
             {this.renderTitle()}
             {timerControl}
-            <TouchableOpacity
-              style={customStyles.fullScreenButton} onPress={this.handleFullscreen}>
-              <Icon
-                color={theme.colors.white}
-                size={ICON_SIZE}
-                name={'arrows-alt'}
-              />
-            </TouchableOpacity>
+            {renderFullscreenButton()}
           </SafeAreaView>
-        </ImageBackground>
+        </View>
       </Animated.View>
     );
   }
@@ -1130,7 +1152,7 @@ export default class VideoPlayer extends Component {
   renderSeekbar() {
     return (
       <View
-        style={styles.seekbar.container}
+        style={styles.seekbar.container(this.props.orientation)}
         collapsable={false}
         {...this.player.seekPanResponder.panHandlers}>
         <View
@@ -1296,7 +1318,7 @@ export default class VideoPlayer extends Component {
           />
           {this.renderError()}
           {this.renderLoader()}
-          {/*{this.renderTopControls()}*/}
+          {this.renderTopControls()}
           {this.renderBottomControls()}
         </View>
       </TouchableWithoutFeedback>
@@ -1314,6 +1336,14 @@ const customStyles = StyleSheet.create({
   fullScreenButton: {
     position: 'absolute',
     right: -115,
+  },
+  bottom: (orientation)=>({
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'flex-end',
+  }),
+  bottomShadowOverlay:{
+    flex: 1, position:'absolute', bottom: 0, width: '100%', height:'100%'
   }
 });
 
@@ -1371,13 +1401,14 @@ const styles = {
     },
   }),
   controls: StyleSheet.create({
-    row: {
+    row:(orientation)=> ({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
       height: null,
       width: null,
-    },
+      marginLeft: orientation === 'portrait' ? null : '42%'
+    }),
     column: {
       flexDirection: 'column',
       alignItems: 'center',
@@ -1495,11 +1526,12 @@ const styles = {
     },
   }),
   seekbar: StyleSheet.create({
-    container: {
+    container: (orientation)=>({
       alignSelf: 'stretch',
       height: 16,
       marginHorizontal: 20,
-    },
+      marginLeft: orientation === 'portrait' ? null : '42%',
+    }),
     track: {
       backgroundColor: 'rgba(255, 255, 255, 0.5)',
       height: 1,
