@@ -18,6 +18,8 @@ import padStart from 'lodash/padStart';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LinearGradient from "react-native-linear-gradient";
 
+import { OverlayControls } from "../../src/common/components/VideoPlayer";
+
 const ICON_SIZE = 20;
 
 export default class VideoPlayer extends Component {
@@ -74,7 +76,8 @@ export default class VideoPlayer extends Component {
       error: false,
       duration: 0,
       isMuted: false,
-      orientation: this.props.orientation
+      orientation: this.props.orientation,
+      isEnded: false,
     };
 
     /**
@@ -269,7 +272,9 @@ export default class VideoPlayer extends Component {
    * Either close the video or go to a
    * new page.
    */
-  _onEnd() {}
+  _onEnd() {
+    this.setState({isEnded: true});
+  }
 
   /**
    * Set the error state to true which then
@@ -1062,7 +1067,12 @@ export default class VideoPlayer extends Component {
   }
 
   handlePlayPause = () => {
-    this.setState({paused: !this.state.paused});
+    const { paused } = this.state;
+    this.setState({paused: !paused});
+  }
+
+  handleRepeat = () => {
+    this.setState({isEnded: false}, () => this.seekTo(0));
   }
 
   handleFullscreen = () => {
@@ -1294,34 +1304,37 @@ export default class VideoPlayer extends Component {
    */
   render() {
     return (
-      <TouchableWithoutFeedback
-        onPress={this.handleShortPress}
-        onLongPress={this.handleLongPress}
-        style={[styles.player.container, this.styles.containerStyle]}>
-        <View style={[styles.player.container, this.styles.containerStyle]}>
-          <Video
-            {...this.props}
-            ref={videoPlayer => (this.player.ref = videoPlayer)}
-            resizeMode={this.state.resizeMode}
-            volume={this.state.volume}
-            paused={this.state.paused}
-            muted={this.state.muted}
-            rate={this.state.rate}
-            onLoadStart={this.events.onLoadStart}
-            onProgress={this.events.onProgress}
-            onError={this.events.onError}
-            onLoad={this.events.onLoad}
-            onEnd={this.events.onEnd}
-            onSeek={this.events.onSeek}
-            style={[styles.player.video, this.styles.videoStyle]}
-            source={this.props.source}
-          />
-          {this.renderError()}
-          {this.renderLoader()}
-          {this.renderTopControls()}
-          {this.renderBottomControls()}
-        </View>
-      </TouchableWithoutFeedback>
+      <>
+        <OverlayControls state={this.state} handlePlayPause={this.handlePlayPause} handleRepeat={this.handleRepeat} />
+        <TouchableWithoutFeedback
+          onPress={this.handleShortPress}
+          onLongPress={this.handleLongPress}
+          style={[styles.player.container, this.styles.containerStyle]}>
+          <View style={[styles.player.container, this.styles.containerStyle]}>
+            <Video
+              {...this.props}
+              ref={videoPlayer => (this.player.ref = videoPlayer)}
+              resizeMode={this.state.resizeMode}
+              volume={this.state.volume}
+              paused={this.state.paused}
+              muted={this.state.muted}
+              rate={this.state.rate}
+              onLoadStart={this.events.onLoadStart}
+              onProgress={this.events.onProgress}
+              onError={this.events.onError}
+              onLoad={this.events.onLoad}
+              onEnd={this.events.onEnd}
+              onSeek={this.events.onSeek}
+              style={[styles.player.video, this.styles.videoStyle]}
+              source={this.props.source}
+            />
+            {this.renderError()}
+            {this.renderLoader()}
+            {this.renderTopControls()}
+            {this.renderBottomControls()}
+          </View>
+        </TouchableWithoutFeedback>
+      </>
     );
   }
 }
