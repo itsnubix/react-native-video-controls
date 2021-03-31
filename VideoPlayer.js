@@ -799,6 +799,7 @@ export default class VideoPlayer extends Component {
         state.seeking = true;
         state.originallyPaused = state.paused;
         state.scrubbing = false;
+        state.isEnded = false;
         if (this.player.scrubbingTimeStep > 0) {
           state.paused = true;
         }
