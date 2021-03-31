@@ -198,6 +198,9 @@ export default class VideoPlayer extends Component {
     state.loading = false;
     this.setState(state);
 
+    // This triggers channel Avatar Channel & Follow Button [Landscape View]
+    this.props.streamLandscapeStore.isShadowOverlayOn = true;
+
     if (state.showControls) {
       this.setControlTimeout();
     }
@@ -324,6 +327,9 @@ export default class VideoPlayer extends Component {
   setControlTimeout() {
     this.player.controlTimeout = setTimeout(() => {
       this._hideControls();
+      // This triggers channel Avatar Channel & Follow Button [Landscape View]
+      this.props.streamLandscapeStore.isShadowOverlayOn = false;
+
     }, this.player.controlTimeoutDelay);
   }
 
@@ -453,11 +459,15 @@ export default class VideoPlayer extends Component {
       this.setControlTimeout();
       typeof this.events.onShowControls === 'function' &&
         this.events.onShowControls();
+      // This triggers channel Avatar Channel & Follow Button [Landscape View]
+      this.props.streamLandscapeStore.isShadowOverlayOn = true;
     } else {
       this.hideControlAnimation();
       this.clearControlTimeout();
       typeof this.events.onHideControls === 'function' &&
         this.events.onHideControls();
+      // This triggers channel Avatar Channel & Follow Button [Landscape View]
+      this.props.streamLandscapeStore.isShadowOverlayOn = false;
     }
 
     this.setState(state);
