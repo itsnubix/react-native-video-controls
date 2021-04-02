@@ -470,12 +470,13 @@ export default class VideoPlayer extends Component {
       this.events.onShowControls();
       // This triggers channel Avatar Channel & Follow Button [Landscape View]
       this.props.streamLandscapeStore.isShadowOverlayOn = true;
-
     } else {
       this.hideControlAnimation();
       this.clearControlTimeout();
       typeof this.events.onHideControls === 'function' &&
       this.events.onHideControls();
+      // This triggers channel Avatar Channel & Follow Button [Landscape View]
+      this.props.streamLandscapeStore.isShadowOverlayOn = false;
     }
 
     this.setState(state);
@@ -758,6 +759,7 @@ export default class VideoPlayer extends Component {
     }
   }
 
+
   /**
    * Upon mounting, calculate the position of the volume
    * bar based on the volume property supplied to it.
@@ -768,6 +770,20 @@ export default class VideoPlayer extends Component {
     this.setVolumePosition(position);
     state.volumeOffset = position;
     this.mounted = true;
+
+
+    this.props.navigation.addListener('focus', () => {
+      if (this.state.isMuted) {
+        this.setState({volume: 0});
+      } else {
+        this.setState({volume: 1});
+      }
+    });
+
+    this.props.navigation.addListener('blur', () => {
+      this.setState({volume: 0});
+    });
+
 
     this.setState(state);
   }
