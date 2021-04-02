@@ -670,13 +670,6 @@ export default class VideoPlayer extends Component {
     this.setState(state);
   }
 
-  seekAndPlay(time){
-    let state = this.state;
-    state.currentTime = time;
-    this.player.ref.seek(time);
-    this.setState(state);
-  }
-
 
 
   /**
@@ -1317,8 +1310,8 @@ export default class VideoPlayer extends Component {
             />
             {this.renderError()}
             {this.renderLoader()}
-            {!this.props.hideAllControls ? this.renderTopControls() : null}
-            {!this.props.hideAllControls ? this.renderBottomControls() : null}
+            {!this.props.hideAllControls && this.renderTopControls()}
+            {!this.props.hideAllControls && this.renderBottomControls()}
           </View>
         </TouchableWithoutFeedback>
       </>
