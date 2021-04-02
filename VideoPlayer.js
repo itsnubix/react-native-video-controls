@@ -216,9 +216,9 @@ export default class VideoPlayer extends Component {
 
     // Seeking to previous location
     if(this.props.seekVideo){
-      this.seekAndPlay(this.props.seekToTime)
+      this.seekTo(this.props.seekToTime)
     }
-    
+
     if (state.showControls) {
       this.setControlTimeout();
     }
@@ -282,6 +282,7 @@ export default class VideoPlayer extends Component {
    * new page.
    */
   _onEnd() {
+    this.setState({})
     this.setState({isEnded: true});
   }
 
@@ -486,7 +487,7 @@ export default class VideoPlayer extends Component {
       this.hideControlAnimation();
       this.clearControlTimeout();
       typeof this.events.onHideControls === 'function' &&
-        this.events.onHideControls();
+      this.events.onHideControls();
       // This triggers channel Avatar Channel & Follow Button [Landscape View]
       this.props.streamLandscapeStore.isShadowOverlayOn = false;
     }
@@ -784,6 +785,7 @@ export default class VideoPlayer extends Component {
     state.volumeOffset = position;
     this.mounted = true;
 
+
     this.props.navigation.addListener('focus', () => {
       if (this.state.isMuted) {
         this.setState({volume: 0});
@@ -795,6 +797,7 @@ export default class VideoPlayer extends Component {
     this.props.navigation.addListener('blur', () => {
       this.setState({volume: 0});
     });
+
 
     this.setState(state);
   }
