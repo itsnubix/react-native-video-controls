@@ -233,6 +233,7 @@ export default class VideoPlayer extends Component {
     let state = this.state;
     if (!state.scrubbing) {
       state.currentTime = data.currentTime;
+      this.props.streamStore.currentVideoTime = state.currentTime;
 
       if (!state.seeking) {
         const position = this.calculateSeekerPosition();
@@ -257,6 +258,7 @@ export default class VideoPlayer extends Component {
     if (state.scrubbing) {
       state.scrubbing = false;
       state.currentTime = data.currentTime;
+      this.props.streamStore.currentVideoTime = state.currentTime;
 
       // Seeking may be false here if the user released the seek bar while the player was still processing
       // the last seek command. In this case, perform the steps that have been postponed.
@@ -265,6 +267,7 @@ export default class VideoPlayer extends Component {
         state.paused = state.originallyPaused;
       }
 
+      this.props.streamStore.isVideoPaused = state.paused;
       this.setState(state);
     }
   }
@@ -276,7 +279,7 @@ export default class VideoPlayer extends Component {
    * new page.
    */
   _onEnd() {
-    this.setState({isEnded: true});
+    this.props.streamStore.isVideoEnded = true;
   }
 
   /**
@@ -473,7 +476,7 @@ export default class VideoPlayer extends Component {
       this.showControlAnimation();
       this.setControlTimeout();
       typeof this.events.onShowControls === 'function' &&
-        this.events.onShowControls();
+      this.events.onShowControls();
       // This triggers channel Avatar Channel & Follow Button [Landscape View]
       this.props.streamLandscapeStore.isShadowOverlayOn = true;
 
@@ -481,7 +484,7 @@ export default class VideoPlayer extends Component {
       this.hideControlAnimation();
       this.clearControlTimeout();
       typeof this.events.onHideControls === 'function' &&
-        this.events.onHideControls();
+      this.events.onHideControls();
       // This triggers channel Avatar Channel & Follow Button [Landscape View]
       this.props.streamLandscapeStore.isShadowOverlayOn = false;
     }
@@ -529,6 +532,7 @@ export default class VideoPlayer extends Component {
       typeof this.events.onPlay === 'function' && this.events.onPlay();
     }
 
+    this.props.streamStore.isVideoPaused = state.paused;
     this.setState(state);
   }
 
@@ -661,6 +665,7 @@ export default class VideoPlayer extends Component {
   seekTo(time = 0) {
     let state = this.state;
     state.currentTime = time;
+    this.props.streamStore.currentVideoTime = state.currentTime;
     this.player.ref.seek(time);
     this.setState(state);
   }
@@ -782,6 +787,12 @@ export default class VideoPlayer extends Component {
       } else {
         this.setState({volume: 1});
       }
+
+      if (this.props.streamStore.isVideoPaused) {
+        this.setState({paused: true});
+      } else {
+        this.setState({paused: false});
+      }
     });
 
     this.props.navigation.addListener('blur', () => {
@@ -825,7 +836,7 @@ export default class VideoPlayer extends Component {
         state.seeking = true;
         state.originallyPaused = state.paused;
         state.scrubbing = false;
-        state.isEnded = false;
+        this.props.streamStore.isVideoEnded = false;
         if (this.player.scrubbingTimeStep > 0) {
           state.paused = true;
         }
@@ -1062,19 +1073,24 @@ export default class VideoPlayer extends Component {
 
   handleMuted = () => {
     if (this.state.isMuted) {
+      this.props.streamStore.isVideoMuted = false;
       this.setState({volume: 1, isMuted: false});
       return;
     }
+
+    this.props.streamStore.isVideoMuted = true;
     this.setState({volume: 0, isMuted: true});
   }
 
   handlePlayPause = () => {
     const { paused } = this.state;
+    this.props.streamStore.isVideoPaused = !paused
     this.setState({paused: !paused});
   }
 
   handleRepeat = () => {
-    this.setState({isEnded: false}, () => this.seekTo(0));
+    this.props.streamStore.isVideoEnded = false;
+    this.seekTo(0);
   }
 
   handleFullscreen = () => {
@@ -1277,7 +1293,7 @@ export default class VideoPlayer extends Component {
   render() {
     return (
       <>
-        <OverlayControls state={this.state} handlePlayPause={this.handlePlayPause} handleRepeat={this.handleRepeat} />
+        <OverlayControls handlePlayPause={this.handlePlayPause} handleRepeat={this.handleRepeat} />
         <TouchableWithoutFeedback
           onPress={this.handleShortPress}
           onLongPress={this.handleLongPress}
