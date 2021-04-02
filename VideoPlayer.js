@@ -163,15 +163,15 @@ export default class VideoPlayer extends Component {
   }
 
   /**
-    | -------------------------------------------------------
-    | Events
-    | -------------------------------------------------------
-    |
-    | These are the events that the <Video> component uses
-    | and can be overridden by assigning it as a prop.
-    | It is suggested that you override onEnd.
-    |
-    */
+   | -------------------------------------------------------
+   | Events
+   | -------------------------------------------------------
+   |
+   | These are the events that the <Video> component uses
+   | and can be overridden by assigning it as a prop.
+   | It is suggested that you override onEnd.
+   |
+   */
 
   /**
    * When load starts we display a loading icon
@@ -320,16 +320,16 @@ export default class VideoPlayer extends Component {
   }
 
   /**
-    | -------------------------------------------------------
-    | Methods
-    | -------------------------------------------------------
-    |
-    | These are all of our functions that interact with
-    | various parts of the class. Anything from
-    | calculating time remaining in a video
-    | to handling control operations.
-    |
-    */
+   | -------------------------------------------------------
+   | Methods
+   | -------------------------------------------------------
+   |
+   | These are all of our functions that interact with
+   | various parts of the class. Anything from
+   | calculating time remaining in a video
+   | to handling control operations.
+   |
+   */
 
   /**
    * Set a timeout when the controls are shown
@@ -449,7 +449,7 @@ export default class VideoPlayer extends Component {
       state.showControls = false;
       this.hideControlAnimation();
       typeof this.events.onHideControls === 'function' &&
-        this.events.onHideControls();
+      this.events.onHideControls();
 
       this.setState(state);
     }
@@ -467,7 +467,7 @@ export default class VideoPlayer extends Component {
       this.showControlAnimation();
       this.setControlTimeout();
       typeof this.events.onShowControls === 'function' &&
-        this.events.onShowControls();
+      this.events.onShowControls();
       // This triggers channel Avatar Channel & Follow Button [Landscape View]
       this.props.streamLandscapeStore.isShadowOverlayOn = true;
 
@@ -475,7 +475,7 @@ export default class VideoPlayer extends Component {
       this.hideControlAnimation();
       this.clearControlTimeout();
       typeof this.events.onHideControls === 'function' &&
-        this.events.onHideControls();
+      this.events.onHideControls();
     }
 
     this.setState(state);
@@ -497,10 +497,10 @@ export default class VideoPlayer extends Component {
 
     if (state.isFullscreen) {
       typeof this.events.onEnterFullscreen === 'function' &&
-        this.events.onEnterFullscreen();
+      this.events.onEnterFullscreen();
     } else {
       typeof this.events.onExitFullscreen === 'function' &&
-        this.events.onExitFullscreen();
+      this.events.onExitFullscreen();
     }
 
     this.setState(state);
@@ -719,15 +719,15 @@ export default class VideoPlayer extends Component {
   }
 
   /**
-    | -------------------------------------------------------
-    | React Component functions
-    | -------------------------------------------------------
-    |
-    | Here we're initializing our listeners and getting
-    | the component ready using the built-in React
-    | Component methods
-    |
-    */
+   | -------------------------------------------------------
+   | React Component functions
+   | -------------------------------------------------------
+   |
+   | Here we're initializing our listeners and getting
+   | the component ready using the built-in React
+   | Component methods
+   |
+   */
 
   /**
    * Before mounting, init our seekbar and volume bar
@@ -908,16 +908,16 @@ export default class VideoPlayer extends Component {
   }
 
   /**
-    | -------------------------------------------------------
-    | Rendering
-    | -------------------------------------------------------
-    |
-    | This section contains all of our render methods.
-    | In addition to the typical React render func
-    | we also have all the render methods for
-    | the controls.
-    |
-    */
+   | -------------------------------------------------------
+   | Rendering
+   | -------------------------------------------------------
+   |
+   | This section contains all of our render methods.
+   | In addition to the typical React render func
+   | we also have all the render methods for
+   | the controls.
+   |
+   */
 
   /**
    * Standard render control function that handles
@@ -1055,7 +1055,7 @@ export default class VideoPlayer extends Component {
       : this.renderPlayPause();
 
     return (
-      <Animated.Viewf
+      <Animated.View
         style={[
           styles.controls.bottom,
           {
