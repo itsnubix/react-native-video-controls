@@ -776,6 +776,18 @@ export default class VideoPlayer extends Component {
     state.volumeOffset = position;
     this.mounted = true;
 
+    this.props.navigation.addListener('focus', () => {
+      if (this.state.isMuted) {
+        this.setState({volume: 0});
+      } else {
+        this.setState({volume: 1});
+      }
+    });
+
+    this.props.navigation.addListener('blur', () => {
+      this.setState({volume: 0});
+    });
+
     this.setState(state);
   }
 
@@ -786,6 +798,9 @@ export default class VideoPlayer extends Component {
   componentWillUnmount() {
     this.mounted = false;
     this.clearControlTimeout();
+
+    this.props.navigation.removeListener('focus');
+    this.props.navigation.removeListener('blur');
   }
 
   /**
