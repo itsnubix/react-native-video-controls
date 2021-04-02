@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Video from 'react-native-video';
 import {
   TouchableWithoutFeedback,
+  TouchableOpacity,
   TouchableHighlight,
   ImageBackground,
   PanResponder,
@@ -14,6 +15,12 @@ import {
   Text,
 } from 'react-native';
 import padStart from 'lodash/padStart';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import LinearGradient from "react-native-linear-gradient";
+
+import { OverlayControls } from "../../src/common/components/VideoPlayer";
+
+const ICON_SIZE = 20;
 
 export default class VideoPlayer extends Component {
   static defaultProps = {
@@ -33,6 +40,7 @@ export default class VideoPlayer extends Component {
     rate: 1,
   };
 
+
   constructor(props) {
     super(props);
 
@@ -51,7 +59,7 @@ export default class VideoPlayer extends Component {
 
       isFullscreen:
         this.props.isFullScreen || this.props.resizeMode === 'cover' || false,
-      showTimeRemaining: true,
+      showTimeRemaining: false,
       volumeTrackWidth: 0,
       volumeFillWidth: 0,
       seekerFillWidth: 0,
@@ -128,6 +136,7 @@ export default class VideoPlayer extends Component {
       ref: Video,
       scrubbingTimeStep: this.props.scrubbing || 0,
       tapAnywhereToPause: this.props.tapAnywhereToPause,
+      orientation : this.props.orientation
     };
 
     /**
@@ -217,6 +226,7 @@ export default class VideoPlayer extends Component {
     if (typeof this.props.onLoad === 'function') {
       this.props.onLoad(...arguments);
     }
+
   }
 
   /**
@@ -339,6 +349,9 @@ export default class VideoPlayer extends Component {
   setControlTimeout() {
     this.player.controlTimeout = setTimeout(() => {
       this._hideControls();
+      // This triggers channel Avatar Channel & Follow Button [Landscape View]
+      this.props.streamLandscapeStore.isShadowOverlayOn = false;
+
     }, this.player.controlTimeoutDelay);
   }
 
@@ -504,6 +517,8 @@ export default class VideoPlayer extends Component {
       this.events.onExitFullscreen();
     }
 
+
+
     this.setState(state);
   }
 
@@ -554,29 +569,35 @@ export default class VideoPlayer extends Component {
    * or duration. Formatted to look as 00:00.
    */
   calculateTime() {
-    if (this.state.showTimeRemaining) {
-      const time = this.state.duration - this.state.currentTime;
-      return `-${this.formatTime(time)}`;
-    }
+    const currentSeconds = Math.floor(this.state.currentTime);
+    const playableDuration = Math.floor(this.state.duration);
 
-    return this.formatTime(this.state.currentTime);
+    return this.formatSeconds(currentSeconds) + ' / ' + this.formatSeconds(playableDuration);
   }
 
   /**
-   * Format a time string as mm:ss
    *
-   * @param {int} time time in milliseconds
-   * @return {string} formatted time string in mm:ss format
+   * @param num
+   * @returns {string}
    */
-  formatTime(time = 0) {
-    const symbol = this.state.showRemainingTime ? '-' : '';
-    time = Math.min(Math.max(time, 0), this.state.duration);
+  padNumber = (num) => {
+    return ('0' + num).slice(-2);
+  };
+  /**
+   *
+   * @param {number} secs
+   * @returns {string}
+   */
+  formatSeconds = (secs = 0) => {
+    let minutes = Math.floor(secs / 60);
+    secs = secs % 60;
+    const hours = Math.floor(minutes / 60);
+    minutes = minutes % 60;
 
-    const formattedMinutes = padStart(Math.floor(time / 60).toFixed(0), 2, 0);
-    const formattedSeconds = padStart(Math.floor(time % 60).toFixed(0), 2, 0);
-
-    return `${symbol}${formattedMinutes}:${formattedSeconds}`;
-  }
+    return `${this.padNumber(hours)}:${this.padNumber(
+      minutes,
+    )}:${this.padNumber(secs)}`;
+  };
 
   /**
    * Set the position of the seekbar's components
@@ -795,6 +816,9 @@ export default class VideoPlayer extends Component {
   componentWillUnmount() {
     this.mounted = false;
     this.clearControlTimeout();
+
+    this.props.navigation.removeListener('focus');
+    this.props.navigation.removeListener('blur');
   }
 
   /**
@@ -819,6 +843,7 @@ export default class VideoPlayer extends Component {
         state.seeking = true;
         state.originallyPaused = state.paused;
         state.scrubbing = false;
+        state.isEnded = false;
         if (this.player.scrubbingTimeStep > 0) {
           state.paused = true;
         }
@@ -956,6 +981,8 @@ export default class VideoPlayer extends Component {
     );
   }
 
+  renderBack() {}
+
   /**
    * Renders an empty control, used to disable a control without breaking the view layout.
    */
@@ -968,6 +995,7 @@ export default class VideoPlayer extends Component {
    * view and spaces them out.
    */
   renderTopControls() {
+
     const backControl = this.props.disableBack
       ? this.renderNullControl()
       : this.renderBack();
@@ -978,6 +1006,16 @@ export default class VideoPlayer extends Component {
       ? this.renderNullControl()
       : this.renderFullscreen();
 
+    const theme = this.props.theme;
+
+    /*const renderDownArrow = () =>{
+      return this.props.orientation === 'portrait' ? (
+        <SafeAreaView style={styles.controls.topControlGroup}>
+         <Icon name={'chevron-down'} size={ICON_SIZE} color={this.props.theme.colors.white} />
+        </SafeAreaView>
+      ):(<></>)
+    }*/
+
     return (
       <Animated.View
         style={[
@@ -987,35 +1025,19 @@ export default class VideoPlayer extends Component {
             marginTop: this.animations.topControl.marginTop,
           },
         ]}>
-        <ImageBackground
-          source={require('./assets/img/top-vignette.png')}
-          style={[styles.controls.column]}
-          imageStyle={[styles.controls.vignette]}>
-          <SafeAreaView style={styles.controls.topControlGroup}>
-            {backControl}
-            <View style={styles.controls.pullRight}>
-              {volumeControl}
-              {fullscreenControl}
-            </View>
-          </SafeAreaView>
-        </ImageBackground>
+        {/* Shadow overlay for top side only */}
+        <LinearGradient
+          colors={theme.colors.blackTransparentOverlayTop}
+          style={{flex: 1 }}
+        />
+        {/* <View>
+          {renderDownArrow()}
+        </View>*/}
       </Animated.View>
     );
   }
 
-  /**
-   * Back button control
-   */
-  renderBack() {
-    return this.renderControl(
-      <Image
-        source={require('./assets/img/back.png')}
-        style={styles.controls.back}
-      />,
-      this.events.onBack,
-      styles.controls.back,
-    );
-  }
+
 
   /**
    * Render the volume slider and attach the pan handlers
@@ -1023,7 +1045,7 @@ export default class VideoPlayer extends Component {
   renderVolume() {
     return (
       <View style={styles.volume.container}>
-        <View
+        <Views
           style={[styles.volume.fill, {width: this.state.volumeFillWidth}]}
         />
         <View
@@ -1056,6 +1078,27 @@ export default class VideoPlayer extends Component {
     );
   }
 
+  handleMuted = () => {
+    if (this.state.isMuted) {
+      this.setState({volume: 1, isMuted: false});
+      return;
+    }
+    this.setState({volume: 0, isMuted: true});
+  }
+
+  handlePlayPause = () => {
+    const { paused } = this.state;
+    this.setState({paused: !paused});
+  }
+
+  handleRepeat = () => {
+    this.setState({isEnded: false}, () => this.seekTo(0));
+  }
+
+  handleFullscreen = () => {
+    this.props.orientationLocker.lockToLandscape();
+  }
+
   /**
    * Render bottom control group and wrap it in a holder
    */
@@ -1069,28 +1112,58 @@ export default class VideoPlayer extends Component {
     const playPauseControl = this.props.disablePlayPause
       ? this.renderNullControl()
       : this.renderPlayPause();
+    const { theme } = this.props
+
+    const renderFullscreenButton = () => {
+      return this.props.orientation === 'portrait' ? (
+        <TouchableOpacity
+          style={customStyles.fullScreenButton} onPress={this.handleFullscreen}>
+          <Icon
+            color={theme.colors.white}
+            size={ICON_SIZE}
+            name={'arrows-alt'}
+          />
+        </TouchableOpacity>
+      ) : (<></>)
+    }
 
     return (
       <Animated.View
         style={[
-          styles.controls.bottom,
+          customStyles.bottom(this.props.orientation),
           {
             opacity: this.animations.bottomControl.opacity,
             marginBottom: this.animations.bottomControl.marginBottom,
           },
         ]}>
-        <ImageBackground
-          source={require('./assets/img/bottom-vignette.png')}
-          style={[styles.controls.column]}
-          imageStyle={[styles.controls.vignette]}>
+        {/* Shadow overlay bottom only */}
+        <LinearGradient
+          colors={theme.colors.blackTransparentOverlayBottom}
+          style={customStyles.bottomShadowOverlay}
+        />
+        {/* Removed the previous Image Background, will do our own opacity controller */}
+        <View>
           {seekbarControl}
           <SafeAreaView
-            style={[styles.controls.row, styles.controls.bottomControlGroup]}>
-            {playPauseControl}
-            {this.renderTitle()}
+            style={[styles.controls.row(this.props.orientation), styles.controls.bottomControlGroup]}>
+            <TouchableOpacity style={customStyles.controlWidth} onPress={this.handlePlayPause}>
+              <Icon
+                color={theme.colors.white}
+                size={ICON_SIZE}
+                name={this.state.paused ? 'play' : 'pause'}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={customStyles.volumeWidth} onPress={this.handleMuted}>
+              <Icon
+                color={theme.colors.white}
+                size={ICON_SIZE}
+                name={this.state.isMuted ? 'volume-off' : 'volume-up'}
+              />
+            </TouchableOpacity>
             {timerControl}
+            {renderFullscreenButton()}
           </SafeAreaView>
-        </ImageBackground>
+        </View>
       </Animated.View>
     );
   }
@@ -1101,15 +1174,14 @@ export default class VideoPlayer extends Component {
   renderSeekbar() {
     return (
       <View
-        style={styles.seekbar.container}
+        style={styles.seekbar.container(this.props.orientation)}
         collapsable={false}
         {...this.player.seekPanResponder.panHandlers}>
         <View
           style={styles.seekbar.track}
           onLayout={event =>
             (this.player.seekerWidth = event.nativeEvent.layout.width)
-          }
-          pointerEvents={'none'}>
+          }>
           <View
             style={[
               styles.seekbar.fill,
@@ -1118,7 +1190,6 @@ export default class VideoPlayer extends Component {
                 backgroundColor: this.props.seekColor || '#FFF',
               },
             ]}
-            pointerEvents={'none'}
           />
         </View>
         <View
@@ -1129,7 +1200,6 @@ export default class VideoPlayer extends Component {
               styles.seekbar.circle,
               {backgroundColor: this.props.seekColor || '#FFF'},
             ]}
-            pointerEvents={'none'}
           />
         </View>
       </View>
@@ -1152,31 +1222,12 @@ export default class VideoPlayer extends Component {
   }
 
   /**
-   * Render our title...if supplied.
-   */
-  renderTitle() {
-    if (this.opts.title) {
-      return (
-        <View style={[styles.controls.control, styles.controls.title]}>
-          <Text
-            style={[styles.controls.text, styles.controls.titleText]}
-            numberOfLines={1}>
-            {this.opts.title || ''}
-          </Text>
-        </View>
-      );
-    }
-
-    return null;
-  }
-
-  /**
    * Show our timer.
    */
   renderTimer() {
     return this.renderControl(
-      <Text style={styles.controls.timerText}>{this.calculateTime()}</Text>,
-      this.methods.toggleTimer,
+      <Text style={styles.controls.timerText(this.props.theme)}>{this.calculateTime()}</Text>,
+      () => {},
       styles.controls.timer,
     );
   }
@@ -1224,6 +1275,19 @@ export default class VideoPlayer extends Component {
     }
     return null;
   }
+  /**
+   * Long press pauses video
+   */
+  handleLongPress = () => {
+    this.methods.togglePlayPause();
+    this.resetControlTimeout();
+  };
+  /**
+   * Short press shows controls
+   */
+  handleShortPress = () => {
+    this.methods.toggleControls();
+  }
 
   /**
    * Provide all of our options and render the whole component.
@@ -1265,10 +1329,31 @@ export default class VideoPlayer extends Component {
   }
 }
 
+const customStyles = StyleSheet.create({
+  controlWidth: {
+    width: 40,
+  },
+  volumeWidth: {
+    width: 20,
+  },
+  fullScreenButton: {
+    position: 'absolute',
+    right: -152,
+  },
+  bottom: (orientation)=>({
+    alignItems: 'stretch',
+    flex: 1,
+    justifyContent: 'flex-end',
+  }),
+  bottomShadowOverlay:{
+    flex: 1, position:'absolute', bottom: 0, width: '100%', height:'100%'
+  }
+});
+
 /**
  * This object houses our styles. There's player
  * specific styles and control specific ones.
- * And then there's volume/seeker styles.
+ * And then there's volume/seeker
  */
 const styles = {
   player: StyleSheet.create({
@@ -1319,25 +1404,23 @@ const styles = {
     },
   }),
   controls: StyleSheet.create({
-    row: {
+    row:(orientation)=> ({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      height: null,
-      width: null,
-    },
+      marginLeft: orientation === 'portrait' ? null : '42%'
+    }),
     column: {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'space-between',
-      height: null,
-      width: null,
     },
     vignette: {
       resizeMode: 'stretch',
     },
     control: {
       padding: 16,
+      paddingTop: 10,
     },
     text: {
       backgroundColor: 'transparent',
@@ -1361,27 +1444,22 @@ const styles = {
       justifyContent: 'flex-end',
     },
     topControlGroup: {
-      alignSelf: 'stretch',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      // alignSelf: 'stretch',
+      // alignItems: 'center',
+      // justifyContent: 'space-between',
       flexDirection: 'row',
       width: null,
       margin: 12,
       marginBottom: 18,
     },
     bottomControlGroup: {
-      alignSelf: 'stretch',
+      alignSelf: 'flex-start',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginLeft: 12,
-      marginRight: 12,
+      marginHorizontal: 20,
       marginBottom: 0,
-    },
-    volume: {
-      flexDirection: 'row',
-    },
-    fullscreen: {
-      flexDirection: 'row',
+      right: 0,
+      top: 1
     },
     playPause: {
       position: 'relative',
@@ -1398,14 +1476,18 @@ const styles = {
       textAlign: 'center',
     },
     timer: {
-      width: 80,
+      width: 160,
+      top: 3,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
-    timerText: {
-      backgroundColor: 'transparent',
-      color: '#FFF',
-      fontSize: 11,
+    timerText: (theme) => ({
+      color: theme.colors.white,
+      fontFamily: theme.Fonts.openSans.bold,
+      fontSize: 14,
       textAlign: 'right',
-    },
+      alignItems: 'center',
+    }),
   }),
   volume: StyleSheet.create({
     container: {
@@ -1437,37 +1519,36 @@ const styles = {
     },
   }),
   seekbar: StyleSheet.create({
-    container: {
+    container: (orientation)=>({
       alignSelf: 'stretch',
-      height: 28,
-      marginLeft: 20,
-      marginRight: 20,
-    },
+      height: 20,
+      marginHorizontal: 20,
+      marginLeft: orientation === 'portrait' ? null : '42%',
+    }),
     track: {
-      backgroundColor: '#333',
-      height: 1,
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      height: 4,
       position: 'relative',
       top: 14,
-      width: '100%',
     },
     fill: {
       backgroundColor: '#FFF',
-      height: 1,
-      width: '100%',
+      height: 4,
     },
     handle: {
       position: 'absolute',
       marginLeft: -7,
-      height: 28,
+      height: 50,
       width: 28,
+      marginBottom: 10,
     },
     circle: {
       borderRadius: 12,
       position: 'relative',
-      top: 8,
-      left: 8,
-      height: 12,
-      width: 12,
+      top: 10,
+      left: 1,
+      height: 13,
+      width: 13,
     },
   }),
 };
