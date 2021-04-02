@@ -67,6 +67,10 @@ export default class VideoPlayer extends Component {
       currentTime: 0,
       error: false,
       duration: 0,
+      isMuted: false,
+      orientation: this.props.orientation,
+      isEnded: false,
+      hideAllControls: false,
     };
 
     /**
@@ -198,6 +202,14 @@ export default class VideoPlayer extends Component {
     state.loading = false;
     this.setState(state);
 
+    // This triggers channel Avatar Channel & Follow Button [Landscape View]
+    this.props.streamLandscapeStore.isShadowOverlayOn = true;
+
+    // Seeking to previous location
+    if(this.props.seekVideo){
+      this.seekAndPlay(this.props.seekToTime)
+    }
+
     if (state.showControls) {
       this.setControlTimeout();
     }
@@ -259,7 +271,10 @@ export default class VideoPlayer extends Component {
    * Either close the video or go to a
    * new page.
    */
-  _onEnd() {}
+  _onEnd() {
+    this.setState({})
+    this.setState({isEnded: true});
+  }
 
   /**
    * Set the error state to true which then
@@ -453,6 +468,9 @@ export default class VideoPlayer extends Component {
       this.setControlTimeout();
       typeof this.events.onShowControls === 'function' &&
         this.events.onShowControls();
+      // This triggers channel Avatar Channel & Follow Button [Landscape View]
+      this.props.streamLandscapeStore.isShadowOverlayOn = true;
+
     } else {
       this.hideControlAnimation();
       this.clearControlTimeout();
@@ -630,6 +648,15 @@ export default class VideoPlayer extends Component {
     this.player.ref.seek(time);
     this.setState(state);
   }
+
+  seekAndPlay(time){
+    let state = this.state;
+    state.currentTime = time;
+    this.player.ref.seek(time);
+    this.setState(state);
+  }
+
+
 
   /**
    * Set the position of the volume slider
@@ -1028,7 +1055,7 @@ export default class VideoPlayer extends Component {
       : this.renderPlayPause();
 
     return (
-      <Animated.View
+      <Animated.Viewf
         style={[
           styles.controls.bottom,
           {
@@ -1187,33 +1214,37 @@ export default class VideoPlayer extends Component {
    */
   render() {
     return (
-      <TouchableWithoutFeedback
-        onPress={this.events.onScreenTouch}
-        style={[styles.player.container, this.styles.containerStyle]}>
-        <View style={[styles.player.container, this.styles.containerStyle]}>
-          <Video
-            {...this.props}
-            ref={videoPlayer => (this.player.ref = videoPlayer)}
-            resizeMode={this.state.resizeMode}
-            volume={this.state.volume}
-            paused={this.state.paused}
-            muted={this.state.muted}
-            rate={this.state.rate}
-            onLoadStart={this.events.onLoadStart}
-            onProgress={this.events.onProgress}
-            onError={this.events.onError}
-            onLoad={this.events.onLoad}
-            onEnd={this.events.onEnd}
-            onSeek={this.events.onSeek}
-            style={[styles.player.video, this.styles.videoStyle]}
-            source={this.props.source}
-          />
-          {this.renderError()}
-          {this.renderLoader()}
-          {this.renderTopControls()}
-          {this.renderBottomControls()}
-        </View>
-      </TouchableWithoutFeedback>
+      <>
+        <OverlayControls state={this.state} handlePlayPause={this.handlePlayPause} handleRepeat={this.handleRepeat} />
+        <TouchableWithoutFeedback
+          onPress={this.handleShortPress}
+          onLongPress={this.handleLongPress}
+          style={[styles.player.container, this.styles.containerStyle]}>
+          <View style={[styles.player.container, this.styles.containerStyle]}>
+            <Video
+              {...this.props}
+              ref={videoPlayer => (this.player.ref = videoPlayer)}
+              resizeMode={this.state.resizeMode}
+              volume={this.state.volume}
+              paused={this.state.paused}
+              muted={this.state.muted}
+              rate={this.state.rate}
+              onLoadStart={this.events.onLoadStart}
+              onProgress={this.events.onProgress}
+              onError={this.events.onError}
+              onLoad={this.events.onLoad}
+              onEnd={this.events.onEnd}
+              onSeek={this.events.onSeek}
+              style={[styles.player.video, this.styles.videoStyle]}
+              source={this.props.source}
+            />
+            {this.renderError()}
+            {this.renderLoader()}
+            {!this.props.hideAllControls ? this.renderTopControls() : null}
+            {!this.props.hideAllControls ? this.renderBottomControls() : null}
+          </View>
+        </TouchableWithoutFeedback>
+      </>
     );
   }
 }
