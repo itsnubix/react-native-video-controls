@@ -285,7 +285,6 @@ export default class VideoPlayer extends Component {
    * new page.
    */
   _onEnd() {
-    this.setState({isEnded: true});
     this.props.streamStore.isVideoEnded = true;
   }
 
