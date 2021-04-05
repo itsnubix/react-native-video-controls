@@ -239,7 +239,12 @@ export default class VideoPlayer extends Component {
     let state = this.state;
     if (!state.scrubbing) {
       state.currentTime = data.currentTime;
-      this.props.streamStore.currentVideoTime = state.currentTime;
+
+      if(state.currentTime !== 0){
+        this.props.streamLandscapeStore.currentVideoTime = state.currentTime;
+        this.props.streamStore.currentVideoTime = state.currentTime;
+        this.props.imageLightBoxStore.currentVideoTime = state.currentTime;
+      }
 
       if (!state.seeking) {
         const position = this.calculateSeekerPosition();
