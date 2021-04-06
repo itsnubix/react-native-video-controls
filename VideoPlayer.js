@@ -240,10 +240,10 @@ export default class VideoPlayer extends Component {
     if (!state.scrubbing) {
       state.currentTime = data.currentTime;
 
-      if(state.currentTime !== 0){
-        this.props.streamLandscapeStore.currentVideoTime = state.currentTime;
-        this.props.streamStore.currentVideoTime = state.currentTime;
-        this.props.imageLightBoxStore.currentVideoTime = state.currentTime;
+      if(!this.props.isLive){
+        if(state.currentTime !== 0){
+          this.props.streamLandscapeStore.currentVideoTime = state.currentTime;
+        }
       }
 
       if (!state.seeking) {
@@ -1106,6 +1106,7 @@ export default class VideoPlayer extends Component {
   handleRepeat = () => {
     this.props.streamStore.isVideoEnded = false;
     this.seekTo(0);
+
   }
 
   handleFullscreen = () => {
@@ -1421,7 +1422,7 @@ const styles = {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginLeft: orientation === 'portrait' ? null : '42%'
+      marginLeft: orientation === 'portrait' ? null : '45%'
     }),
     column: {
       flexDirection: 'column',
@@ -1536,7 +1537,7 @@ const styles = {
       alignSelf: 'stretch',
       height: 20,
       marginHorizontal: 20,
-      marginLeft: orientation === 'portrait' ? null : '42%',
+      marginLeft: orientation === 'portrait' ? null : '45%',
     }),
     track: {
       backgroundColor: 'rgba(255, 255, 255, 0.5)',
