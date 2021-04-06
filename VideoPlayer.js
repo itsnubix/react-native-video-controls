@@ -215,8 +215,8 @@ export default class VideoPlayer extends Component {
     this.props.streamLandscapeStore.isShadowOverlayOn = true;
 
     // Seeking to previous location
-    if(this.props.seekVideo){
-      this.seekTo(this.props.seekToTime)
+    if(this.props.streamStore.seekVideo){
+      this.seekTo(this.props.streamStore.seekToTime)
     }
 
     if (state.showControls) {
@@ -1334,8 +1334,8 @@ export default class VideoPlayer extends Component {
             />
             {this.renderError()}
             {this.renderLoader()}
-            {!this.props.hideAllControls && this.renderTopControls()}
-            {!this.props.hideAllControls && this.renderBottomControls()}
+            {!this.props.streamStore.hideAllControls && this.renderTopControls()}
+            {!this.props.streamStore.hideAllControls && this.renderBottomControls()}
           </View>
         </TouchableWithoutFeedback>
       </>
