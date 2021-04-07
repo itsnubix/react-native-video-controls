@@ -215,7 +215,7 @@ export default class VideoPlayer extends Component {
     this.props.streamLandscapeStore.isShadowOverlayOn = true;
 
     // Seeking to previous location
-    if(this.props.streamStore.seekVideo){
+    if (this.props.streamStore.seekVideo) {
       this.seekTo(this.props.streamStore.seekToTime)
     }
 
@@ -240,10 +240,8 @@ export default class VideoPlayer extends Component {
     if (!state.scrubbing) {
       state.currentTime = data.currentTime;
 
-      if(!this.props.isLive){
-        if(state.currentTime !== 0){
-          this.props.streamLandscapeStore.currentVideoTime = state.currentTime;
-        }
+      if (state.currentTime) {
+        this.props.streamLandscapeStore.currentVideoTime = state.currentTime;
       }
 
       if (!state.seeking) {
