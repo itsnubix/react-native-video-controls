@@ -78,6 +78,7 @@ export default class VideoPlayer extends Component {
       isMuted: false,
       orientation: this.props.orientation,
       isEnded: false,
+      hideAllControls: false,
     };
 
     /**
@@ -213,6 +214,11 @@ export default class VideoPlayer extends Component {
     // This triggers channel Avatar Channel & Follow Button [Landscape View]
     this.props.streamLandscapeStore.isShadowOverlayOn = true;
 
+    // Seeking to previous location
+    if (this.props.streamStore.seekVideo) {
+      this.seekTo(this.props.streamStore.seekToTime)
+    }
+
     if (state.showControls) {
       this.setControlTimeout();
     }
@@ -233,7 +239,10 @@ export default class VideoPlayer extends Component {
     let state = this.state;
     if (!state.scrubbing) {
       state.currentTime = data.currentTime;
-      this.props.streamStore.currentVideoTime = state.currentTime;
+
+      if (state.currentTime) {
+        this.props.streamLandscapeStore.currentVideoTime = state.currentTime;
+      }
 
       if (!state.seeking) {
         const position = this.calculateSeekerPosition();
@@ -479,7 +488,6 @@ export default class VideoPlayer extends Component {
       this.events.onShowControls();
       // This triggers channel Avatar Channel & Follow Button [Landscape View]
       this.props.streamLandscapeStore.isShadowOverlayOn = true;
-
     } else {
       this.hideControlAnimation();
       this.clearControlTimeout();
@@ -670,6 +678,8 @@ export default class VideoPlayer extends Component {
     this.setState(state);
   }
 
+
+
   /**
    * Set the position of the volume slider
    *
@@ -770,6 +780,7 @@ export default class VideoPlayer extends Component {
     }
   }
 
+
   /**
    * Upon mounting, calculate the position of the volume
    * bar based on the volume property supplied to it.
@@ -780,6 +791,7 @@ export default class VideoPlayer extends Component {
     this.setVolumePosition(position);
     state.volumeOffset = position;
     this.mounted = true;
+
 
     this.props.navigation.addListener('focus', () => {
       if (this.state.isMuted) {
@@ -798,6 +810,7 @@ export default class VideoPlayer extends Component {
     this.props.navigation.addListener('blur', () => {
       this.setState({volume: 0});
     });
+
 
     this.setState(state);
   }
@@ -1091,6 +1104,7 @@ export default class VideoPlayer extends Component {
   handleRepeat = () => {
     this.props.streamStore.isVideoEnded = false;
     this.seekTo(0);
+
   }
 
   handleFullscreen = () => {
@@ -1318,8 +1332,8 @@ export default class VideoPlayer extends Component {
             />
             {this.renderError()}
             {this.renderLoader()}
-            {this.renderTopControls()}
-            {this.renderBottomControls()}
+            {!this.props.streamStore.hideAllControls && this.renderTopControls()}
+            {!this.props.streamStore.hideAllControls && this.renderBottomControls()}
           </View>
         </TouchableWithoutFeedback>
       </>
@@ -1406,7 +1420,7 @@ const styles = {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginLeft: orientation === 'portrait' ? null : '42%'
+      marginLeft: orientation === 'portrait' ? null : '45%'
     }),
     column: {
       flexDirection: 'column',
@@ -1521,7 +1535,7 @@ const styles = {
       alignSelf: 'stretch',
       height: 20,
       marginHorizontal: 20,
-      marginLeft: orientation === 'portrait' ? null : '42%',
+      marginLeft: orientation === 'portrait' ? null : '45%',
     }),
     track: {
       backgroundColor: 'rgba(255, 255, 255, 0.5)',
