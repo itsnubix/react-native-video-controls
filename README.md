@@ -82,6 +82,7 @@ These are various events that you can hook into and fire functions on in the com
 | onError           | Fired when an error is encountered when loading the video                       |
 | onPause           | Fired when the video is paused after the play/pause button is pressed           |
 | onPlay            | Fired when the video begins playing after the play/pause button is pressed      |
+| onSeek            | Fired when a seek completes                                                     |
 | onBack            | Function fired when back button is pressed, override if using custom navigation |
 | onEnd             | Fired when the video is complete                                                |
 

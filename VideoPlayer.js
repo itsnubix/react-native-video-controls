@@ -249,6 +249,10 @@ export default class VideoPlayer extends Component {
         state.paused = state.originallyPaused;
       }
 
+      if (typeof this.props.onSeek === 'function') {
+        this.props.onSeek(...arguments);
+      }
+
       this.setState(state);
     }
   }
