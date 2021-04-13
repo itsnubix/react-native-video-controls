@@ -31,6 +31,7 @@ export default class VideoPlayer extends Component {
     volume: 1,
     title: '',
     rate: 1,
+    counterTimeMode: 'negative',
   };
 
   constructor(props) {
@@ -67,6 +68,7 @@ export default class VideoPlayer extends Component {
       currentTime: 0,
       error: false,
       duration: 0,
+      counterTimeMode: this.props.counterTimeMode || 'negative',
     };
 
     /**
@@ -533,11 +535,17 @@ export default class VideoPlayer extends Component {
    * Calculate the time to show in the timer area
    * based on if they want to see time remaining
    * or duration. Formatted to look as 00:00.
+   * 
+   * Consider props counterTimeMode. 
    */
   calculateTime() {
     if (this.state.showTimeRemaining) {
-      const time = this.state.currentTime;
-      return `${this.formatTime(time)}`;
+      if(counterTimeMode !== 'negative'){
+        const time = this.state.currentTime;
+        return `${this.formatTime(time)}`;
+      }
+      const time = this.state.duration - this.state.currentTime;
+      return `-${this.formatTime(time)}`;
     }
 
     return this.formatTime(this.state.currentTime);
