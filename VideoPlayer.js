@@ -31,6 +31,7 @@ export default class VideoPlayer extends Component {
     volume: 1,
     title: '',
     rate: 1,
+    showTimeRemaining: true,
   };
 
   constructor(props) {
@@ -51,7 +52,7 @@ export default class VideoPlayer extends Component {
 
       isFullscreen:
         this.props.isFullScreen || this.props.resizeMode === 'cover' || false,
-      showTimeRemaining: true,
+      showTimeRemaining: this.props.showTimeRemaining,
       volumeTrackWidth: 0,
       volumeFillWidth: 0,
       seekerFillWidth: 0,
