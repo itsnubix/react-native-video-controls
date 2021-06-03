@@ -13,6 +13,8 @@ import {
   Image,
   View,
   Text,
+  Dimensions,
+  StatusBar,
 } from 'react-native';
 import padStart from 'lodash/padStart';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -1310,14 +1312,17 @@ export default class VideoPlayer extends Component {
    * Provide all of our options and render the whole component.
    */
   render() {
+    const screen = Dimensions.get('screen');
+    const platformHeight = Platform.OS === 'ios' ? screen.height : screen.width;
+
     return (
       <>
         <OverlayControls handlePlayPause={this.handlePlayPause} handleRepeat={this.handleRepeat} />
         <TouchableWithoutFeedback
           onPress={this.handleShortPress}
           onLongPress={this.handleLongPress}
-          style={[styles.player.container, this.styles.containerStyle]}>
-          <View style={[styles.player.container, this.styles.containerStyle]}>
+          style={[styles.player.container(this.props.orientation, platformHeight), this.styles.containerStyle]}>
+          <View style={[styles.player.container(this.props.orientation, platformHeight), this.styles.containerStyle]}>
             <Video
               {...this.props}
               ref={videoPlayer => (this.player.ref = videoPlayer)}
@@ -1374,13 +1379,14 @@ const customStyles = StyleSheet.create({
  */
 const styles = {
   player: StyleSheet.create({
-    container: {
+    container: (orientation, platformHeight) => ({
       overflow: 'hidden',
       backgroundColor: '#000',
       flex: 1,
       alignSelf: 'stretch',
       justifyContent: 'space-between',
-    },
+      height: orientation === 'portrait' ? 'auto' : platformHeight - StatusBar.currentHeight,
+    }),
     video: {
       overflow: 'hidden',
       position: 'absolute',
