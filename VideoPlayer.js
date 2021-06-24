@@ -12,6 +12,7 @@ import {
   Image,
   View,
   Text,
+  I18nManager
 } from 'react-native';
 import padStart from 'lodash/padStart';
 
@@ -795,7 +796,7 @@ export default class VideoPlayer extends Component {
       onPanResponderGrant: (evt, gestureState) => {
         let state = this.state;
         this.clearControlTimeout();
-        const position = evt.nativeEvent.locationX;
+        const position = evt.nativeEvent[I18nManager.isRTL ? 'pageX' : 'locationX'];
         this.setSeekerPosition(position);
         state.seeking = true;
         state.originallyPaused = state.paused;
@@ -1247,6 +1248,7 @@ export default class VideoPlayer extends Component {
  * specific styles and control specific ones.
  * And then there's volume/seeker styles.
  */
+let calcRtlRow =I18nManager.isRTL ? 'row-reverse' : 'row',
 const styles = {
   player: StyleSheet.create({
     container: {
@@ -1297,7 +1299,7 @@ const styles = {
   }),
   controls: StyleSheet.create({
     row: {
-      flexDirection: 'row',
+      flexDirection: calcRtlRow,
       alignItems: 'center',
       justifyContent: 'space-between',
       height: null,
@@ -1323,7 +1325,7 @@ const styles = {
       textAlign: 'center',
     },
     pullRight: {
-      flexDirection: 'row',
+      flexDirection: calcRtlRow,
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -1341,7 +1343,7 @@ const styles = {
       alignSelf: 'stretch',
       alignItems: 'center',
       justifyContent: 'space-between',
-      flexDirection: 'row',
+      flexDirection: calcRtlRow,
       width: null,
       margin: 12,
       marginBottom: 18,
@@ -1355,10 +1357,10 @@ const styles = {
       marginBottom: 0,
     },
     volume: {
-      flexDirection: 'row',
+      flexDirection: calcRtlRow,
     },
     fullscreen: {
-      flexDirection: 'row',
+      flexDirection: calcRtlRow,
     },
     playPause: {
       position: 'relative',
@@ -1388,7 +1390,7 @@ const styles = {
     container: {
       alignItems: 'center',
       justifyContent: 'flex-start',
-      flexDirection: 'row',
+      flexDirection: calcRtlRow,
       height: 1,
       marginLeft: 20,
       marginRight: 20,
@@ -1419,6 +1421,7 @@ const styles = {
       height: 28,
       marginLeft: 20,
       marginRight: 20,
+      ...(I18nManager.isRTL ? { transform: [{ rotateY: '180deg' }] } : {})
     },
     track: {
       backgroundColor: '#333',
