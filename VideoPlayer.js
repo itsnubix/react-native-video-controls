@@ -1062,8 +1062,15 @@ export default class VideoPlayer extends Component {
           <SafeAreaView
             style={[styles.controls.row, styles.controls.bottomControlGroup]}>
             {playPauseControl}
-            {this.renderBackRewind()}
-            {this.renderFastForward()}
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              {this.renderBackRewind()}
+              {this.renderFastForward()}
+            </View>
             {this.renderTitle()}
             {timerControl}
           </SafeAreaView>
@@ -1120,7 +1127,7 @@ export default class VideoPlayer extends Component {
     return this.renderControl(
       <Image
         source={require('./assets/img/fastForward.png')}
-        style={{width: 15, height: 15, marginRight: 20}}
+        style={{width: 15, height: 15}}
       />,
       this.methods.fastForward,
     );
@@ -1133,7 +1140,7 @@ export default class VideoPlayer extends Component {
     return this.renderControl(
       <Image
         source={require('./assets/img/backRewind.png')}
-        style={{width: 15, height: 15, marginLeft: 20, marginRight: -70}}
+        style={{width: 15, height: 15}}
       />,
       this.methods.backRewind,
     );
