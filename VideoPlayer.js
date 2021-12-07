@@ -1083,7 +1083,7 @@ export default class VideoPlayer extends Component {
         {...this.player.seekPanResponder.panHandlers}>
         <View
           style={styles.seekbar.track}
-          onLayout={(event) =>
+          onLayout={event =>
             (this.player.seekerWidth = event.nativeEvent.layout.width)
           }
           pointerEvents={'none'}>
@@ -1120,7 +1120,7 @@ export default class VideoPlayer extends Component {
     return this.renderControl(
       <Image
         source={require('./assets/img/fastForward.png')}
-        style={{width: 15, height: 15, marginLeft: -50}}
+        style={{width: 15, height: 15, marginRight: 20}}
       />,
       this.methods.fastForward,
     );
@@ -1133,7 +1133,7 @@ export default class VideoPlayer extends Component {
     return this.renderControl(
       <Image
         source={require('./assets/img/backRewind.png')}
-        style={{width: 15, height: 15, marginLeft: 15}}
+        style={{width: 15, height: 15, marginLeft: 20, marginRight: -70}}
       />,
       this.methods.backRewind,
     );
@@ -1239,7 +1239,7 @@ export default class VideoPlayer extends Component {
         <View style={[styles.player.container, this.styles.containerStyle]}>
           <Video
             {...this.props}
-            ref={(videoPlayer) => (this.player.ref = videoPlayer)}
+            ref={videoPlayer => (this.player.ref = videoPlayer)}
             resizeMode={this.state.resizeMode}
             volume={this.state.volume}
             paused={this.state.paused}
