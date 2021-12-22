@@ -972,7 +972,7 @@ export default class VideoPlayer extends Component {
           source={require('./assets/img/top-vignette.png')}
           style={[styles.controls.column]}
           imageStyle={[styles.controls.vignette]}>
-          <SafeAreaView style={styles.controls.topControlGroup}>
+          <SafeAreaView style={[styles.controls.topControlGroup, { marginTop: this.props.insets.top}]}>
             {backControl}
             <View style={styles.controls.pullRight}>
               {volumeControl}
