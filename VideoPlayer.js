@@ -1248,7 +1248,7 @@ export default class VideoPlayer extends Component {
  * specific styles and control specific ones.
  * And then there's volume/seeker styles.
  */
-let calcRtlRow =I18nManager.isRTL ? 'row-reverse' : 'row',
+const calcRtlRow =I18nManager.isRTL ? 'row-reverse' : 'row'
 const styles = {
   player: StyleSheet.create({
     container: {
