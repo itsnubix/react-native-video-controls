@@ -33,6 +33,7 @@ export default class VideoPlayer extends Component {
     rate: 1,
     showTimeRemaining: true,
     showHours: false,
+    currentTime: 0,
   };
 
   constructor(props) {
@@ -52,7 +53,7 @@ export default class VideoPlayer extends Component {
       // Controls
 
       isFullscreen:
-        this.props.isFullScreen || this.props.resizeMode === 'cover' || false,
+        this.props.isFullscreen || this.props.resizeMode === 'cover' || false,
       showTimeRemaining: this.props.showTimeRemaining,
       showHours: this.props.showHours,
       volumeTrackWidth: 0,
@@ -67,7 +68,7 @@ export default class VideoPlayer extends Component {
       originallyPaused: false,
       scrubbing: false,
       loading: false,
-      currentTime: 0,
+      currentTime: this.props.currentTime,
       error: false,
       duration: 0,
     };
