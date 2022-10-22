@@ -4,6 +4,7 @@
   "description": "A set of GUI controls for the react-native-video component",
   "license": "MIT",
   "main": "VideoPlayer.js",
+  "types": "VideoPlayer.d.ts",
   "keywords": [
     "react-native",
     "react-native-video",
