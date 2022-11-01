@@ -217,6 +217,10 @@ export default class VideoPlayer extends Component {
     if (typeof this.props.onLoad === 'function') {
       this.props.onLoad(...arguments);
     }
+    
+    if (this.props.initialSeekTo) {
+      this.seekTo(this.props.initialSeekTo);
+    }
   }
 
   /**
