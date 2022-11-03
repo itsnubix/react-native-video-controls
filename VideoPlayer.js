@@ -31,8 +31,6 @@ export default class VideoPlayer extends Component {
     volume: 1,
     title: '',
     rate: 1,
-    showTimeRemaining: true,
-    showHours: false,
   };
 
   constructor(props) {
@@ -49,12 +47,12 @@ export default class VideoPlayer extends Component {
       muted: this.props.muted,
       volume: this.props.volume,
       rate: this.props.rate,
+
       // Controls
 
       isFullscreen:
         this.props.isFullScreen || this.props.resizeMode === 'cover' || false,
-      showTimeRemaining: this.props.showTimeRemaining,
-      showHours: this.props.showHours,
+      showTimeRemaining: true,
       volumeTrackWidth: 0,
       volumeFillWidth: 0,
       seekerFillWidth: 0,
@@ -110,6 +108,8 @@ export default class VideoPlayer extends Component {
       togglePlayPause: this._togglePlayPause.bind(this),
       toggleControls: this._toggleControls.bind(this),
       toggleTimer: this._toggleTimer.bind(this),
+      fastForward: this._toggleFastForward.bind(this),
+      backRewind: this._toggleBackRewind.bind(this),
     };
 
     /**
@@ -161,15 +161,6 @@ export default class VideoPlayer extends Component {
     };
   }
 
-  componentDidUpdate = prevProps => {
-    const {isFullscreen} = this.props;
-
-    if (prevProps.isFullscreen !== isFullscreen) {
-      this.setState({
-        isFullscreen,
-      });
-    }
-  };
   /**
     | -------------------------------------------------------
     | Events
@@ -527,6 +518,22 @@ export default class VideoPlayer extends Component {
   }
 
   /**
+   * Fast forward the video
+   */
+  _toggleFastForward() {
+    let state = this.state;
+    this.player.ref.seek(state.currentTime + 15);
+  }
+
+  /**
+   * Back Rewind the video
+   */
+  _toggleBackRewind() {
+    let state = this.state;
+    this.player.ref.seek(state.currentTime - 15);
+  }
+
+  /**
    * The default 'onBack' function pops the navigator
    * and as such the video player requires a
    * navigator prop by default.
@@ -565,22 +572,10 @@ export default class VideoPlayer extends Component {
     const symbol = this.state.showRemainingTime ? '-' : '';
     time = Math.min(Math.max(time, 0), this.state.duration);
 
-    if (!this.state.showHours) {
-      const formattedMinutes = padStart(Math.floor(time / 60).toFixed(0), 2, 0);
-      const formattedSeconds = padStart(Math.floor(time % 60).toFixed(0), 2, 0);
-
-      return `${symbol}${formattedMinutes}:${formattedSeconds}`;
-    }
-
-    const formattedHours = padStart(Math.floor(time / 3600).toFixed(0), 2, 0);
-    const formattedMinutes = padStart(
-      (Math.floor(time / 60) % 60).toFixed(0),
-      2,
-      0,
-    );
+    const formattedMinutes = padStart(Math.floor(time / 60).toFixed(0), 2, 0);
     const formattedSeconds = padStart(Math.floor(time % 60).toFixed(0), 2, 0);
 
-    return `${symbol}${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+    return `${symbol}${formattedMinutes}:${formattedSeconds}`;
   }
 
   /**
@@ -596,7 +591,6 @@ export default class VideoPlayer extends Component {
 
     state.seekerFillWidth = position;
     state.seekerPosition = position;
-
     if (!state.seeking) {
       state.seekerOffset = position;
     }
@@ -1068,6 +1062,8 @@ export default class VideoPlayer extends Component {
           <SafeAreaView
             style={[styles.controls.row, styles.controls.bottomControlGroup]}>
             {playPauseControl}
+            {this.renderBackRewind()}
+            {this.renderFastForward()}
             {this.renderTitle()}
             {timerControl}
           </SafeAreaView>
@@ -1087,7 +1083,7 @@ export default class VideoPlayer extends Component {
         {...this.player.seekPanResponder.panHandlers}>
         <View
           style={styles.seekbar.track}
-          onLayout={event =>
+          onLayout={(event) =>
             (this.player.seekerWidth = event.nativeEvent.layout.width)
           }
           pointerEvents={'none'}>
@@ -1114,6 +1110,32 @@ export default class VideoPlayer extends Component {
           />
         </View>
       </View>
+    );
+  }
+
+  /**
+   * Render the fastForward button and show the respective icon
+   */
+  renderFastForward() {
+    return this.renderControl(
+      <Image
+        source={require('./assets/img/fastForward.png')}
+        style={{width: 15, height: 15, marginLeft: -50}}
+      />,
+      this.methods.fastForward,
+    );
+  }
+
+  /**
+   * Render the backRewind button and show the respective icon
+   */
+  renderBackRewind() {
+    return this.renderControl(
+      <Image
+        source={require('./assets/img/backRewind.png')}
+        style={{width: 15, height: 15, marginLeft: 15}}
+      />,
+      this.methods.backRewind,
     );
   }
 
@@ -1217,7 +1239,7 @@ export default class VideoPlayer extends Component {
         <View style={[styles.player.container, this.styles.containerStyle]}>
           <Video
             {...this.props}
-            ref={videoPlayer => (this.player.ref = videoPlayer)}
+            ref={(videoPlayer) => (this.player.ref = videoPlayer)}
             resizeMode={this.state.resizeMode}
             volume={this.state.volume}
             paused={this.state.paused}
@@ -1363,6 +1385,10 @@ const styles = {
     playPause: {
       position: 'relative',
       width: 80,
+      zIndex: 0,
+    },
+    fastForward: {
+      width: 5,
       zIndex: 0,
     },
     title: {
