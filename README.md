@@ -68,6 +68,7 @@ In addition, the `<VideoPlayer />` also takes these props:
 | seekColor                    | String(#HEX) | '#FFF'  | Fill/handle colour of the seekbar                                                                                                                                |
 | style                        | StyleSheet   | null    | React Native StyleSheet object that is appended to the video's parent `<View>`                                                                                   |
 | tapAnywhereToPause           | Boolean      | false   | If true, single tapping anywhere on the video (other than a control) toggles between playing and paused.                                                         |
+| controlRate                  | Boolean      | false   | If true, show the control Rate button \[x1\] (Playback Speed).                                                                                                   |
 
 | showTimeRemaining            | Boolean      | true    | If true, show the time remaing, else show the current time in the Player.
 `<View>`
