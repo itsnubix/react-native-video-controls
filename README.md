@@ -104,5 +104,13 @@ These are the various controls that you can turn on/off as needed. All of these 
 | disableTimer      | Hide the timer             |
 | disableBack       | Hide the back button       |
 
+### Methods
+
+There are methods you can call on VideoPlayer ref
+
+| Method            | Description                     |
+| ----------------- | ------------------------------- |
+| seekTo(time = 0)  | Seek to a time in the video     |
+
 [1]: https://github.com/itsnubix/react-native-video-controls/workflows/ci/badge.svg
 [2]: https://github.com/itsnubix/react-native-video-controls/actions
