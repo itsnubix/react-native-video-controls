@@ -68,12 +68,9 @@ In addition, the `<VideoPlayer />` also takes these props:
 | seekColor                    | String(#HEX) | '#FFF'  | Fill/handle colour of the seekbar                                                                                                                                |
 | style                        | StyleSheet   | null    | React Native StyleSheet object that is appended to the video's parent `<View>`                                                                                   |
 | tapAnywhereToPause           | Boolean      | false   | If true, single tapping anywhere on the video (other than a control) toggles between playing and paused.                                                         |
-
-| showTimeRemaining            | Boolean      | true    | If true, show the time remaing, else show the current time in the Player.
-`<View>`
-
-| showHours                    | Boolean      | false   | If true, convert time to hours in the Player
-`<View>`
+| showTimeRemaining            | Boolean      | true    | If true, show the time remaining, else show the current time in the Player `<View>`                                                        |
+| showHours                    | Boolean      | false   | If true, convert time to hours in the Player `<View>`                                                        |
+| errorMessage                 | String       | 'Video unavailable'   | Error message to show in Video Player UI when error occurs                                                   |
 
 ### Events
 
@@ -85,7 +82,8 @@ These are various events that you can hook into and fire functions on in the com
 | onExitFullscreen  | Fired when the video exits fullscreen after the fullscreen button is pressed    |
 | onHideControls    | Fired when the controls disappear                                               |
 | onShowControls    | Fired when the controls appear                                                  |
-| onError           | Fired when an error is encountered when loading the video                       |
+| onError           | Fired when an error is encountered when loading the video. This prop overrides error handling mechanism provided by this library                       |
+| catchError        | Fired when an error is encountered when loading the video                       |
 | onPause           | Fired when the video is paused after the play/pause button is pressed           |
 | onPlay            | Fired when the video begins playing after the play/pause button is pressed      |
 | onBack            | Function fired when back button is pressed, override if using custom navigation |

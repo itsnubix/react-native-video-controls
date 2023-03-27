@@ -29,6 +29,8 @@ interface VideoPlayerProperties extends VideoProperties {
   style?: StyleProp<ViewStyle>;
   /** If true, single tapping anywhere on the video (other than a control) toggles between playing and paused. */
   tapAnywhereToPause?: boolean;
+  /** Custom error message to show in Video Player UI */
+  errorMessage?: string;
   /** Fired when the video enters fullscreen after the fullscreen button is pressed */
   onEnterFullscreen?: () => void;
   /** Fired when the video exits fullscreen after the fullscreen button is pressed */
@@ -37,8 +39,10 @@ interface VideoPlayerProperties extends VideoProperties {
   onHideControls?: () => void;
   /** Fired when the controls appear */
   onShowControls?: () => void;
-  /** Fired when an error is encountered when loading the video */
+  /** Fired when an error is encountered when loading the video. This overrides error handling mechanism provided by react-native-video-controls lib */
   onError?: (error: LoadError) => void;
+  /** Fired when an error is encountered when loading the video. This does not overrides error handling mechanism provided by react-native-video-controls lib  */
+  catchError?: (error: LoadError) => void;
   /** Fired when the video is paused after the play/pause button is pressed */
   onPause?: () => void;
   /** Fired when the video begins playing after the play/pause button is pressed */
