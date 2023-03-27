@@ -1199,7 +1199,7 @@ export default class VideoPlayer extends Component {
             source={require('./assets/img/error-icon.png')}
             style={styles.error.icon}
           />
-          <Text style={styles.error.text}>Video unavailable</Text>
+          <Text style={styles.error.text}>{this.props.errorMessage || 'Video unavailable'}</Text>
         </View>
       );
     }
