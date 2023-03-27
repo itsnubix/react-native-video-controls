@@ -285,6 +285,10 @@ export default class VideoPlayer extends Component {
     state.loading = false;
 
     this.setState(state);
+    
+    if (typeof this.props.catchError === "function") {
+      this.props.catchError(err);
+    }
   }
 
   /**
