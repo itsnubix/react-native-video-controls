@@ -1,3 +1,9 @@
+## 2.9.1 (27-03-2023)
+
+Added `errorMessage` prop to customize error message shown in Video Player UI
+
+Added `catchError` prop to handle `react-native-video` lib error while also using error handling mechanism provided by `react-native-video-controls` lib
+
 ## 2.5.1 (17-05-2020)
 
 [#177](https://github.com/itsnubix/react-native-video-controls/pull/177)
