@@ -31,8 +31,6 @@ export default class VideoPlayer extends Component {
     volume: 1,
     title: '',
     rate: 1,
-    showTimeRemaining: true,
-    showHours: false,
   };
 
   constructor(props) {
@@ -53,8 +51,7 @@ export default class VideoPlayer extends Component {
 
       isFullscreen:
         this.props.isFullScreen || this.props.resizeMode === 'cover' || false,
-      showTimeRemaining: this.props.showTimeRemaining,
-      showHours: this.props.showHours,
+      showTimeRemaining: true,
       volumeTrackWidth: 0,
       volumeFillWidth: 0,
       seekerFillWidth: 0,
@@ -110,6 +107,7 @@ export default class VideoPlayer extends Component {
       togglePlayPause: this._togglePlayPause.bind(this),
       toggleControls: this._toggleControls.bind(this),
       toggleTimer: this._toggleTimer.bind(this),
+      toggleVolume: this._toggleVolume.bind(this),
     };
 
     /**
@@ -501,6 +499,15 @@ export default class VideoPlayer extends Component {
   }
 
   /**
+   * toggle volume
+   */
+  _toggleVolume(){
+    let state = this.state;
+    state.muted = !state.muted;
+    this.setState(state);
+  }
+
+  /**
    * Toggle playing state on <Video> component
    */
   _togglePlayPause() {
@@ -565,22 +572,10 @@ export default class VideoPlayer extends Component {
     const symbol = this.state.showRemainingTime ? '-' : '';
     time = Math.min(Math.max(time, 0), this.state.duration);
 
-    if (!this.state.showHours) {
-      const formattedMinutes = padStart(Math.floor(time / 60).toFixed(0), 2, 0);
-      const formattedSeconds = padStart(Math.floor(time % 60).toFixed(0), 2, 0);
-
-      return `${symbol}${formattedMinutes}:${formattedSeconds}`;
-    }
-
-    const formattedHours = padStart(Math.floor(time / 3600).toFixed(0), 2, 0);
-    const formattedMinutes = padStart(
-      (Math.floor(time / 60) % 60).toFixed(0),
-      2,
-      0,
-    );
+    const formattedMinutes = padStart(Math.floor(time / 60).toFixed(0), 2, 0);
     const formattedSeconds = padStart(Math.floor(time % 60).toFixed(0), 2, 0);
 
-    return `${symbol}${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+    return `${symbol}${formattedMinutes}:${formattedSeconds}`;
   }
 
   /**
@@ -628,7 +623,7 @@ export default class VideoPlayer extends Component {
    * @return {float} position of seeker handle in px based on currentTime
    */
   calculateSeekerPosition() {
-    const percent = this.state.currentTime / this.state.duration;
+    const percent = this.state.duration === 0 ? 0 : this.state.currentTime / this.state.duration;
     return this.player.seekerWidth * percent;
   }
 
@@ -976,7 +971,7 @@ export default class VideoPlayer extends Component {
             {backControl}
             <View style={styles.controls.pullRight}>
               {volumeControl}
-              {fullscreenControl}
+              {/* {fullscreenControl} */}
             </View>
           </SafeAreaView>
         </ImageBackground>
@@ -1037,6 +1032,30 @@ export default class VideoPlayer extends Component {
     );
   }
 
+  renderVolumeButtonBottom(){
+    let source =
+      this.state.muted === true
+        ? require('./assets/img/mute_button.png')
+        : require('./assets/img/volume_button.png');
+    return this.renderControl(
+      <Image source={source} style={{width: 20, height: 20}} resizeMode='contain'/>,
+      this.methods.toggleVolume,
+      styles.controls.playPause,
+    );
+  }
+
+  renderFullScreenBottom(){
+    let isFullScreen = this.state.isFullscreen;
+    let source = isFullScreen 
+        ? require('./assets/img/full_screen_collapse.png')
+        : require('./assets/img/full_screen_expand.png');
+    return this.renderControl(
+      <Image source={source} style={{width: 20, height: 20,marginBottom: isFullScreen ? 10 : 5 ,alignSelf: 'flex-end'}} resizeMode='contain'/>,
+      this.methods.toggleFullscreen,
+      styles.controls.fullscreenBottom,
+    );
+  }
+
   /**
    * Render bottom control group and wrap it in a holder
    */
@@ -1050,6 +1069,10 @@ export default class VideoPlayer extends Component {
     const playPauseControl = this.props.disablePlayPause
       ? this.renderNullControl()
       : this.renderPlayPause();
+
+    const volumeButton = this.renderVolumeButtonBottom();
+
+    const fullScreenBottom = this.renderFullScreenBottom();
 
     return (
       <Animated.View
@@ -1066,10 +1089,13 @@ export default class VideoPlayer extends Component {
           imageStyle={[styles.controls.vignette]}>
           {seekbarControl}
           <SafeAreaView
-            style={[styles.controls.row, styles.controls.bottomControlGroup]}>
+            // style={[styles.controls.row, styles.controls.bottomControlGroup,{backgroundColor:'blue'}]}>
+            style={{flexDirection: 'row', width: '100%', alignItems: 'center'}}>
             {playPauseControl}
-            {this.renderTitle()}
-            {timerControl}
+            {volumeButton}
+            {fullScreenBottom}
+            {/* {this.renderTitle()} */}
+            {/* {timerControl} */}
           </SafeAreaView>
         </ImageBackground>
       </Animated.View>
@@ -1123,10 +1149,10 @@ export default class VideoPlayer extends Component {
   renderPlayPause() {
     let source =
       this.state.paused === true
-        ? require('./assets/img/play.png')
-        : require('./assets/img/pause.png');
+        ? require('./assets/img/play_button.png')
+        : require('./assets/img/pause_button.png');
     return this.renderControl(
-      <Image source={source} />,
+      <Image source={source} style={{width:20, height: 20}} resizeMode={'contain'} />,
       this.methods.togglePlayPause,
       styles.controls.playPause,
     );
@@ -1347,9 +1373,12 @@ const styles = {
       marginBottom: 18,
     },
     bottomControlGroup: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'flex-start',
       alignSelf: 'stretch',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      // alignItems: 'center',
+      // justifyContent: 'space-between',
       marginLeft: 12,
       marginRight: 12,
       marginBottom: 0,
@@ -1361,13 +1390,20 @@ const styles = {
       flexDirection: 'row',
     },
     playPause: {
-      position: 'relative',
-      width: 80,
+      // position: 'relative',
+      width: 40,
+      zIndex: 0,
+    },
+    fullscreenBottom: {
+      width: 40,
+      position: 'absolute',
+      right: 0,
+      alignSelf: 'flex-end',
       zIndex: 0,
     },
     title: {
       alignItems: 'center',
-      flex: 0.6,
+      // flex: 0.6,
       flexDirection: 'column',
       padding: 0,
     },
@@ -1385,6 +1421,10 @@ const styles = {
     },
   }),
   volume: StyleSheet.create({
+    muteControls:{
+      width: 40,
+      height: 40,
+    },  
     container: {
       alignItems: 'center',
       justifyContent: 'flex-start',
