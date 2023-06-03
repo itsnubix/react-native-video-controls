@@ -68,12 +68,13 @@ In addition, the `<VideoPlayer />` also takes these props:
 | seekColor                    | String(#HEX) | '#FFF'  | Fill/handle colour of the seekbar                                                                                                                                |
 | style                        | StyleSheet   | null    | React Native StyleSheet object that is appended to the video's parent `<View>`                                                                                   |
 | tapAnywhereToPause           | Boolean      | false   | If true, single tapping anywhere on the video (other than a control) toggles between playing and paused.                                                         |
+| showTimeRemaining            | Boolean      | true    | If true, show the time remaing, else show the current time in the Player. |
+| showHours                    | Boolean      | false   | If true, convert time to hours in the Player. |
+| thumbnailUri                 | Boolean      | String  | URI string pointing to an image to be displayed as a loader instead of the default spinning loader |
+| thumbnailStyle               | StyleSheet   | null   | React Native StyleSheet object that is appended to the loader thumbnail |
 
-| showTimeRemaining            | Boolean      | true    | If true, show the time remaing, else show the current time in the Player.
-`<View>`
 
-| showHours                    | Boolean      | false   | If true, convert time to hours in the Player
-`<View>`
+
 
 ### Events
 
