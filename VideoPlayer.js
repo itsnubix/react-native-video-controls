@@ -49,6 +49,9 @@ export default class VideoPlayer extends Component {
       muted: this.props.muted,
       volume: this.props.volume,
       rate: this.props.rate,
+      //thumbnail uri
+      thumbnailUri: this.props.thumbnailUri,
+
       // Controls
 
       isFullscreen:
@@ -158,6 +161,7 @@ export default class VideoPlayer extends Component {
     this.styles = {
       videoStyle: this.props.videoStyle || {},
       containerStyle: this.props.style || {},
+      thumbnailStyle: this.props.thumbnailStyle || {},
     };
   }
 
@@ -184,11 +188,15 @@ export default class VideoPlayer extends Component {
   /**
    * When load starts we display a loading icon
    * and show the controls.
+   * If the user wants to display a thumbnail instead, 
+   * the animation does not start.
    */
   _onLoadStart() {
     let state = this.state;
     state.loading = true;
-    this.loadAnimation();
+    if (!this.state.thumbnailUri){
+      this.loadAnimation();
+    }
     this.setState(state);
 
     if (typeof this.props.onLoadStart === 'function') {
@@ -753,6 +761,10 @@ export default class VideoPlayer extends Component {
     if (this.styles.containerStyle !== nextProps.style) {
       this.styles.containerStyle = nextProps.style;
     }
+
+    if (this.styles.thumbnailStyle !== nextProps.style) {
+      this.styles.thumbnailStyle = nextProps.style;
+    }
   }
 
   /**
@@ -1163,10 +1175,20 @@ export default class VideoPlayer extends Component {
   }
 
   /**
-   * Show loading icon
+   * Show loading icon or thumbnail
    */
   renderLoader() {
     if (this.state.loading) {
+      if (this.state.thumbnailUri) {
+        return (
+          <View style={styles.loader.container}>
+          <Image
+              source={{uri: this.state.thumbnailUri}}
+              style={[this.styles.thumbnailStyle]}
+          />
+          </View>
+        )
+      }
       return (
         <View style={styles.loader.container}>
           <Animated.Image
