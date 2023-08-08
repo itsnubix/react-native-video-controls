@@ -59,6 +59,7 @@ export default class VideoPlayer extends Component {
       volumeFillWidth: 0,
       seekerFillWidth: 0,
       showControls: this.props.showOnStart,
+      resetTimer: this.props.resetTimer,
       volumePosition: 0,
       seekerPosition: 0,
       volumeOffset: 0,
@@ -168,6 +169,10 @@ export default class VideoPlayer extends Component {
       this.setState({
         isFullscreen,
       });
+    }
+
+    if (this.state.resetTimer) {
+      this.resetControlTimeout();
     }
   };
   /**
