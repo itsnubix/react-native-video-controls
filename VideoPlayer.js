@@ -31,8 +31,6 @@ export default class VideoPlayer extends Component {
     volume: 1,
     title: '',
     rate: 1,
-    showTimeRemaining: true,
-    showHours: false,
   };
 
   constructor(props) {
@@ -53,8 +51,7 @@ export default class VideoPlayer extends Component {
 
       isFullscreen:
         this.props.isFullScreen || this.props.resizeMode === 'cover' || false,
-      showTimeRemaining: this.props.showTimeRemaining,
-      showHours: this.props.showHours,
+      showTimeRemaining: true,
       volumeTrackWidth: 0,
       volumeFillWidth: 0,
       seekerFillWidth: 0,
@@ -565,22 +562,10 @@ export default class VideoPlayer extends Component {
     const symbol = this.state.showRemainingTime ? '-' : '';
     time = Math.min(Math.max(time, 0), this.state.duration);
 
-    if (!this.state.showHours) {
-      const formattedMinutes = padStart(Math.floor(time / 60).toFixed(0), 2, 0);
-      const formattedSeconds = padStart(Math.floor(time % 60).toFixed(0), 2, 0);
-
-      return `${symbol}${formattedMinutes}:${formattedSeconds}`;
-    }
-
-    const formattedHours = padStart(Math.floor(time / 3600).toFixed(0), 2, 0);
-    const formattedMinutes = padStart(
-      (Math.floor(time / 60) % 60).toFixed(0),
-      2,
-      0,
-    );
+    const formattedMinutes = padStart(Math.floor(time / 60).toFixed(0), 2, 0);
     const formattedSeconds = padStart(Math.floor(time % 60).toFixed(0), 2, 0);
 
-    return `${symbol}${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+    return `${symbol}${formattedMinutes}:${formattedSeconds}`;
   }
 
   /**
@@ -1187,8 +1172,24 @@ export default class VideoPlayer extends Component {
           />
         </View>
       );
+    }else{
+      /**
+      * Making same Functionality Accross platorm [Android and IOS] when Poster Prop is passed
+      * *
+      * Poster will be available until user clicks on the play button in Android. But in IOS
+      * when video is readyForDisplay By default it will load first frame of the video.
+      * *
+      * Below condition disable the loading of first frame in IOS when Poster value available.
+      */
+      if((this.state.paused) && (this.props.poster !== "") && (this.state.seekerPosition) === 0){
+      return (
+        <View style={styles.poster.container}>
+          <Image source={{uri: this.props.poster}} style={styles.poster.image}/>
+        </View>);
+      }else{
+        return null;
+      }
     }
-    return null;
   }
 
   renderError() {
@@ -1210,6 +1211,8 @@ export default class VideoPlayer extends Component {
    * Provide all of our options and render the whole component.
    */
   render() {
+    console.log('renderrrrrrr');
+    console.log({...this.props});
     return (
       <TouchableWithoutFeedback
         onPress={this.events.onScreenTouch}
@@ -1248,6 +1251,21 @@ export default class VideoPlayer extends Component {
  * And then there's volume/seeker styles.
  */
 const styles = {
+  poster: StyleSheet.create({
+    container: {
+      display: 'flex',
+      alignItems: 'center',
+      height: '100%',
+      width: '100%',
+      textAlign: 'center',
+      backgroundColor: '#000'
+    },
+    image: {
+      resizeMode: 'contain',
+      width: '100%',
+      flex: 1
+    },
+  }),
   player: StyleSheet.create({
     container: {
       overflow: 'hidden',
@@ -1448,3 +1466,4 @@ const styles = {
     },
   }),
 };
+
